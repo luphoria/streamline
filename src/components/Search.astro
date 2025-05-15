@@ -1,0 +1,169 @@
+<div class="musicbrainz-search">
+  <input
+    type="text"
+    id="musicBrainzApiUrl"
+    value="https://musicbrainz.org/ws/2/"
+  />
+  <button id="apiUrlSetBtn">Set MusicBrainz API URL</button>
+  <br /><br />
+  <input
+    type="text"
+    id="songSearchValue"
+    placeholder="ARTIST - SONG or search..."
+  />
+  <button id="songSearchBtn">Search song</button>
+  <input type="text" id="artistSearchValue" placeholder="ARTIST or search..." />
+  <button id="artistSearchBtn">Search artist</button>
+  <br /><br />
+  <search-results id="search-results"></search-results>
+</div>
+
+<script>
+  import { addResult } from "../stores/searchResults.ts";
+
+  import { $results } from "../stores/searchResults.ts";
+
+  import { removeAllResults } from "../stores/searchResults.ts";
+  import { MusicBrainz } from "../utils/MusicBrainz";
+
+  const mb = new MusicBrainz("https://musicbrainz.org/ws/2/"); // TODO: this needs to be dynamic
+
+  class SearchResults extends HTMLElement {
+    constructor() {
+      super();
+
+      $results.subscribe((results) => {
+        this.innerHTML = "";
+
+        results.forEach((songs) => {
+          console.info(`SearchResults:`);
+          console.info(songs);
+
+          let resNumber = 0;
+          songs.forEach((ver) => {
+            try {
+              let firstResult = ver.versions[0];
+              // get the last result
+              // let lastResult = ver.versions[ver.versions.length - 1];
+
+              // Populate dropdown menu
+              let songVersionsHtml = "";
+              ver.versions.forEach((version) => {
+                songVersionsHtml += `<option value="${version.parentMbid}">${version.releaseTitle} (${version.releaseDate})</option>`;
+              });
+
+              // just push the first version of each result
+              this.innerHTML += `<div>
+              <img height='75px' width='75px' src="${firstResult.coverArt}"><span>${firstResult.artist}</span> - <b>${firstResult.title}</b> (${firstResult.releaseDate}) 
+                <select id="sel${resNumber}">
+                  ${songVersionsHtml}
+                </select>
+                <button class="result-btn">Play</button> 
+                <button onclick="document.getElementById('releaseMbid').value = document.getElementById('sel${resNumber}').value; document.getElementById('releaseButton').click()">Open release</button>
+              </div>`;
+
+              resNumber += 1;
+            } catch (err) {
+              console.error(err);
+            }
+          });
+        });
+      });
+    }
+  }
+
+  customElements.define("search-results", SearchResults);
+
+  const searchLucidaForUrl = async (artist, title) => {
+    const query = `${artist} - ${title}`;
+    try {
+      let res = await fetch(
+        `/api/lucidaSearch?query=${encodeURIComponent(query)}`,
+      );
+      let lucidaSearchRes = await res.json();
+
+      // Filter results so only ones with the correct author and title are accepted
+      let results = lucidaSearchRes["results"]["tracks"];
+      results = results.filter((track) => {
+        return track["title"] == title && track["artists"][0]["name"] == artist;
+      });
+
+      console.log(results);
+
+      // Use the top result
+      return results[0]["url"];
+    } catch (err) {
+      console.error(err);
+      return err;
+    }
+  };
+
+  document.getElementById("apiUrlSetBtn").addEventListener("click", () => {
+    mb.SetApiUrl(
+      (document.getElementById("musicBrainzApiUrl") as HTMLInputElement).value,
+    );
+  });
+
+  document.getElementById("songSearchBtn").addEventListener("click", () => {
+    removeAllResults();
+
+    try {
+      mb.SearchSongs(
+        (document.getElementById("songSearchValue") as HTMLInputElement).value,
+      ).then((recordings) => {
+        // TODO: Fix TS error
+        // @ts-ignore
+        addResult(recordings);
+
+        for (let button in document.getElementsByClassName("result-btn")) {
+          let btn = document.getElementsByClassName("result-btn")[button];
+          if (btn.innerHTML) {
+            btn.addEventListener("click", async () => {
+              try {
+                let streamUrl = await searchLucidaForUrl(
+                  (btn.parentElement.children[1] as HTMLSpanElement).innerText,
+                  (btn.parentElement.children[2] as HTMLElement).innerText,
+                );
+                document.querySelector("input").value = streamUrl;
+                document.getElementById("set").click(); // lol
+              } catch (err) {
+                console.error(err);
+              }
+            });
+          }
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  });
+
+  document.getElementById("artistSearchBtn").addEventListener("click", () => {
+    // TODO: combine with song search in two api reqs?
+    console.log("Artist search");
+    removeAllResults();
+    try {
+      mb.SearchArtists(
+        (document.getElementById("artistSearchValue") as HTMLInputElement)
+          .value,
+      ).then((artists) => {
+        console.log(artists);
+        let resNumber = 0;
+        for (let artist in artists) {
+          try {
+            // just push the first version of each result
+            document.getElementById("search-results").innerHTML += `<div>
+              <b id="res${resNumber}" value="${artists[artist].mbid}">${artists[artist].name}</b> ${artists[artist].disambiguation ? `(<i>${artists[artist].disambiguation}</i>)` : ""} 
+                <button onclick="document.getElementById('artistMbid').value = document.getElementById('res${resNumber}').getAttribute('value');document.getElementById('artistButton').click()">View artist</button>
+              </div>`;
+            resNumber += 1;
+          } catch (err) {
+            console.error(err);
+          }
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  });
+</script>
