@@ -1,5 +1,5 @@
 {
-  "name": "openbeat",
+  "name": "streamline",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -27,6 +27,7 @@
     "http-proxy": "^1.18.1",
     "http-proxy-middleware": "^3.0.0",
     "json5": "^2.2.3",
+    "livelook": "github:misterhat/livelook",
     "lucida": "2.0.0-22",
     "msgpack-lite": "^0.1.26",
     "nanostores": "^0.10.3",
