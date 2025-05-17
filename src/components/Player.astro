@@ -64,7 +64,7 @@
     // @ts-ignore
     source.noteOn(0); // play the source now
   }
-
+/*
   function setStream(
     url: string | number | boolean,
     infoUrl: string,
@@ -136,6 +136,7 @@
       // };
     };
   }
+*/
 
   async function getInfo(url: any) {
     let response = await fetch(`/api/getInfo?url=${url}`);
@@ -162,15 +163,23 @@
   }
 
   (document.getElementById("streamUrl") as HTMLInputElement).value =
-    "https://tidal.com/browse/track/185776372";
+    "AJR - Thirsty";
 
-  document.getElementById("set").addEventListener("click", () => {
-    let inputUrl = document.querySelector("input").value;
-    let url = `https://hund.lucida.su/api/fetch/stream?url=${inputUrl}&meta=true`;
-
+  document.getElementById("set").addEventListener("click", async () => {
+    let input = document.querySelector("input").value;
     // TODO: We need to fetch the metadata from MusicBrainz
 
-    setStream(url, inputUrl, true, 2);
+    try {
+      let res = await fetch(
+        `/api/slskSearch?query=${encodeURIComponent(input)}`,
+      );
+      let slskRes = await res.json();
+
+      console.log(slskRes);
+    } catch (err) {
+      console.error(err);
+      return err;
+    }
   });
 
   let stream: Howl = null;

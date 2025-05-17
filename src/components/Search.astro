@@ -120,11 +120,14 @@
           if (btn.innerHTML) {
             btn.addEventListener("click", async () => {
               try {
+                // Unmonkey this stuff
+                /*
                 let streamUrl = await searchLucidaForUrl(
                   (btn.parentElement.children[1] as HTMLSpanElement).innerText,
                   (btn.parentElement.children[2] as HTMLElement).innerText,
                 );
-                document.querySelector("input").value = streamUrl;
+                */
+                document.querySelector("input").value = `${(btn.parentElement.children[1] as HTMLSpanElement).innerText} - ${(btn.parentElement.children[2] as HTMLElement).innerText}`;
                 document.getElementById("set").click(); // lol
               } catch (err) {
                 console.error(err);
