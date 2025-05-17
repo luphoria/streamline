@@ -33,3 +33,4 @@ pnpm-lock.yaml
 
 # song cache default directory
 music/
+tests/slsk-downloads/*
