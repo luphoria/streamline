@@ -2,69 +2,69 @@
 <button id="set">Set Stream</button>
 
 <div class="music-player">
-  <div class="album">
-    <img id="albumImg" class="img-alb" />
-    <p class="heading">
-      <div class="album-info">
-        <h5 id="name" class="alb-he5"></h5>
-        <h6 id="artist" class="alb-he6"></h6>
-      </div>
-    </p>
-  </div>
-  <div class="player">
-    <div class="player-controls">
-      <img
-        src="imgs/pause.png"
-        class="player-control-icon"
-        id="play-btn"
-        style="opacity: 1; height: 2.5rem;"
-      />
-      <br />
-      <div class="playback-bar">
-        <input type="range" min="0" max="999" class="progress-bar" step="1" />
-      </div>
-    </div>
-  </div>
+	<div class="album">
+		<img id="albumImg" class="img-alb" />
+		<p class="heading">
+			<div class="album-info">
+				<h5 id="name" class="alb-he5"></h5>
+				<h6 id="artist" class="alb-he6"></h6>
+			</div>
+		</p>
+	</div>
+	<div class="player">
+		<div class="player-controls">
+			<img
+				src="imgs/pause.png"
+				class="player-control-icon"
+				id="play-btn"
+				style="opacity: 1; height: 2.5rem;"
+			/>
+			<br />
+			<div class="playback-bar">
+				<input type="range" min="0" max="999" class="progress-bar" step="1" />
+			</div>
+		</div>
+	</div>
 </div>
 
 <script>
-  import { Howl, Howler } from "howler";
+	import { Howl, Howler } from "howler";
 
-  import { Buffer } from "buffer";
+	import { Buffer } from "buffer";
 
-  import msgpack from "msgpack-lite";
+	import msgpack from "msgpack-lite";
 
-  Howler.autoUnlock = false;
+	Howler.autoUnlock = false;
 
-  const playBtn = document.querySelector("#play-btn");
-  const progress = document.querySelector(".progress-bar");
+	const playBtn = document.querySelector("#play-btn");
+	const progress = document.querySelector(".progress-bar");
 
-  let url = "";
+	let url = "";
 
-  let lastChunk = 0;
+	let lastChunk = 0;
 
-  let oldStream = null;
+	let oldStream = null;
 
-  let ws: WebSocket;
+	let ws: WebSocket;
 
-  let context: AudioContext;
-  window.addEventListener("load", init, false);
-  function init() {
-    try {
-      context = new AudioContext();
-    } catch (e) {
-      alert("Web Audio API is not supported in this browser");
-    }
-  }
+	let context: AudioContext;
+	window.addEventListener("load", init, false);
+	function init() {
+		try {
+			context = new AudioContext();
+		} catch (e) {
+			alert("Web Audio API is not supported in this browser");
+		}
+	}
 
-  function playSound(buffer) {
-    var source = context.createBufferSource(); // creates a sound source
-    source.buffer = buffer; // tell the source which sound to play
-    source.connect(context.destination); // connect the source to the context's destination (the speakers)
-    // @ts-ignore
-    source.noteOn(0); // play the source now
-  }
-/*
+	function playSound(buffer) {
+		var source = context.createBufferSource(); // creates a sound source
+		source.buffer = buffer; // tell the source which sound to play
+		source.connect(context.destination); // connect the source to the context's destination (the speakers)
+		// @ts-ignore
+		source.noteOn(0); // play the source now
+	}
+	/*
   function setStream(
     url: string | number | boolean,
     infoUrl: string,
@@ -138,121 +138,121 @@
   }
 */
 
-  async function getInfo(url: any) {
-    let response = await fetch(`/api/getInfo?url=${url}`);
+	async function getInfo(url: any) {
+		let response = await fetch(`/api/getInfo?url=${url}`);
 
-    let data = await response.json();
+		let data = await response.json();
 
-    console.info(`getInfo: ${JSON.stringify(data)}`);
-    const info = data.data.info;
+		console.info(`getInfo: ${JSON.stringify(data)}`);
+		const info = data.data.info;
 
-    // set info
+		// set info
 
-    let cover = info.coverArtwork
-      ? info.coverArtwork[0].url
-      : info.album.coverArtwork[0].url;
+		let cover = info.coverArtwork
+			? info.coverArtwork[0].url
+			: info.album.coverArtwork[0].url;
 
-    (document.querySelector("#albumImg") as HTMLImageElement).src = cover;
+		(document.querySelector("#albumImg") as HTMLImageElement).src = cover;
 
-    document.querySelector("#name").innerHTML = info.title;
-    document.querySelector("#artist").innerHTML = info.artists
-      .map((artist: { name: any }) => artist.name)
-      .join(", ");
+		document.querySelector("#name").innerHTML = info.title;
+		document.querySelector("#artist").innerHTML = info.artists
+			.map((artist: { name: any }) => artist.name)
+			.join(", ");
 
-    duration = info.durationMs / 1000;
-  }
+		duration = info.durationMs / 1000;
+	}
 
-  (document.getElementById("streamUrl") as HTMLInputElement).value =
-    "AJR - Thirsty";
+	(document.getElementById("streamUrl") as HTMLInputElement).value =
+		"AJR - Thirsty";
 
-  document.getElementById("set").addEventListener("click", async () => {
-    let input = document.querySelector("input").value;
-    // TODO: We need to fetch the metadata from MusicBrainz
+	document.getElementById("set").addEventListener("click", async () => {
+		let input = document.querySelector("input").value;
+		// TODO: We need to fetch the metadata from MusicBrainz
 
-    try {
-      let res = await fetch(
-        `/api/slskSearch?query=${encodeURIComponent(input)}`,
-      );
-      let slskRes = await res.json();
+		try {
+			let res = await fetch(
+				`/api/slskSearch?query=${encodeURIComponent(input)}`
+			);
+			let slskRes = await res.json();
 
-      console.log(slskRes);
-    } catch (err) {
-      console.error(err);
-      return err;
-    }
-  });
+			console.log(slskRes);
+		} catch (err) {
+			console.error(err);
+			return err;
+		}
+	});
 
-  let stream: Howl = null;
+	let stream: Howl = null;
 
-  function setupEventListeners({
-    stream,
-  }: {
-    stream: {
-      on: (arg0: string, arg1: { (): void; (): void }) => void;
-      seek: () => number;
-    };
-  }): void {
-    stream.on("play", () => {
-      // @ts-ignore
-      (progress as HTMLInputElement).max = duration;
-      (playBtn as HTMLImageElement).src = "imgs/pause.png";
-      isPlaying = true;
-      // playBtn.style.display = "none";
-      // pauseBtn.style.display = "inline-block";
-      updateSeekBar();
-    });
+	function setupEventListeners({
+		stream,
+	}: {
+		stream: {
+			on: (arg0: string, arg1: { (): void; (): void }) => void;
+			seek: () => number;
+		};
+	}): void {
+		stream.on("play", () => {
+			// @ts-ignore
+			(progress as HTMLInputElement).max = duration;
+			(playBtn as HTMLImageElement).src = "imgs/pause.png";
+			isPlaying = true;
+			// playBtn.style.display = "none";
+			// pauseBtn.style.display = "inline-block";
+			updateSeekBar();
+		});
 
-    stream.on("pause", () => {
-      isPlaying = false;
-      (playBtn as HTMLImageElement).src = "imgs/pause.png";
-      // playBtn.style.display = "inline-block";
-      // pauseBtn.style.display = "none";
-    });
-  }
+		stream.on("pause", () => {
+			isPlaying = false;
+			(playBtn as HTMLImageElement).src = "imgs/pause.png";
+			// playBtn.style.display = "inline-block";
+			// pauseBtn.style.display = "none";
+		});
+	}
 
-  let isPlaying = false;
-  let currentTime = 0;
-  let duration = 0;
-  let pressing = false;
+	let isPlaying = false;
+	let currentTime = 0;
+	let duration = 0;
+	let pressing = false;
 
-  // setupEventListeners(stream);
+	// setupEventListeners(stream);
 
-  playBtn.addEventListener("click", () => {
-    !isPlaying ? stream.play() : stream.pause();
-  });
+	playBtn.addEventListener("click", () => {
+		!isPlaying ? stream.play() : stream.pause();
+	});
 
-  progress.addEventListener("mousedown", (e: any) => {
-    pressing = true;
-  });
+	progress.addEventListener("mousedown", (e: any) => {
+		pressing = true;
+	});
 
-  // @ts-ignore
-  progress.addEventListener("mouseup", (e: { target: { value: number } }) => {
-    pressing = false;
-    currentTime = Math.round(e.target.value);
-    console.info(e.target.value);
-    stream.seek(currentTime);
-    stream.seek(currentTime);
-    console.info(stream.seek(), currentTime);
-    updateSeekBar();
-  });
+	// @ts-ignore
+	progress.addEventListener("mouseup", (e: { target: { value: number } }) => {
+		pressing = false;
+		currentTime = Math.round(e.target.value);
+		console.info(e.target.value);
+		stream.seek(currentTime);
+		stream.seek(currentTime);
+		console.info(stream.seek(), currentTime);
+		updateSeekBar();
+	});
 
-  function updateSeekBar() {
-    if (isPlaying) {
-      requestAnimationFrame(updateSeekBar);
+	function updateSeekBar() {
+		if (isPlaying) {
+			requestAnimationFrame(updateSeekBar);
 
-      currentTime = stream.seek();
+			currentTime = stream.seek();
 
-      if (!pressing) {
-        // @ts-ignore
-        (progress as HTMLInputElement).value = currentTime;
-      }
-      if (currentTime >= duration - 1) {
-        console.info("seekbar: end");
+			if (!pressing) {
+				// @ts-ignore
+				(progress as HTMLInputElement).value = currentTime;
+			}
+			if (currentTime >= duration - 1) {
+				console.info("seekbar: end");
 
-        stream.seek(0);
+				stream.seek(0);
 
-        stream.play();
-      }
-    }
-  }
+				stream.play();
+			}
+		}
+	}
 </script>

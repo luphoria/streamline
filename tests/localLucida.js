@@ -10,15 +10,15 @@ let password = accounts[0].password;
 let config = accounts[0].config;
 
 const lucida = new Lucida({
-  modules: {
-    tidal: new Tidal(config),
-  },
-  logins: {
-    tidal: {
-      username: userName,
-      password: password,
-    },
-  },
+	modules: {
+		tidal: new Tidal(config),
+	},
+	logins: {
+		tidal: {
+			username: userName,
+			password: password,
+		},
+	},
 });
 
 await lucida.login();
@@ -26,15 +26,15 @@ await lucida.login();
 console.info(lucida);
 
 lucida.getByUrl("https://tidal.com/browse/track/255207223").then((track) => {
-  track.getStream().then((stream) => {
-    stream = stream.stream;
-    // log every event
-    stream.on("data", (data) => {
-      // console.info(data);
-    });
+	track.getStream().then((stream) => {
+		stream = stream.stream;
+		// log every event
+		stream.on("data", (data) => {
+			// console.info(data);
+		});
 
-    stream.on("close", () => {
-      console.info("stream closed");
-    });
-  });
+		stream.on("close", () => {
+			console.info("stream closed");
+		});
+	});
 });

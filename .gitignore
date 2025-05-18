@@ -27,10 +27,6 @@ pnpm-debug.log*
 
 cache/
 
-# package lockfiles
-package-lock.json
-pnpm-lock.yaml
-
 # song cache default directory
 music/
 tests/slsk-downloads/*
