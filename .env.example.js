@@ -3,5 +3,6 @@ export const slskd = {
   username: "",
   password: "",
   apikey: "YOUR_API_KEY_HERE",
-  path: "/home/[user]/.local/share/slskd/downloads/"
+  path: "/home/[user]/.local/share/slskd/downloads/",
+  allowFiletypes: [".mp3",".flac",".ogg",".m4a",".wma"]
 }

@@ -170,6 +170,12 @@ export default async function (query) {
 	await AwaitSearchCompletion(search.id);
 	let searchRes = await SearchResponses(search.id);
 
+	// Move this out of the loop to avoid unnecessary computation
+	let cleanQuerySongTitle = query
+		.split(" - ")[1]
+		.toLowerCase()
+		.replace(/[^0-9a-z]/gi, ""); // todo: edge cases?
+
 	// Filter files per result
 	for (let response in searchRes) {
 		// A lot of bootleg/remixes are on soulseek, this will remove them from the results unless the user requested a remix
@@ -181,6 +187,29 @@ export default async function (query) {
 			searchRes[response].files = searchRes[response].files.filter((file) => {
 				return !file.filename.toLowerCase().includes("edit");
 			});
+		// TODO / EXPERIMENTAL: Filter out live-tagged titles if the song title does not have "live" in the name. Could cause issues/false filters.
+		if (!query.toLowerCase().includes("live"))
+			searchRes[response].files = searchRes[response].files.filter((file) => {
+				// We are explicitly returning the filename rather than the path -- many live albums do not have "live" in the name, but the user may have sorted them as such.
+				return !file.filename
+					.split("\\")
+					[file.filename.split("\\").length - 1].toLowerCase()
+					.includes("live");
+			});
+		// If the filename itself (not including the path) doesn't include the song title, we don't want it.
+		searchRes[response].files = searchRes[response].files.filter((file) => {
+			return file.filename
+				.split("\\")
+				[file.filename.split("\\").length - 1].toLowerCase()
+				.replace(/[^0-9a-z]/gi, "") // TODO: This works for them, but we need some way to differentiate non-alphanumeric titles.
+				.includes(cleanQuerySongTitle);
+		});
+		// Filter by allowed filetypes
+		searchRes[response].files = searchRes[response].files.filter((file) => {
+			return slskd.allowFiletypes.some((filetype) => {
+				return file.filename.endsWith(filetype);
+			});
+		});
 	}
 
 	// Filter empty responses again (TODO: maybe sometimes we can access locked files?)
@@ -190,6 +219,9 @@ export default async function (query) {
 
 	// Sort by upload speed -- we will want more options later, like preferring flac, etc
 	searchRes.sort((a, b) => b.uploadSpeed - a.uploadSpeed);
+
+	console.log(searchRes);
+	console.log(`${searchRes.length} responses after filtering :-)`);
 
 	const chosenSearchRes = searchRes[0];
 	console.log(searchRes[0]);
