@@ -74,30 +74,6 @@
 
 	customElements.define("search-results", SearchResults);
 
-	const searchLucidaForUrl = async (artist, title) => {
-		const query = `${artist} - ${title}`;
-		try {
-			let res = await fetch(
-				`/api/lucidaSearch?query=${encodeURIComponent(query)}`
-			);
-			let lucidaSearchRes = await res.json();
-
-			// Filter results so only ones with the correct author and title are accepted
-			let results = lucidaSearchRes["results"]["tracks"];
-			results = results.filter((track) => {
-				return track["title"] == title && track["artists"][0]["name"] == artist;
-			});
-
-			console.log(results);
-
-			// Use the top result
-			return results[0]["url"];
-		} catch (err) {
-			console.error(err);
-			return err;
-		}
-	};
-
 	document.getElementById("apiUrlSetBtn").addEventListener("click", () => {
 		mb.SetApiUrl(
 			(document.getElementById("musicBrainzApiUrl") as HTMLInputElement).value
@@ -120,13 +96,6 @@
 					if (btn.innerHTML) {
 						btn.addEventListener("click", async () => {
 							try {
-								// Unmonkey this stuff
-								/*
-                let streamUrl = await searchLucidaForUrl(
-                  (btn.parentElement.children[1] as HTMLSpanElement).innerText,
-                  (btn.parentElement.children[2] as HTMLElement).innerText,
-                );
-                */
 								document.querySelector("input").value =
 									`${(btn.parentElement.children[1] as HTMLSpanElement).innerText} - ${(btn.parentElement.children[2] as HTMLElement).innerText}`;
 								document.getElementById("set").click(); // lol
