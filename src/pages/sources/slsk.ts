@@ -1,5 +1,4 @@
-// Search soulseek with ARTIST - TITLE to download the file and return a filepath for the client to then
-// TODO: beyond demo, this should not be exposed as an API; rather, internally, the server should be parsing all of this within one `search` query.
+// Search soulseek with ARTIST - TITLE to download the file and then send it to the client. 
 
 import * as fs from "fs";
 import { slskd } from "../../../.env.js";
@@ -48,6 +47,7 @@ const AwaitSearchCompletion = async (id) => {
 	console.log("== Search Completed ==");
 	await SearchResponses(id);
 
+	// TODO: If there are 0 responses, return & quit
 	return {
 		id: id,
 		isComplete: true,
@@ -87,10 +87,13 @@ const CreateDownload = async (username, filePath, size) => {
 		},
 	})
 	
+	// TODO: Handle server/connection error (here or in the composite logic?)
 	return response;
 };
 
 const AwaitDownloadCompletion = async (username, filePath) => {
+	// First we need to get the ID of the download that we want (the download creation api does not return this value)
+	// So we will fetch all active downloads under the peer's username
 	const response = await fetch(`${slskd.url}/api/v0/transfers/downloads/${username}`, {
 		method: "GET",
 		headers: {
@@ -100,14 +103,14 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 		},
 	})
 	const data = await response.json();
+	
+	// Find the file we want in the list of username's downloads  	
 	const file = data.directories[0].files.filter((file) => {
 		return file.filename == filePath;
 	});
-	console.log("========");
-	console.log(file);
-	// First we need to get the ID of the download that we want (the download creation api does not return this value)
 	const fileId = file[0].id;
 	console.log(fileId);
+
 	// Repeatedly check to see if the file is at 100% yet
 	while (true) {
 		console.log("Awaiting download completion . . .");
@@ -123,6 +126,11 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 			}
 		)
 		const data = await response.json();
+
+		// TODO: If the ETA is extremely long (i.e. queue, or just download speed), maybe we can concurrently try another download
+		// based on configs. 
+
+		// TODO: Progress report on client side? Maybe/maybe not. 
 		if (data.percentComplete >= 100) {
 			break;
 		}
@@ -153,6 +161,7 @@ export default async function (query) {
 	const search = await CreateSearch(query);
 	await AwaitSearchCompletion(search.id);
 	let searchRes = await SearchResponses(search.id);
+
 	// Sort by upload speed -- we will want more options later, like preferring flac, etc
 	searchRes.sort((a, b) => b.uploadSpeed - a.uploadSpeed);
 	// Some responses are for locked-only files (TODO: add a check for if we have access to locked files maybe? idk how they work)
@@ -160,14 +169,16 @@ export default async function (query) {
 
 	const chosenSearchRes = searchRes[0];
 	console.log(searchRes[0]);
+	// TODO: If the individual user has several file options in the search results, we need to pick the one with the correct title (and select the best option). 
 	const chosenFile = chosenSearchRes.files[0];
 
 	// Possibly use an array of these options to do multiple downloads in one request ?
-	const download = await CreateDownload(
+	await CreateDownload(
 		chosenSearchRes.username,
 		chosenFile.filename,
 		chosenFile.size
 	);
+	// TODO: If download init fails, then try again with another user in the search results. 
 
 	// TODO: we can stream the incomplete file.
 	await AwaitDownloadCompletion(chosenSearchRes.username, chosenFile.filename);
