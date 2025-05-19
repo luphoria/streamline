@@ -170,12 +170,12 @@
 		// TODO: We need to fetch the metadata from MusicBrainz
 
 		try {
-			let res = await fetch(
+			fetch(
 				`/api/slskSearch?query=${encodeURIComponent(input)}`
-			);
-			let slskRes = await res.json();
-
-			console.log(slskRes);
+			).then((res) => res.blob()).then(blob => {
+				const url = URL.createObjectURL(blob);
+				window.open(url);
+			})
 		} catch (err) {
 			console.error(err);
 			return err;
