@@ -181,7 +181,7 @@ export default async function (query) {
 	console.log(filePath);
 
 	// TODO: Create a cache db associating mbid to filepath
-	const readStream = fs.createReadStream(`/home/percs/.local/share/slskd/downloads/${filePath}`);
+	const readStream = fs.createReadStream(`${slskd.path}${filePath}`);
 	const webStream = Readable.toWeb(readStream) as ReadableStream<Uint8Array>;
 	
 	return new Response(webStream, {

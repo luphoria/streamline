@@ -1,8 +1,6 @@
 // plugins/proxy-middleware.mjs
 import { WebSocketServer } from "ws";
 
-import { handleConn } from "./backend/chunking.mjs";
-
 /**
  * @returns {import("astro").AstroIntegration}
  */
