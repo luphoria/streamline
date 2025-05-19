@@ -28,7 +28,6 @@ const CreateSearch = async (query) => {
 // Check that search status
 const AwaitSearchCompletion = async (id) => {
 	while (true) {
-		console.log("Awaiting search completion . . .");
 		const response = await fetch(`${slskd.url}/api/v0/searches/${id}`, {
 			method: "GET",
 			headers: {
@@ -38,6 +37,7 @@ const AwaitSearchCompletion = async (id) => {
 			},
 		})
 		const data = await response.json();
+		console.log(`Awaiting search completion for ${id} (${data.responseCount} responses). . .`);
 		if (data.isComplete) {
 			break;
 		}
@@ -113,7 +113,6 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 
 	// Repeatedly check to see if the file is at 100% yet
 	while (true) {
-		console.log("Awaiting download completion . . .");
 		const response = await fetch(
 			`${slskd.url}/api/v0/transfers/downloads/${username}/${fileId}`,
 			{
@@ -129,7 +128,7 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 
 		// TODO: If the ETA is extremely long (i.e. queue, or just download speed), maybe we can concurrently try another download
 		// based on configs. 
-
+		console.log(`Downloading ${username}/${filePath} (${Math.round(data.percentComplete*100)/100}%) . . .`);
 		// TODO: Progress report on client side? Maybe/maybe not. 
 		if (data.percentComplete >= 100) {
 			break;
