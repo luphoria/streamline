@@ -171,10 +171,13 @@
 
 		try {
 			fetch(
-				`/api/slskSearch?query=${encodeURIComponent(input)}`
+				`/api/source?query=${encodeURIComponent(input)}`
 			).then((res) => res.blob()).then(blob => {
 				const url = URL.createObjectURL(blob);
-				window.open(url);
+				const player = new Audio(url);
+				player.controls = true;
+				player.play();
+				document.getElementById("set").after(player)
 			})
 		} catch (err) {
 			console.error(err);
