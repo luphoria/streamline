@@ -1,6 +1,7 @@
-<input id="streamUrl" />
-<button id="set">Set Stream</button>
+<input id="recordingId" />
+<button id="set">Fetch</button>
 
+<!--
 <div class="music-player">
 	<div class="album">
 		<img id="albumImg" class="img-alb" />
@@ -26,143 +27,11 @@
 		</div>
 	</div>
 </div>
+ -->
 
 <script>
-	import { Howl, Howler } from "howler";
 
-	import { Buffer } from "buffer";
-
-	import msgpack from "msgpack-lite";
-
-	Howler.autoUnlock = false;
-
-	const playBtn = document.querySelector("#play-btn");
-	const progress = document.querySelector(".progress-bar");
-
-	let url = "";
-
-	let lastChunk = 0;
-
-	let oldStream = null;
-
-	let ws: WebSocket;
-
-	let context: AudioContext;
-	window.addEventListener("load", init, false);
-	function init() {
-		try {
-			context = new AudioContext();
-		} catch (e) {
-			alert("Web Audio API is not supported in this browser");
-		}
-	}
-
-	function playSound(buffer) {
-		var source = context.createBufferSource(); // creates a sound source
-		source.buffer = buffer; // tell the source which sound to play
-		source.connect(context.destination); // connect the source to the context's destination (the speakers)
-		// @ts-ignore
-		source.noteOn(0); // play the source now
-	}
-	/*
-  function setStream(
-    url: string | number | boolean,
-    infoUrl: string,
-    autoplay: boolean,
-    amountOfChunks: number,
-  ) {
-    if (stream != null) {
-      stream.unload();
-    }
-
-    getInfo(infoUrl);
-
-    console.info(`== setStream: ${url}, ${amountOfChunks} ==`);
-
-    ws = new WebSocket(
-      `/getAudio?chunks=${amountOfChunks}&url=${encodeURIComponent(url)}`,
-    );
-
-    ws.binaryType = "arraybuffer";
-
-    ws.onmessage = async function (event) {
-      if (stream != null) {
-        oldStream = stream;
-      }
-
-      const data = msgpack.decode(new Uint8Array(event.data));
-
-      console.info(`== setStream: data chunk ==`);
-      console.info(data);
-
-      if (data.type != "chunk") return;
-
-      if (data.chunkIndex < lastChunk) return;
-
-      const buffer = Buffer.from(data.data);
-
-      let blob = new Blob([buffer], { type: "audio/wav" });
-      console.info(`== setStream: song blob: ${URL.createObjectURL(blob)} ==`);
-
-      playSound(buffer);
-
-      //   stream = new Howl({
-      //     src: base64DataUrl,
-      //     format: ["webm"],
-
-      //     html5: true,
-      //     preload: true,
-      //   });
-
-      //   lastChunk = data.chunkIndex;
-
-      //   setupEventListeners({ stream });
-
-      //   console.info(
-      //     "Stream set to " + url,
-      //     `${data.chunkIndex}/${amountOfChunks}`
-      //   );
-
-      //   stream.volume(1);
-
-      //   autoplay ? stream.play() : null;
-
-      //   if (oldStream != null) {
-      //     // transition to new stream
-      //   }
-
-      //   // @ts-ignore
-      //   (progress as HTMLInputElement).value = currentTime;
-      // };
-    };
-  }
-*/
-
-	async function getInfo(url: any) {
-		let response = await fetch(`/api/getInfo?url=${url}`);
-
-		let data = await response.json();
-
-		console.info(`getInfo: ${JSON.stringify(data)}`);
-		const info = data.data.info;
-
-		// set info
-
-		let cover = info.coverArtwork
-			? info.coverArtwork[0].url
-			: info.album.coverArtwork[0].url;
-
-		(document.querySelector("#albumImg") as HTMLImageElement).src = cover;
-
-		document.querySelector("#name").innerHTML = info.title;
-		document.querySelector("#artist").innerHTML = info.artists
-			.map((artist: { name: any }) => artist.name)
-			.join(", ");
-
-		duration = info.durationMs / 1000;
-	}
-
-	(document.getElementById("streamUrl") as HTMLInputElement).value =
+	(document.getElementById("recordingId") as HTMLInputElement).value =
 		"AJR - Thirsty";
 
 	document.getElementById("set").addEventListener("click", async () => {
@@ -184,78 +53,4 @@
 			return err;
 		}
 	});
-
-	let stream: Howl = null;
-
-	function setupEventListeners({
-		stream,
-	}: {
-		stream: {
-			on: (arg0: string, arg1: { (): void; (): void }) => void;
-			seek: () => number;
-		};
-	}): void {
-		stream.on("play", () => {
-			// @ts-ignore
-			(progress as HTMLInputElement).max = duration;
-			(playBtn as HTMLImageElement).src = "imgs/pause.png";
-			isPlaying = true;
-			// playBtn.style.display = "none";
-			// pauseBtn.style.display = "inline-block";
-			updateSeekBar();
-		});
-
-		stream.on("pause", () => {
-			isPlaying = false;
-			(playBtn as HTMLImageElement).src = "imgs/pause.png";
-			// playBtn.style.display = "inline-block";
-			// pauseBtn.style.display = "none";
-		});
-	}
-
-	let isPlaying = false;
-	let currentTime = 0;
-	let duration = 0;
-	let pressing = false;
-
-	// setupEventListeners(stream);
-
-	playBtn.addEventListener("click", () => {
-		!isPlaying ? stream.play() : stream.pause();
-	});
-
-	progress.addEventListener("mousedown", (e: any) => {
-		pressing = true;
-	});
-
-	// @ts-ignore
-	progress.addEventListener("mouseup", (e: { target: { value: number } }) => {
-		pressing = false;
-		currentTime = Math.round(e.target.value);
-		console.info(e.target.value);
-		stream.seek(currentTime);
-		stream.seek(currentTime);
-		console.info(stream.seek(), currentTime);
-		updateSeekBar();
-	});
-
-	function updateSeekBar() {
-		if (isPlaying) {
-			requestAnimationFrame(updateSeekBar);
-
-			currentTime = stream.seek();
-
-			if (!pressing) {
-				// @ts-ignore
-				(progress as HTMLInputElement).value = currentTime;
-			}
-			if (currentTime >= duration - 1) {
-				console.info("seekbar: end");
-
-				stream.seek(0);
-
-				stream.play();
-			}
-		}
-	}
 </script>
