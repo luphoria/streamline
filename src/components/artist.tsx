@@ -34,7 +34,6 @@ export const ArtistView: Component<
 		artist: Awaited<ReturnType<MusicBrainz["ArtistInfo"]>>;
 	}
 > = function (cx) {
-	this.mbid = "e0c97a4d-c392-41a9-a374-57af3e3eeab3";
 	this.update = async (mbid: string) => {
 		this.artist = await this.mb.ArtistInfo(mbid);
 		this.artistEl = <Artist artist={use(this.artist)} />;

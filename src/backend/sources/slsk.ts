@@ -2,7 +2,6 @@
 
 import * as fs from "fs";
 import { slskd } from "../../../.env.js";
-import { Readable } from "stream";
 
 // Create a search in slskd
 const CreateSearch = async (query) => {
@@ -27,6 +26,7 @@ const CreateSearch = async (query) => {
 
 // Check that search status
 const AwaitSearchCompletion = async (id) => {
+	let searchStarted = Date.now();
 	while (true) {
 		const response = await fetch(`${slskd.url}/api/v0/searches/${id}`, {
 			method: "GET",
@@ -40,7 +40,21 @@ const AwaitSearchCompletion = async (id) => {
 		console.log(
 			`Awaiting search completion for ${id} (${data.responseCount} responses). . .`
 		);
-		if (data.isComplete) {
+		// TODO: data.responseCount cutoff and timeout/response count before timeout could be configurable?
+		if (
+			data.isComplete ||
+			data.responseCount > 75 ||
+			(data.responseCount > 5 && Date.now() - searchStarted >= 10000)
+		) {
+			// Stop the search prematurely if it's still going
+			await fetch(`${slskd.url}/api/v0/searches/${id}`, {
+				method: "PUT",
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+					"X-API-Key": slskd.apikey,
+				},
+			});
 			break;
 		}
 		// repeat until finished
@@ -112,6 +126,12 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	const data = await response.json();
 
 	// Find the file we want in the list of username's downloads
+	// Find correct directory
+	data.directories = data.directories.filter((dir) => {
+		return filePath.includes(dir.directory);
+	});
+
+	// Find correct file in directory
 	const file = data.directories[0].files.filter((file) => {
 		return file.filename == filePath;
 	});
@@ -166,9 +186,21 @@ export default async function (query) {
 	const query = decodeURIComponent(searchParams.get("query"));
 	const mbid = decodeURIComponent(searchParams.get("mbid"));
 	*/
-	const search = await CreateSearch(query);
-	await AwaitSearchCompletion(search.id);
+	let search;
+	try {
+		search = await CreateSearch(query);
+		await AwaitSearchCompletion(search.id);
+	} catch (err) {
+		throw new Response(`Search error: ${err}`, { status: 500 });
+	}
+	// TODO: find a better way to avoid this race condition.
+	await new Promise((resolve) => setTimeout(resolve, 250));
 	let searchRes = await SearchResponses(search.id);
+
+	if (searchRes.length == 0)
+		throw new Response("No search results :-(", { status: 404 });
+
+	console.log(searchRes);
 
 	// Move this out of the loop to avoid unnecessary computation
 	let cleanQuerySongTitle = query
@@ -217,27 +249,50 @@ export default async function (query) {
 		return response.files.length > 0;
 	});
 
+	if (searchRes.length == 0)
+		throw new Response("No search results after filtered :-(", {
+			status: 404,
+		});
+
 	// Sort by upload speed -- we will want more options later, like preferring flac, etc
 	searchRes.sort((a, b) => b.uploadSpeed - a.uploadSpeed);
+
+	// Sort by queue length -- this doesn't screw up ordering if they're equal, right?
+	searchRes.sort((a, b) => a.queueLength - b.queueLength);
 
 	console.log(searchRes);
 	console.log(`${searchRes.length} responses after filtering :-)`);
 
-	const chosenSearchRes = searchRes[0];
-	console.log(searchRes[0]);
-	// TODO: If the individual user has several file options in the search results, we need to pick the one with the correct title (and select the best option).
-	const chosenFile = chosenSearchRes.files[0];
+	let downloadResult;
+	let chosenRes = null;
+	let chosenFile = null;
+	// Usually, this for loop only runs the first iteration, but
+	for (let result in searchRes) {
+		// Possibly use an array of these options to do multiple downloads in one request ?
+		chosenRes = searchRes[result];
+		chosenFile = searchRes[result].files[0];
 
-	// Possibly use an array of these options to do multiple downloads in one request ?
-	await CreateDownload(
-		chosenSearchRes.username,
-		chosenFile.filename,
-		chosenFile.size
-	);
-	// TODO: If download init fails, then try again with another user in the search results.
+		await CreateDownload(
+			chosenRes.username,
+			chosenFile.filename,
+			chosenFile.size
+		);
 
-	// TODO: we can stream the incomplete file.
-	await AwaitDownloadCompletion(chosenSearchRes.username, chosenFile.filename);
+		downloadResult = await AwaitDownloadCompletion(
+			chosenRes.username,
+			chosenFile.filename
+		);
+
+		if (downloadResult.isComplete) {
+			break;
+		}
+	}
+
+	if (!downloadResult.isComplete) {
+		throw new Response(":-(", { status: 404 }); // is a better status code more descriptive?
+	}
+
+	console.log(chosenRes);
 
 	const filename_arr = chosenFile.filename.split("\\");
 	// slskd will auto-save the file in this directory format. TODO -- check for edge cases?
@@ -249,12 +304,6 @@ export default async function (query) {
 
 	// TODO: Create a cache db associating mbid to filepath
 	const readStream = fs.createReadStream(`${slskd.path}${filePath}`);
-	const webStream = Readable.toWeb(readStream) as ReadableStream<Uint8Array>;
 
-	return new Response(webStream, {
-		status: 200,
-		headers: {
-			"Content-Type": "audio/mpeg",
-		},
-	});
+	return readStream;
 }
