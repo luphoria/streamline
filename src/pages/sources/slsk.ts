@@ -41,9 +41,13 @@ const AwaitSearchCompletion = async (id) => {
 		console.log(
 			`Awaiting search completion for ${id} (${data.responseCount} responses). . .`
 		);
-		// TODO: data.responseCount cutoff and timeout/response count before timeout could be configurable? 
-		if (data.isComplete || data.responseCount > 75 || (data.responseCount > 5 && Date.now() - searchStarted >= 10000)) {
-			// Stop the search prematurely if it's still going 
+		// TODO: data.responseCount cutoff and timeout/response count before timeout could be configurable?
+		if (
+			data.isComplete ||
+			data.responseCount > 75 ||
+			(data.responseCount > 5 && Date.now() - searchStarted >= 10000)
+		) {
+			// Stop the search prematurely if it's still going
 			await fetch(`${slskd.url}/api/v0/searches/${id}`, {
 				method: "PUT",
 				headers: {
@@ -124,7 +128,7 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 
 	// Find the file we want in the list of username's downloads
 	// Find correct directory
-	data.directories = data.directories.filter(dir => {
+	data.directories = data.directories.filter((dir) => {
 		return filePath.includes(dir.directory);
 	});
 
@@ -183,13 +187,21 @@ export default async function (query) {
 	const query = decodeURIComponent(searchParams.get("query"));
 	const mbid = decodeURIComponent(searchParams.get("mbid"));
 	*/
-	const search = await CreateSearch(query);
-	await AwaitSearchCompletion(search.id);
-	// TODO: find a better way to avoid this race condition. 
+	let search;
+	try {
+		search = await CreateSearch(query);
+		await AwaitSearchCompletion(search.id);
+	} catch (err) {
+		return new Response(`Search error: ${err}`, { status: 500 });
+	}
+	// TODO: find a better way to avoid this race condition.
 	await new Promise((resolve) => setTimeout(resolve, 250));
 	let searchRes = await SearchResponses(search.id);
 
-	console.log(searchRes)
+	if (searchRes.length == 0)
+		return new Response("No search results :-(", { status: 404 });
+
+	console.log(searchRes);
 
 	// Move this out of the loop to avoid unnecessary computation
 	let cleanQuerySongTitle = query
@@ -238,45 +250,50 @@ export default async function (query) {
 		return response.files.length > 0;
 	});
 
+	if (searchRes.length == 0)
+		return new Response("No search results after filtered :-(", {
+			status: 404,
+		});
+
 	// Sort by upload speed -- we will want more options later, like preferring flac, etc
 	searchRes.sort((a, b) => b.uploadSpeed - a.uploadSpeed);
 
-	// Sort by queue length -- this doesn't screw up ordering if they're equal, right? 
-	searchRes.sort((a,b) => a.queueLength - b.queueLength)
+	// Sort by queue length -- this doesn't screw up ordering if they're equal, right?
+	searchRes.sort((a, b) => a.queueLength - b.queueLength);
 
 	console.log(searchRes);
 	console.log(`${searchRes.length} responses after filtering :-)`);
 
-	let downloadResult; 
-	// Usually, this for loop only runs the first iteration, but 
+	let downloadResult;
+	let chosenRes = null;
+	let chosenFile = null;
+	// Usually, this for loop only runs the first iteration, but
 	for (let result in searchRes) {
 		// Possibly use an array of these options to do multiple downloads in one request ?
+		chosenRes = searchRes[result];
+		chosenFile = searchRes[result].files[0];
+
 		await CreateDownload(
-			searchRes[result].username,
-			searchRes[result].files[0].filename,
-			searchRes[result].files[0].size
+			chosenRes.username,
+			chosenFile.filename,
+			chosenFile.size
 		);
 
-		downloadResult = await AwaitDownloadCompletion(searchRes[result].username, searchRes[result].files[0].filename);
+		downloadResult = await AwaitDownloadCompletion(
+			chosenRes.username,
+			chosenFile.filename
+		);
+
 		if (downloadResult.isComplete) {
 			break;
 		}
 	}
 
 	if (!downloadResult.isComplete) {
-		return new Response(":-(", {status: 404}) // is a better status code more descriptive? 
+		return new Response(":-(", { status: 404 }); // is a better status code more descriptive?
 	}
 
-	const chosenSearchRes = searchRes[0];
-	console.log(searchRes[0]);
-	// TODO: If the individual user has several file options in the search results, we need to pick the one with the correct title (and select the best option).
-	const chosenFile = chosenSearchRes.files[0];
-
-
-	// TODO: If download init fails, then try again with another user in the search results.
-
-	// TODO: we can stream the incomplete file.
-	await AwaitDownloadCompletion(chosenSearchRes.username, chosenFile.filename);
+	console.log(chosenRes);
 
 	const filename_arr = chosenFile.filename.split("\\");
 	// slskd will auto-save the file in this directory format. TODO -- check for edge cases?
