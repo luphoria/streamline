@@ -27,6 +27,7 @@ const CreateSearch = async (query) => {
 
 // Check that search status
 const AwaitSearchCompletion = async (id) => {
+	let searchStarted = Date.now();
 	while (true) {
 		const response = await fetch(`${slskd.url}/api/v0/searches/${id}`, {
 			method: "GET",
@@ -40,7 +41,17 @@ const AwaitSearchCompletion = async (id) => {
 		console.log(
 			`Awaiting search completion for ${id} (${data.responseCount} responses). . .`
 		);
-		if (data.isComplete) {
+		// TODO: data.responseCount cutoff and timeout/response count before timeout could be configurable? 
+		if (data.isComplete || data.responseCount > 75 || (data.responseCount > 5 && Date.now() - searchStarted >= 10000)) {
+			// Stop the search prematurely if it's still going 
+			await fetch(`${slskd.url}/api/v0/searches/${id}`, {
+				method: "PUT",
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+					"X-API-Key": slskd.apikey,
+				},
+			});
 			break;
 		}
 		// repeat until finished
@@ -112,6 +123,12 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	const data = await response.json();
 
 	// Find the file we want in the list of username's downloads
+	// Find correct directory
+	data.directories = data.directories.filter(dir => {
+		return filePath.includes(dir.directory);
+	});
+
+	// Find correct file in directory
 	const file = data.directories[0].files.filter((file) => {
 		return file.filename == filePath;
 	});
@@ -168,7 +185,11 @@ export default async function (query) {
 	*/
 	const search = await CreateSearch(query);
 	await AwaitSearchCompletion(search.id);
+	// TODO: find a better way to avoid this race condition. 
+	await new Promise((resolve) => setTimeout(resolve, 250));
 	let searchRes = await SearchResponses(search.id);
+
+	console.log(searchRes)
 
 	// Move this out of the loop to avoid unnecessary computation
 	let cleanQuerySongTitle = query
@@ -220,20 +241,38 @@ export default async function (query) {
 	// Sort by upload speed -- we will want more options later, like preferring flac, etc
 	searchRes.sort((a, b) => b.uploadSpeed - a.uploadSpeed);
 
+	// Sort by queue length -- this doesn't screw up ordering if they're equal, right? 
+	searchRes.sort((a,b) => a.queueLength - b.queueLength)
+
 	console.log(searchRes);
 	console.log(`${searchRes.length} responses after filtering :-)`);
+
+	let downloadResult; 
+	// Usually, this for loop only runs the first iteration, but 
+	for (let result in searchRes) {
+		// Possibly use an array of these options to do multiple downloads in one request ?
+		await CreateDownload(
+			searchRes[result].username,
+			searchRes[result].files[0].filename,
+			searchRes[result].files[0].size
+		);
+
+		downloadResult = await AwaitDownloadCompletion(searchRes[result].username, searchRes[result].files[0].filename);
+		if (downloadResult.isComplete) {
+			break;
+		}
+	}
+
+	if (!downloadResult.isComplete) {
+		return new Response(":-(", {status: 404}) // is a better status code more descriptive? 
+	}
 
 	const chosenSearchRes = searchRes[0];
 	console.log(searchRes[0]);
 	// TODO: If the individual user has several file options in the search results, we need to pick the one with the correct title (and select the best option).
 	const chosenFile = chosenSearchRes.files[0];
 
-	// Possibly use an array of these options to do multiple downloads in one request ?
-	await CreateDownload(
-		chosenSearchRes.username,
-		chosenFile.filename,
-		chosenFile.size
-	);
+
 	// TODO: If download init fails, then try again with another user in the search results.
 
 	// TODO: we can stream the incomplete file.
