@@ -3,38 +3,16 @@
 	"type": "module",
 	"version": "0.0.1",
 	"scripts": {
-		"build": "astro build",
-		"preview": "astro preview",
-		"dev": "astro dev",
+		"build": "tsc && vite build",
+		"preview": "vite preview",
+		"dev": "vite --host",
 		"format": "prettier --config .prettierrc.js --write .",
 		"lint": "eslint ./src/",
-		"lint:fix": "eslint ./src/ --fix",
-		"astro": "astro"
+		"lint:fix": "eslint ./src/ --fix"
 	},
 	"dependencies": {
-		"@astrojs/node": "^9.2.1",
-		"@wasm-audio-decoders/flac": "^0.2.4",
-		"astro": "^5.7.13",
-		"audio-buffer-from": "^1.1.1",
-		"audio-decode": "^2.2.0",
-		"buffer": "^6.0.3",
-		"codec-parser": "^2.4.3",
-		"dompurify": "^3.2.5",
-		"express": "^4.19.2",
-		"express-ws": "^5.0.2",
-		"fluent-ffmpeg": "^2.1.3",
-		"howler": "^2.2.4",
-		"http-proxy": "^1.18.1",
-		"http-proxy-middleware": "^3.0.0",
-		"json5": "^2.2.3",
-		"lucida": "2.0.0-22",
-		"msgpack-lite": "^0.1.26",
-		"nanostores": "^0.10.3",
-		"opus-stream-decoder": "^1.2.7",
-		"prettier": "^3.5.3",
-		"prettier-plugin-astro": "^0.14.1",
-		"prompt-sync": "^4.2.0",
-		"ws": "^8.18.2"
+		"dompurify": "^3.2.3",
+		"dreamland": "link:../dreamlandjs"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.3.1",
@@ -51,6 +29,7 @@
 		"prettier": "^3.5.3",
 		"prettier-plugin-astro": "^0.14.1",
 		"tslib": "^2.8.1",
-		"typescript": "^5.8.3"
+		"typescript": "^5.8.3",
+		"vite": "^6.0.11"
 	}
 }

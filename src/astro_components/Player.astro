@@ -30,7 +30,6 @@
  -->
 
 <script>
-
 	(document.getElementById("recordingId") as HTMLInputElement).value =
 		"AJR - Thirsty";
 
@@ -39,15 +38,15 @@
 		// TODO: We need to fetch the metadata from MusicBrainz
 
 		try {
-			fetch(
-				`/api/source?query=${encodeURIComponent(input)}`
-			).then((res) => res.blob()).then(blob => {
-				const url = URL.createObjectURL(blob);
-				const player = new Audio(url);
-				player.controls = true;
-				player.play();
-				document.getElementById("set").after(player)
-			})
+			fetch(`/api/source?query=${encodeURIComponent(input)}`)
+				.then((res) => res.blob())
+				.then((blob) => {
+					const url = URL.createObjectURL(blob);
+					const player = new Audio(url);
+					player.controls = true;
+					player.play();
+					document.getElementById("set").after(player);
+				});
 		} catch (err) {
 			console.error(err);
 			return err;
