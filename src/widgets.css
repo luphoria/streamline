@@ -5,6 +5,7 @@ h1 {
     font-size: 5rem;
     font-weight: 600;
     letter-spacing: -0.3rem;
+    margin-bottom: 0;
 }
 
 input[type="text"] {
@@ -19,6 +20,8 @@ input[type="text"] {
 }
 
 input[type="submit"], button {
+    cursor: pointer;
+
     background-color: var(--secondary);
     color: var(--text);
 

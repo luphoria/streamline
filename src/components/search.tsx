@@ -3,7 +3,7 @@ import { scope, Component, ComponentInstance } from "dreamland/core";
 export const SearchResults = function (cx) {
 	const firstResult = this.results[0];
 	return (
-		<div>
+		<div id="searchresults">
 			{use(this.results).mapEach((song) => {
 				const firstResult = song.versions[0];
 				return (
@@ -36,35 +36,32 @@ export const Search: Component<
 > = function (cx) {
 	this.updateSongs = async (query: string) => {
 		const songs = await this.mb.SearchSongs(query);
-		this.resultsEl = <SearchResults results={songs} />;
+		this.sr( songs );
 	};
 	return (
-		<div class="input-row">
-			<input type="text" id="musicBrainzApiUrl" />
-			<button id="apiUrlSetBtn">Set MusicBrainz API URL</button>
-			<br />
-			<br />
-			<input
-				type="text"
-				id="songSearchValue"
-				placeholder="ARTIST - SONG or search..."
-				value={use(this.songQuery).bind()}
-			/>
-			<button
-				id="songSearchBtn"
-				on:click={() => this.updateSongs(this.songQuery)}
-			>
-				Search song
-			</button>
-			<input
-				type="text"
-				id="artistSearchValue"
-				placeholder="ARTIST or search..."
-			/>
-			<button id="artistSearchBtn">Search artist</button>
-			<br />
-			<br />
-			{use(this.resultsEl)}
+		<div id="searchbar">
+			<span>
+				<input
+					type="text"
+					id="songSearchValue"
+					placeholder="ARTIST - SONG or search..."
+					value={use(this.songQuery).bind()}
+				/>
+				<button
+					id="songSearchBtn"
+					on:click={() => this.updateSongs(this.songQuery)}
+				>
+					Search song
+				</button>
+			</span>
+			<span>
+				<input
+					type="text"
+					id="artistSearchValue"
+					placeholder="ARTIST or search..."
+				/>
+				<button id="artistSearchBtn">Search artist</button>
+			</span>
 		</div>
 	);
 };
