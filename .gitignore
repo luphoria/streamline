@@ -30,3 +30,4 @@ cache/
 # song cache default directory
 music/
 tests/slsk-downloads/*
+tests/yt-dlp/*
