@@ -1,89 +1,8 @@
-// Search soulseek with ARTIST - TITLE to download the file and then send it to the client.
+// Download a file from soulseek and then send it to the client.
 
 import * as fs from "fs";
 import { slskd } from "../../.env.js";
-
-// Create a search in slskd
-const CreateSearch = async (query) => {
-	const response = await fetch(`${slskd.url}/api/v0/searches`, {
-		method: "POST",
-		body: JSON.stringify({
-			searchText: query,
-		}),
-		headers: {
-			Accept: "application/json",
-			"Content-Type": "application/json",
-			"X-API-Key": slskd.apikey,
-		},
-	});
-	const data = await response.json();
-
-	return {
-		query: data.searchText,
-		id: data.id,
-	};
-};
-
-// Check that search status
-const AwaitSearchCompletion = async (id) => {
-	const searchStarted = Date.now();
-	while (true) {
-		const response = await fetch(`${slskd.url}/api/v0/searches/${id}`, {
-			method: "GET",
-			headers: {
-				Accept: "application/json",
-				"Content-Type": "application/json",
-				"X-API-Key": slskd.apikey,
-			},
-		});
-		const data = await response.json();
-		console.log(
-			`Awaiting search completion for ${id} (${data.responseCount} responses). . .`
-		);
-		// TODO: data.responseCount cutoff and timeout/response count before timeout could be configurable?
-		if (
-			data.isComplete ||
-			data.responseCount > 75 ||
-			(data.responseCount > 5 && Date.now() - searchStarted >= 10000)
-		) {
-			// Stop the search prematurely if it's still going
-			await fetch(`${slskd.url}/api/v0/searches/${id}`, {
-				method: "PUT",
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json",
-					"X-API-Key": slskd.apikey,
-				},
-			});
-			break;
-		}
-		// repeat until finished
-		await new Promise((resolve) => setTimeout(resolve, 2000));
-	}
-	console.log("== Search Completed ==");
-
-	// TODO: If there are 0 responses, return & quit
-	return {
-		id: id,
-		isComplete: true,
-	};
-};
-
-// Retrieve search responses
-const SearchResponses = async (id) => {
-	const response = await fetch(`${slskd.url}/api/v0/searches/${id}/responses`, {
-		method: "GET",
-		headers: {
-			Accept: "application/json",
-			"Content-Type": "application/json",
-			"X-API-Key": slskd.apikey,
-		},
-	});
-	const data = await response.json();
-	// console.log(data);
-
-	return data;
-};
+import search from "./slsk_search";
 
 const CreateDownload = async (username, filePath, size) => {
 	const response = await fetch(
@@ -176,119 +95,19 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 };
 
 export default async function (query) {
-	/*
-	const url = new URL(request.url);
-
-	const searchParams = new URLSearchParams(url.search);
-
-	// TODO (longterm): We should not trust the client with this information.
-	// Maybe only take MBID and then query it server-side to get the %ARTIST - %TITLE plus validate the mbid?
-	const query = decodeURIComponent(searchParams.get("query"));
-	const mbid = decodeURIComponent(searchParams.get("mbid"));
-	*/
-	let search;
-	try {
-		search = await CreateSearch(query);
-		await AwaitSearchCompletion(search.id);
-	} catch (err) {
-		return new Response(`Search error: ${err}`, { status: 500 });
-	}
-	// TODO: find a better way to avoid this race condition.
-	await new Promise((resolve) => setTimeout(resolve, 250));
-	let searchRes = await SearchResponses(search.id);
-
-	if (searchRes.length == 0)
-		return new Response("No search results :-(", { status: 404 });
-
-	// console.log(searchRes);
-
-	// Move this out of the loop to avoid unnecessary computation
-	const cleanQuerySongTitle = query
-		.split(" - ")[1]
-		.toLowerCase()
-		.replace(/[^0-9a-z]/gi, ""); // todo: edge cases?
-
-	// We should probably move this search logic to another file since we will probably make out own ranking algorith at some point
-	// Filter files per result
-	for (const response in searchRes) {
-		// A lot of bootleg/remixes are on soulseek, this will remove them from the results unless the user requested a remix
-		if (!query.toLowerCase().includes("remix"))
-			searchRes[response].files = searchRes[response].files.filter((file) => {
-				return !file.filename.toLowerCase().includes("remix");
-			});
-		if (!query.toLowerCase().includes("edit"))
-			searchRes[response].files = searchRes[response].files.filter((file) => {
-				return !file.filename.toLowerCase().includes("edit");
-			});
-		// TODO / EXPERIMENTAL: Filter out live-tagged titles if the song title does not have "live" in the name. Could cause issues/false filters.
-		if (!query.toLowerCase().includes("live"))
-			searchRes[response].files = searchRes[response].files.filter((file) => {
-				// We are explicitly returning the filename rather than the path -- many live albums do not have "live" in the name, but the user may have sorted them as such.
-				return !file.filename
-					.split("\\")
-					[file.filename.split("\\").length - 1].toLowerCase()
-					.includes("live");
-			});
-		// If the filename itself (not including the path) doesn't include the song title, we don't want it.
-		searchRes[response].files = searchRes[response].files.filter((file) => {
-			return file.filename
-				.split("\\")
-				[file.filename.split("\\").length - 1].toLowerCase()
-				.replace(/[^0-9a-z]/gi, "") // TODO: This works for them, but we need some way to differentiate non-alphanumeric titles.
-				.includes(cleanQuerySongTitle);
-		});
-		// Filter by allowed filetypes
-		searchRes[response].files = searchRes[response].files.filter((file) => {
-			return slskd.allowFiletypes.some((filetype) => {
-				return file.filename.endsWith(filetype);
-			});
-		});
-	}
-
-	// Filter empty responses again (TODO: maybe sometimes we can access locked files?)
-	searchRes = searchRes.filter((response) => {
-		return response.files.length > 0;
-	});
-
-	if (searchRes.length == 0)
-		return new Response("No search results after filtered :-(", {
-			status: 404,
-		});
-
-	// Sort by upload speed -- we will want more options later, like preferring flac, etc
-	searchRes.sort((a, b) => b.uploadSpeed - a.uploadSpeed);
-
-	// Sort by queue length -- this doesn't screw up ordering if they're equal, right?
-	searchRes.sort((a, b) => a.queueLength - b.queueLength);
-
-	// console.log(searchRes);
-	console.log(`${searchRes.length} responses after filtering :-)`);
-
 	// Downloader
 	let downloadResult;
-	let chosenRes: { username: string };
-	let chosenFile: { filename: string; size: number };
-	let filename_arr;
+	let chosenRes: { username: string; files: any[] } = await search(query);
+	let chosenFile: { filename: string; size: number } = chosenRes.files[0];
 
 	// slskd will auto-save the file in this directory format. TODO -- check for edge cases?
-	let filePath;
-	// Usually, this for loop only runs the first iteration, but
-	for (const result in searchRes) {
-		// Possibly use an array of these options to do multiple downloads in one request ?
-		chosenRes = searchRes[result];
-		chosenFile = searchRes[result].files[0];
+	let filename_arr = chosenFile.filename.split("\\");
+	let filePath = filename_arr
+		.slice(Math.max(filename_arr.length - 2, 0))
+		.join("/");
 
-		filename_arr = chosenFile.filename.split("\\");
-		filePath = filename_arr
-			.slice(Math.max(filename_arr.length - 2, 0))
-			.join("/");
-		// Don't dowload if we already have it
-		if (fs.existsSync(`${slskd.path}${filePath}`)) {
-			console.log("file already downloaded");
-			downloadResult = { isComplete: true };
-			break;
-		}
-
+	// Don't dowload if we already have it
+	if (!fs.existsSync(`${slskd.path}${filePath}`)) {
 		await CreateDownload(
 			chosenRes.username,
 			chosenFile.filename,
@@ -300,18 +119,10 @@ export default async function (query) {
 			chosenFile.filename
 		);
 
-		if (downloadResult.isComplete) {
-			break;
+		if (!downloadResult.isComplete) {
+			throw new Response("Could not download", { status: 404 });
 		}
 	}
-
-	if (!downloadResult.isComplete) {
-		throw new Response(":-(", { status: 404 }); // is a better status code more descriptive?
-	}
-
-	// console.log(chosenRes);
-
-	console.log(filePath);
 
 	// TODO: Create a cache db associating mbid to filepath
 	const readStream = fs.createReadStream(`${slskd.path}${filePath}`);
