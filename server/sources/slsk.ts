@@ -80,7 +80,7 @@ const SearchResponses = async (id) => {
 		},
 	});
 	const data = await response.json();
-	console.log(data);
+	// console.log(data);
 
 	return data;
 };
@@ -200,7 +200,7 @@ export default async function (query) {
 	if (searchRes.length == 0)
 		throw new Response("No search results :-(", { status: 404 });
 
-	console.log(searchRes);
+	// console.log(searchRes);
 
 	// Move this out of the loop to avoid unnecessary computation
 	const cleanQuerySongTitle = query
@@ -208,6 +208,7 @@ export default async function (query) {
 		.toLowerCase()
 		.replace(/[^0-9a-z]/gi, ""); // todo: edge cases?
 
+	// We should probably move this search logic to another file since we will probably make out own ranking algorith at some point
 	// Filter files per result
 	for (const response in searchRes) {
 		// A lot of bootleg/remixes are on soulseek, this will remove them from the results unless the user requested a remix
@@ -260,17 +261,32 @@ export default async function (query) {
 	// Sort by queue length -- this doesn't screw up ordering if they're equal, right?
 	searchRes.sort((a, b) => a.queueLength - b.queueLength);
 
-	console.log(searchRes);
+	// console.log(searchRes);
 	console.log(`${searchRes.length} responses after filtering :-)`);
 
+	// Downloader
 	let downloadResult;
-	let chosenRes = null;
-	let chosenFile = null;
+	let chosenRes: { username: string };
+	let chosenFile: { filename: string; size: number };
+	let filename_arr;
+	// slskd will auto-save the file in this directory format. TODO -- check for edge cases?
+	let filePath;
 	// Usually, this for loop only runs the first iteration, but
 	for (const result in searchRes) {
 		// Possibly use an array of these options to do multiple downloads in one request ?
 		chosenRes = searchRes[result];
 		chosenFile = searchRes[result].files[0];
+
+		filename_arr = chosenFile.filename.split("\\");
+		filePath = filename_arr
+			.slice(Math.max(filename_arr.length - 2, 0))
+			.join("/");
+		// Don't dowload if we already have it
+		if (fs.existsSync(`${slskd.path}${filePath}`)) {
+			console.log("file already downloaded");
+			downloadResult = { isComplete: true };
+			break;
+		}
 
 		await CreateDownload(
 			chosenRes.username,
@@ -292,13 +308,7 @@ export default async function (query) {
 		throw new Response(":-(", { status: 404 }); // is a better status code more descriptive?
 	}
 
-	console.log(chosenRes);
-
-	const filename_arr = chosenFile.filename.split("\\");
-	// slskd will auto-save the file in this directory format. TODO -- check for edge cases?
-	const filePath = filename_arr
-		.slice(Math.max(filename_arr.length - 2, 0))
-		.join("/");
+	// console.log(chosenRes);
 
 	console.log(filePath);
 
