@@ -31,3 +31,6 @@ cache/
 music/
 tests/slsk-downloads/*
 tests/yt-dlp/*
+
+# slskd app directory
+slskd/
