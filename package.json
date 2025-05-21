@@ -6,7 +6,7 @@
 		"build": "tsc && vite build",
 		"preview": "vite preview",
 		"dev": "concurrently -n vite,api \"vite --host\" \"npm run api\"",
-		"api": "nodemon ./src/backend/index.ts",
+		"api": "nodemon ./server/index.ts",
 		"format": "prettier --config .prettierrc.js --write .",
 		"lint": "eslint ./src/",
 		"lint:fix": "eslint ./src/ --fix"

@@ -1,7 +1,7 @@
 // Search soulseek with ARTIST - TITLE to download the file and then send it to the client.
 
 import * as fs from "fs";
-import { slskd } from "../../../.env.js";
+import { slskd } from "../../.env.js";
 
 // Create a search in slskd
 const CreateSearch = async (query) => {

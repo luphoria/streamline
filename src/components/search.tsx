@@ -18,7 +18,8 @@ export const SearchResults = function (cx) {
 										{version.releaseTitle} ({version.releaseDate})
 									</option>
 								);
-							})};
+							})}
+							;
 						</select>
 					</div>
 				);
