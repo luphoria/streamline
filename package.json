@@ -34,16 +34,17 @@
 		"prettier": "^3.5.3",
 		"prettier-plugin-astro": "^0.14.1",
 		"prompt-sync": "^4.2.0",
-		"ws": "^8.18.2"
+		"ws": "^8.18.2",
+		"yt-dlp-wrap": "^2.3.12"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.3.1",
 		"@eslint/js": "^9.26.0",
-		"@types/ws": "^8.18.1",
-		"@types/howler": "^2.2.11",
-		"@types/msgpack-lite": "^0.1.11",
 		"@types/eslint": "^9.6.1",
 		"@types/estree": "^1.0.7",
+		"@types/howler": "^2.2.11",
+		"@types/msgpack-lite": "^0.1.11",
+		"@types/ws": "^8.18.1",
 		"@typescript-eslint/eslint-plugin": "^8.32.1",
 		"@typescript-eslint/parser": "^8.32.1",
 		"dotenv": "^16.5.0",
