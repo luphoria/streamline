@@ -26,7 +26,7 @@ const CreateSearch = async (query) => {
 
 // Check that search status
 const AwaitSearchCompletion = async (id) => {
-	let searchStarted = Date.now();
+	const searchStarted = Date.now();
 	while (true) {
 		const response = await fetch(`${slskd.url}/api/v0/searches/${id}`, {
 			method: "GET",
@@ -203,13 +203,13 @@ export default async function (query) {
 	console.log(searchRes);
 
 	// Move this out of the loop to avoid unnecessary computation
-	let cleanQuerySongTitle = query
+	const cleanQuerySongTitle = query
 		.split(" - ")[1]
 		.toLowerCase()
 		.replace(/[^0-9a-z]/gi, ""); // todo: edge cases?
 
 	// Filter files per result
-	for (let response in searchRes) {
+	for (const response in searchRes) {
 		// A lot of bootleg/remixes are on soulseek, this will remove them from the results unless the user requested a remix
 		if (!query.toLowerCase().includes("remix"))
 			searchRes[response].files = searchRes[response].files.filter((file) => {
@@ -267,7 +267,7 @@ export default async function (query) {
 	let chosenRes = null;
 	let chosenFile = null;
 	// Usually, this for loop only runs the first iteration, but
-	for (let result in searchRes) {
+	for (const result in searchRes) {
 		// Possibly use an array of these options to do multiple downloads in one request ?
 		chosenRes = searchRes[result];
 		chosenFile = searchRes[result].files[0];

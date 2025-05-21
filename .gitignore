@@ -30,3 +30,6 @@ cache/
 # song cache default directory
 music/
 tests/slsk-downloads/*
+
+# slskd app directory
+slskd/
