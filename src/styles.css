@@ -1,3 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+	--background: #141418;
+	--text: #FFFFFF;
+	--secondary-text: #9F9F9F;
+
+	--primary: #6F07E6;
+	--secondary: #282828;
+
+	--dividor: #646464;
+}
+
 body,
 html,
 #app {
@@ -5,6 +18,11 @@ html,
 	height: 100vh;
 	margin: 0;
 	padding: 0;
+
+	background-color: var(--background);
+	color: var(--text);
+
+	font-family: 'Inter', sans-serif;
 }
 
 #app {
@@ -13,4 +31,6 @@ html,
 
 * {
 	box-sizing: border-box;
+
+	font: inherit;
 }

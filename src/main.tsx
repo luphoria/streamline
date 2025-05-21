@@ -4,7 +4,7 @@ import { Player } from "./components/player";
 import { ReleaseView } from "./components/release";
 
 import { MusicBrainz } from "./utils/MusicBrainz";
-import "./styles.css";
+import "./main.css";
 import { Search } from "./components/search";
 
 const Main: Component<
@@ -24,6 +24,7 @@ const Main: Component<
 
 	return (
 		<div id="app">
+			<h1>Streamline</h1>
 			{use(this.player)}
 			{use(this.releaseView)}
 			{use(this.artistView)}

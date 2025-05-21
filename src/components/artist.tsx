@@ -39,11 +39,12 @@ export const ArtistView: Component<
 		this.artistEl = <Artist artist={use(this.artist)} />;
 	};
 	return (
-		<div>
+		<div class="input-row">
 			<input
 				value={use(this.mbid).bind()}
 				id="artistMbid"
 				placeholder="e0c97a4d-c392-41a9-a374-57af3e3eeab3"
+				type="text"
 			/>
 			<button id="artistButton" on:click={() => this.update(this.mbid)}>
 				view artist

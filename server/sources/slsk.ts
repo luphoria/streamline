@@ -74,8 +74,8 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 
 		// TODO: If the ETA is extremely long (i.e. queue, or just download speed), maybe we can concurrently try another download
 		// based on configs.
-		console.log(
-			`Downloading ${username}/${filePath} (${Math.round(data.percentComplete * 100) / 100}%) . . .`
+		process.stdout.write(
+			`\rDownloading ${username}/${filePath} (${Math.round(data.percentComplete * 100) / 100}%) . . .`
 		);
 		// TODO: Progress report on client side? Maybe/maybe not.
 		if (data.percentComplete >= 100) {
@@ -84,7 +84,7 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 		// repeat until finished
 		await new Promise((resolve) => setTimeout(resolve, 2000));
 	}
-	console.log("== Download Completed ==");
+	console.log("\n== Download Completed ==");
 
 	return {
 		username: username,

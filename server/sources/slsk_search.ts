@@ -36,8 +36,8 @@ const AwaitSearchCompletion = async (id) => {
 			},
 		});
 		const data = await response.json();
-		console.log(
-			`Awaiting search completion for ${id} (${data.responseCount} responses). . .`
+		process.stdout.write(
+			`\rAwaiting search completion for ${id} (${data.responseCount} responses). . .`, 
 		);
 		// TODO: data.responseCount cutoff and timeout/response count before timeout could be configurable?
 		if (
@@ -59,7 +59,7 @@ const AwaitSearchCompletion = async (id) => {
 		// repeat until finished
 		await new Promise((resolve) => setTimeout(resolve, 2000));
 	}
-	console.log("== Search Completed ==");
+	console.log("\n== Search Completed ==");
 
 	// TODO: If there are 0 responses, return & quit
 	return {

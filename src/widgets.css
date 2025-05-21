@@ -1,0 +1,38 @@
+/* Default widget styles */
+@import './styles.css';
+
+h1 {
+    font-size: 5rem;
+    font-weight: 600;
+    letter-spacing: -0.3rem;
+}
+
+input[type="text"] {
+    background-color: var(--secondary);
+    color: var(--text);
+
+    border: 1px solid var(--dividor);
+    outline-color: var(--text);
+
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+input[type="submit"], button {
+    background-color: var(--secondary);
+    color: var(--text);
+
+    border: 1px solid var(--dividor);
+    outline-color: var(--text);
+
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.input-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}

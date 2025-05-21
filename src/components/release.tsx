@@ -60,8 +60,8 @@ export const ReleaseView: Component<
 		);
 	};
 	return (
-		<div class="musicbrainz-search">
-			<input id="releaseMbid" value={use(this.mbid).bind()} />
+		<div class="musicbrainz-search" class="input-row">
+			<input id="releaseMbid" value={use(this.mbid).bind()} type="text" />
 			<button id="releaseButton" on:click={() => this.update(this.mbid)}>
 				view release
 			</button>

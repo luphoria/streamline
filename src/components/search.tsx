@@ -39,7 +39,7 @@ export const Search: Component<
 		this.resultsEl = <SearchResults results={songs} />;
 	};
 	return (
-		<div>
+		<div class="input-row">
 			<input type="text" id="musicBrainzApiUrl" />
 			<button id="apiUrlSetBtn">Set MusicBrainz API URL</button>
 			<br />
