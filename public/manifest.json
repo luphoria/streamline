@@ -1,5 +1,5 @@
 {
-    "short_name": "Streamline",
+	"short_name": "Streamline",
 	"name": "Streamline",
 	"description": "A webOS and development environment powered by v86",
 	"icons": [
@@ -16,8 +16,8 @@
 		"minimal-ui",
 		"browser"
 	],
-    "id": ".",
-    "start_url": ".",
-    "display": "standalone",
+	"id": ".",
+	"start_url": ".",
+	"display": "standalone",
 	"background_color": "#000"
 }

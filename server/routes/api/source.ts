@@ -14,7 +14,9 @@ export const get: Handler = async (req, res, next) => {
 	if (!stream.ok) {
 		console.log(stream.error);
 
-		return res.status((stream.error as Response).status).send(await (stream.error as Response).text());
+		return res
+			.status((stream.error as Response).status)
+			.send(await (stream.error as Response).text());
 	}
 
 	return stream.value.pipe(res);

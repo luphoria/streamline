@@ -5,7 +5,7 @@ import { ReleaseView } from "./components/release";
 import { Config } from "./components/config";
 
 import { MusicBrainz } from "./utils/MusicBrainz";
-import "./main.css";
+import "./styles/main.css";
 import { Search, SearchResults } from "./components/search";
 
 const Main: Component<
@@ -34,7 +34,11 @@ const Main: Component<
 			mb={use(this.mb)}
 			sr={(r) =>
 				(this.searchResults = (
-					<SearchResults results={r} playSong={this.player.$.state.update} openRelease={this.releaseView.$.state.update} />
+					<SearchResults
+						results={r}
+						playSong={this.player.$.state.update}
+						openRelease={this.releaseView.$.state.update}
+					/>
 				))
 			}
 		/>
@@ -42,14 +46,15 @@ const Main: Component<
 	this.config = <Config mb={use(this.mb)} />;
 	return (
 		<div id="app">
+			{use(this.search)}
+			<br />
+			<h1>Streamline</h1>
 			<div id="fetchers">
-				<h1>Streamline</h1>
 				{use(this.player)}
 				{use(this.releaseView)}
 				{use(this.artistView)}
 				{use(this.config)}
 			</div>
-			{use(this.search)}
 			{use(this.searchResults)}
 		</div>
 	);

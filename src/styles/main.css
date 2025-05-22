@@ -7,20 +7,27 @@
 	gap: 1rem;
 
 	justify-content: flex-start;
-	align-items: flex-start;
+	align-items: center;
 }
 
 #fetchers {
 	display: flex;
 	flex-direction: row;
-	gap: 4rem;
+	gap: 1rem;
+	padding: 0 1rem;
 
 	justify-content: space-evenly;
 	align-items: center;
 	flex-wrap: wrap;
 
 	width: 100%;
-	padding-top: 5rem;
+}
+
+.input-row {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+	justify-content: center;
 }
 
 /* Searchbar */

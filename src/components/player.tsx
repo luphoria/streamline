@@ -18,8 +18,8 @@ export const Player: Component<
 			fetch(`/api/source?query=${encodeURIComponent(input)}`)
 		);
 		if (!response.ok) {
-			this.player = <div>an error occured: {response.error}</div>
-			console.error(response.error)
+			this.player = <div>an error occured: {response.error}</div>;
+			console.error(response.error);
 			return;
 		}
 		const blob = await response.value.blob();

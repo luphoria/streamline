@@ -1,13 +1,17 @@
 import { scope, Component, ComponentInstance } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
 
-const Release: Component<{
-	updateArtist: any;
-	release: Awaited<ReturnType<MusicBrainz["ReleaseInfo"]>>;
-	coverArt?: string;
-}, {}, {
-	trackCount: number;
-}> = function (cx) {
+const Release: Component<
+	{
+		updateArtist: any;
+		release: Awaited<ReturnType<MusicBrainz["ReleaseInfo"]>>;
+		coverArt?: string;
+	},
+	{},
+	{
+		trackCount: number;
+	}
+> = function (cx) {
 	this.trackCount = 0;
 	return (
 		<div>
@@ -27,7 +31,7 @@ const Release: Component<{
 			</h4>
 			<p id="release-tracklist">
 				{use(this.release.trackList).mapEach((track) => {
-					this.trackCount++
+					this.trackCount++;
 					return (
 						<span>
 							{this.trackCount} <b>{track.title}</b>
