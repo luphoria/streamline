@@ -13,7 +13,7 @@
 	},
 	"dependencies": {
 		"dompurify": "^3.2.3",
-		"dreamland": "link:../dreamlandjs",
+		"dreamland": "github:MercuryWorkshop/dreamlandjs#vdom",
 		"express": "^5.1.0",
 		"express-file-routing": "^3.1.0",
 		"try": "1.0.0-beta.7"
