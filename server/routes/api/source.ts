@@ -1,5 +1,6 @@
 import type { Handler } from "express";
 import slskSearch from "../../sources/slsk";
+import { YTDLPSearchAndDownload } from "../../sources/yt-dlp";
 import { t } from "try";
 export const get: Handler = async (req, res, next) => {
 	console.log(req.originalUrl);
@@ -9,8 +10,8 @@ export const get: Handler = async (req, res, next) => {
 
 	const query = decodeURIComponent(searchParams.get("query"));
 	//TODO: make this actually do something (when we have multiple sources ofc)
-	const source = decodeURIComponent(searchParams.get("source")) || "slsk";
-	const stream = await t(slskSearch(query));
+	const source = decodeURIComponent(searchParams.get("source")) || "yt-dlp";
+	const stream = await t(YTDLPSearchAndDownload(query));
 	if (!stream.ok) {
 		console.log(stream.error);
 
