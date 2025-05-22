@@ -19,19 +19,69 @@ const execPromise = (input) => {
 };
 
 const SearchAndDownload = async (query) => {
+	// Search
+	let results = [];
 	try {
-		const results = JSON.parse(
+		let resultsRaw = JSON.parse(
 			await execPromise(
 				`yt-dlp --default-search ytsearch ytsearch10:"${query} song" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
 			)
 		).entries;
-		for (let result in results) {
+		for (let result in resultsRaw) {
 			console.log(
-				`${results[result].channel} - ${results[result].title} (${results[result].id})`
+				`${resultsRaw[result].channel} - ${resultsRaw[result].title} (${resultsRaw[result].id})`
 			);
+			results.push({
+				channel: resultsRaw[result].channel,
+				title: resultsRaw[result].title,
+				id: resultsRaw[result].id,
+			});
 		}
 	} catch (err) {
 		console.error(err);
 	}
+	console.log(results);
+	console.log(`${results.length} results before filtering`);
+	// Filter results
+	query = query.toLowerCase();
+	for (let res in results)
+		results[res].title = results[res].title.toLowerCase();
+
+	if (!query.includes("remix"))
+		results = results.filter((res) => {
+			return !res.title.includes("remix");
+		});
+	if (!query.includes("edit"))
+		results = results.filter((res) => {
+			return !res.title.includes("edit");
+		});
+	if (!query.includes("live"))
+		results = results.filter((res) => {
+			return !res.title.includes("live");
+		});
+	if (!query.includes("video"))
+		results = results.filter((res) => {
+			return !res.title.includes("video");
+		});
+	if (!query.includes("full album"))
+		// probably doesn't need to be in this if, but just in case
+		results = results.filter((res) => {
+			return !res.title.includes("full album");
+		});
+
+	if (results.length == 0) return { status: 404, msg: "sorry bro" };
+
+	console.log(`${results.length} results after filtering`);
+
+	// TODO: Sort results by things like if channel author is artist
+
+	console.log(results[0]);
+
+	await execPromise(
+		// We don't use -x because the file path doesn't properly print the new extension. Instead, let's just make sure it's the smallest/worst video file. 
+		`yt-dlp ${results[0].id} --print "after_move:filename" -f wv+ba -P ./tests/yt-dlp`
+	).then(res => console.log(res));
+
+	return results[0];
 };
 SearchAndDownload(prompt("Search: "));
