@@ -16,6 +16,7 @@
 		"dreamland": "github:MercuryWorkshop/dreamlandjs#vdom",
 		"express": "^5.1.0",
 		"express-file-routing": "^3.1.0",
+		"prompt-sync": "^4.2.0",
 		"try": "1.0.0-beta.7"
 	},
 	"devDependencies": {
@@ -32,13 +33,13 @@
 		"concurrently": "^9.1.2",
 		"dotenv": "^16.5.0",
 		"eslint": "^9.26.0",
+		"nodemon": "^3.1.10",
 		"prettier": "^3.5.3",
 		"prettier-plugin-astro": "^0.14.1",
 		"tslib": "^2.8.1",
 		"tsx": "4.19.4",
 		"typescript": "^5.8.3",
-		"vite": "^6.0.11",
-		"nodemon": "^3.1.10"
+		"vite": "^6.0.11"
 	},
 	"nodemonConfig": {
 		"execMap": {
