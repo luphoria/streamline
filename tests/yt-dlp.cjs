@@ -25,7 +25,6 @@ const SearchAndDownload = async (query) => {
 	try {
 		let resultsRaw = JSON.parse(
 			await execPromise(
-				// TODO: sanitize
 				`yt-dlp --default-search ytsearch ytsearch10:"${quote([query])} song" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
 			)
 		).entries;
@@ -86,7 +85,6 @@ const SearchAndDownload = async (query) => {
 	let filePath = (
 		await execPromise(
 			// We don't use -x because the file path doesn't properly print the new extension. Instead, let's just make sure it's the smallest/worst video file.
-			// TODO: sanitize
 			`yt-dlp "${quote([results[0].id])}" -f wv+ba -P ./tests/yt-dlp --print "after_move:filename"`
 		)
 	).split("\n")[0];
