@@ -48,7 +48,7 @@ const Main: Component<
 		<div id="app">
 			{use(this.search)}
 			<br />
-			<h1>Streamline</h1>
+			<h1>streamline</h1>
 			<div id="fetchers">
 				{use(this.player)}
 				{use(this.releaseView)}
