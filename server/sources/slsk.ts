@@ -97,13 +97,13 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 export default async function (query) {
 	// Downloader
 	let downloadResult;
-	let chosenRes: { username: string; files: any[] } = await search(query);
+	const chosenRes: { username: string; files: any[] } = await search(query);
 	if (!chosenRes.files) throw new Response("No songs found.", { status: 404 });
-	let chosenFile: { filename: string; size: number } = chosenRes.files[0];
+	const chosenFile: { filename: string; size: number } = chosenRes.files[0];
 
 	// slskd will auto-save the file in this directory format. TODO -- check for edge cases?
-	let filename_arr = chosenFile.filename.split("\\");
-	let filePath = filename_arr
+	const filename_arr = chosenFile.filename.split("\\");
+	const filePath = filename_arr
 		.slice(Math.max(filename_arr.length - 2, 0))
 		.join("/");
 
@@ -125,8 +125,12 @@ export default async function (query) {
 		}
 	}
 
-	// TODO: Create a cache db associating mbid to filepath
-	const readStream = fs.createReadStream(`${slskd.path}${filePath}`);
+	try {
+		// TODO: Create a cache db associating mbid to filepath
+		const readStream = fs.createReadStream(`${slskd.path}${filePath}`);
 
-	return readStream;
+		return readStream;
+	} catch (e) {
+		console.log(e);
+	}
 }
