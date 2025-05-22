@@ -31,12 +31,13 @@ export const ArtistView: Component<
 	{
 		update: (mbid: string) => Promise<void>;
 		mbid: string;
-		artist: Awaited<ReturnType<MusicBrainz["ArtistInfo"]>>;
 	}
 > = function (cx) {
 	this.update = async (mbid: string) => {
-		this.artist = await this.mb.ArtistInfo(mbid);
-		this.artistEl = <Artist artist={use(this.artist)} />;
+		this.mbid = mbid;
+		this.artistEl = <div>Loading...</div>;
+		const artist = await this.mb.ArtistInfo(mbid);
+		this.artistEl = <Artist artist={artist} />;
 	};
 	return (
 		<div class="input-row">
@@ -49,6 +50,7 @@ export const ArtistView: Component<
 			<button id="artistButton" on:click={() => this.update(this.mbid)}>
 				view artist
 			</button>
+			<br />
 			{use(this.artistEl)}
 		</div>
 	);

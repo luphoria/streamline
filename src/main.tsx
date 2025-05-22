@@ -13,7 +13,14 @@ const Main: Component<
 	{
 		mb: MusicBrainz;
 	},
-	{}
+	{
+		player: ComponentInstance<typeof Player>;
+		artistView: ComponentInstance<typeof ArtistView>;
+		releaseView: ComponentInstance<typeof ReleaseView>;
+		searchResults: ComponentInstance<typeof SearchResults>;
+		search: ComponentInstance<typeof Search>;
+		config: ComponentInstance<typeof Config>;
+	}
 > = function (cx) {
 	this.mb = new MusicBrainz("https://musicbrainz.org/ws/2/");
 	this.player = <Player />;
@@ -21,17 +28,18 @@ const Main: Component<
 	this.releaseView = (
 		<ReleaseView mb={use(this.mb)} artistView={use(this.artistView)} />
 	);
-
 	this.searchResults = <SearchResults results={[]} />;
 	this.search = (
 		<Search
 			mb={use(this.mb)}
-			sr={(r) => {
-				this.searchResults = <SearchResults results={r} />;
-			}}
+			sr={(r) =>
+				(this.searchResults = (
+					<SearchResults results={r} playSong={this.player.$.state.update} openRelease={this.releaseView.$.state.update} />
+				))
+			}
 		/>
 	);
-	this.config = <Config />;
+	this.config = <Config mb={use(this.mb)} />;
 	return (
 		<div id="app">
 			<div id="fetchers">

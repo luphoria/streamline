@@ -1,26 +1,40 @@
 import { scope, Component, ComponentInstance } from "dreamland/core";
+import { MusicBrainz } from "../utils/MusicBrainz";
 
-export const SearchResults = function (cx) {
-	const firstResult = this.results[0];
+export const SearchResults: Component<{
+	playSong: (input: string) => Promise<void>,
+	updateReleases: (mbid: string) => Promise<void>
+	results: [];
+}, {}, {
+	selectedMbid: string;
+}> = function (cx) {
 	return (
 		<div id="searchresults">
 			{use(this.results).mapEach((song) => {
 				const firstResult = song.versions[0];
+				this.selectedMbid = firstResult.parentMbid;
 				return (
 					<div>
 						<img height="75px" width="75px" src={firstResult.coverArt} />
-						<span>{firstResult.artist}</span> - <b>{firstResult.title}</b> (
-						{firstResult.releaseDate})
-						<select>
+						<span>{firstResult.artist}</span> - <b>{firstResult.title}</b> ({firstResult.releaseDate})
+						<select value={use(this.selectedMbid).bind()}>
 							{song.versions.map((version) => {
 								return (
-									<option valued={version.parentMbid}>
+									<option>
 										{version.releaseTitle} ({version.releaseDate})
 									</option>
 								);
 							})}
 							;
 						</select>
+						<button
+							on:click={() =>
+								this.playSong(`${firstResult.artist} - ${firstResult.title}`)
+							}
+						>
+							Play
+						</button>
+						<button on:click={() => this.openRelease(this.selectedMbid)}>Open Release</button>
 					</div>
 				);
 			})}
@@ -29,14 +43,18 @@ export const SearchResults = function (cx) {
 };
 
 export const Search: Component<
-	{},
+	{
+		mb: MusicBrainz,
+	},
 	{
 		updateSongs: (query: string) => Promise<void>;
 	}
 > = function (cx) {
-	this.updateSongs = async (query: string) => {
+	this.updateSongs = async (query) => {
+		this.songQuery = query; 
 		const songs = await this.mb.SearchSongs(query);
-		this.sr( songs );
+		console.log(this.sr);
+		this.sr(songs);
 	};
 	return (
 		<div id="searchbar">

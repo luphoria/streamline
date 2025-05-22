@@ -98,6 +98,7 @@ export default async function (query) {
 	// Downloader
 	let downloadResult;
 	let chosenRes: { username: string; files: any[] } = await search(query);
+	if (!chosenRes.files) throw new Response("No songs found.", { status: 404 });
 	let chosenFile: { filename: string; size: number } = chosenRes.files[0];
 
 	// slskd will auto-save the file in this directory format. TODO -- check for edge cases?

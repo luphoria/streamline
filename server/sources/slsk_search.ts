@@ -37,7 +37,7 @@ const AwaitSearchCompletion = async (id) => {
 		});
 		const data = await response.json();
 		process.stdout.write(
-			`\rAwaiting search completion for ${id} (${data.responseCount} responses). . .`, 
+			`\rAwaiting search completion for ${id} (${data.responseCount} responses). . .`
 		);
 		// TODO: data.responseCount cutoff and timeout/response count before timeout could be configurable?
 		if (

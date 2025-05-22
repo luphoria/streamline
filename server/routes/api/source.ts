@@ -12,7 +12,9 @@ export const get: Handler = async (req, res, next) => {
 	const source = decodeURIComponent(searchParams.get("source")) || "slsk";
 	const stream = await t(slskSearch(query));
 	if (!stream.ok) {
-		return res.status(stream.error.status).send(await stream.error.text());
+		console.log(stream.error);
+
+		return res.status((stream.error as Response).status).send(await (stream.error as Response).text());
 	}
 
 	return stream.value.pipe(res);

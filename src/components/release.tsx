@@ -44,11 +44,14 @@ export const ReleaseView: Component<
 	},
 	{
 		update: (mbid: string) => Promise<void>;
+		releaseEl: HTMLElement;
 		mbid: string;
 		release: Awaited<ReturnType<MusicBrainz["ReleaseInfo"]>>;
 	}
 > = function (cx) {
 	this.update = async (mbid: string) => {
+		this.mbid = mbid;
+		this.releaseEl = <div>Loading...</div>;
 		this.release = await this.mb.ReleaseInfo(mbid);
 		const coverArtUrl = await this.mb.HdCoverArtUrl(mbid);
 		this.releaseEl = (
@@ -60,7 +63,7 @@ export const ReleaseView: Component<
 		);
 	};
 	return (
-		<div class="musicbrainz-search" class="input-row">
+		<div class="musicbrainz-search input-row">
 			<input id="releaseMbid" value={use(this.mbid).bind()} type="text" />
 			<button id="releaseButton" on:click={() => this.update(this.mbid)}>
 				view release
