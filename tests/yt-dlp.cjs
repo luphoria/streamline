@@ -1,5 +1,6 @@
 const { exec } = require("child_process");
 const prompt = require("prompt-sync")();
+const quote = require("shell-quote/quote");
 
 const execPromise = (input) => {
 	return new Promise((resolve, reject) => {
@@ -24,7 +25,8 @@ const SearchAndDownload = async (query) => {
 	try {
 		let resultsRaw = JSON.parse(
 			await execPromise(
-				`yt-dlp --default-search ytsearch ytsearch10:"${query} song" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
+				// TODO: sanitize
+				`yt-dlp --default-search ytsearch ytsearch10:"${quote([query])} song" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
 			)
 		).entries;
 		for (let result in resultsRaw) {
@@ -68,6 +70,10 @@ const SearchAndDownload = async (query) => {
 		results = results.filter((res) => {
 			return !res.title.includes("full album");
 		});
+	if (!query.includes("cover"))
+		results = results.filter((res) => {
+			return !res.title.includes("cover");
+		});
 
 	if (results.length == 0) return { status: 404, msg: "sorry bro" };
 
@@ -77,11 +83,16 @@ const SearchAndDownload = async (query) => {
 
 	console.log(results[0]);
 
-	await execPromise(
-		// We don't use -x because the file path doesn't properly print the new extension. Instead, let's just make sure it's the smallest/worst video file. 
-		`yt-dlp ${results[0].id} --print "after_move:filename" -f wv+ba -P ./tests/yt-dlp`
-	).then(res => console.log(res));
+	let filePath = (
+		await execPromise(
+			// We don't use -x because the file path doesn't properly print the new extension. Instead, let's just make sure it's the smallest/worst video file.
+			// TODO: sanitize
+			`yt-dlp "${quote([results[0].id])}" -f wv+ba -P ./tests/yt-dlp --print "after_move:filename"`
+		)
+	).split("\n")[0];
 
-	return results[0];
+	console.log(filePath);
+
+	return filePath;
 };
 SearchAndDownload(prompt("Search: "));
