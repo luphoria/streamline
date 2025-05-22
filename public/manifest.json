@@ -1,0 +1,23 @@
+{
+    "short_name": "Streamline",
+	"name": "Streamline",
+	"description": "A webOS and development environment powered by v86",
+	"icons": [
+		{
+			"src": "pencil_logo.jpg",
+			"sizes": "16x16 32x32 48x48 72x72 96x96 128x128 256x256 512x512 1024x1024 2048x2048",
+			"type": "image/png",
+			"purpose": "any maskable"
+		}
+	],
+	"display_override": [
+		"window-controls-overlay",
+		"standalone",
+		"minimal-ui",
+		"browser"
+	],
+    "id": ".",
+    "start_url": ".",
+    "display": "standalone",
+	"background_color": "#000"
+}

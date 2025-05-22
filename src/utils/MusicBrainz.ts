@@ -4,7 +4,7 @@ import DOMPurify from "dompurify";
 export class MusicBrainz {
 	apiUrl: string;
 	userAgent: string;
-	constructor(apiUrl, userAgent?) {
+	constructor(apiUrl: string, userAgent?) {
 		console.info("== MusicBrainz: new MusicBrainz class instance created ==");
 		this.apiUrl = apiUrl;
 		this.userAgent = userAgent
@@ -13,7 +13,7 @@ export class MusicBrainz {
 	}
 
 	// should not be used outside of this file. queries musicbrainz api
-	releaseFetch = async (path) => {
+	releaseFetch = async (path: string) => {
 		const res = await (
 			await fetch(this.apiUrl + path, {
 				headers: {
@@ -154,7 +154,7 @@ export class MusicBrainz {
 	};
 
 	// Search recordings
-	SearchSongs = async (query) => {
+	SearchSongs = async (query: string) => {
 		query = '"' + query.replaceAll(/ /g, '" "') + '"';
 		const data = await this.releaseFetch(
 			`recording/?query=${encodeURIComponent(query)}&limit=50&fmt=json`
@@ -279,7 +279,7 @@ export class MusicBrainz {
 		return songsArray;
 	};
 
-	SearchArtists = async (query) => {
+	SearchArtists = async (query: string) => {
 		// Limit is much lower for artists because there are fewer artists in general.
 		// TODO: Sort artists into the main search res list by score?
 		const data = await this.releaseFetch(
