@@ -5,7 +5,10 @@ const Release: Component<{
 	updateArtist: any;
 	release: Awaited<ReturnType<MusicBrainz["ReleaseInfo"]>>;
 	coverArt?: string;
+}, {}, {
+	trackCount: number;
 }> = function (cx) {
+	this.trackCount = 0;
 	return (
 		<div>
 			<img id="release-art" height="250" width="250" src={this.coverArt} />
@@ -24,10 +27,10 @@ const Release: Component<{
 			</h4>
 			<p id="release-tracklist">
 				{use(this.release.trackList).mapEach((track) => {
-					console.log(track);
+					this.trackCount++
 					return (
 						<span>
-							{parseInt(track) + 1} <b>{track.title}</b>
+							{this.trackCount} <b>{track.title}</b>
 							<br />
 						</span>
 					);

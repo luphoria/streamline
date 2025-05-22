@@ -1,4 +1,4 @@
-import { scope, Component, ComponentInstance } from "dreamland/core";
+import { createState, scope, Component, ComponentInstance } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
 
 export const SearchResults: Component<{
@@ -12,15 +12,18 @@ export const SearchResults: Component<{
 		<div id="searchresults">
 			{use(this.results).mapEach((song) => {
 				const firstResult = song.versions[0];
-				this.selectedMbid = firstResult.parentMbid;
+				console.log(firstResult)
+				const selectedMbid = createState({
+					value: firstResult.parentMbid
+				})
 				return (
 					<div>
 						<img height="75px" width="75px" src={firstResult.coverArt} />
 						<span>{firstResult.artist}</span> - <b>{firstResult.title}</b> ({firstResult.releaseDate})
-						<select value={use(this.selectedMbid).bind()}>
+						<select value={use(selectedMbid.value).bind()}>
 							{song.versions.map((version) => {
 								return (
-									<option>
+									<option value={version.parentMbid}>
 										{version.releaseTitle} ({version.releaseDate})
 									</option>
 								);
@@ -34,14 +37,13 @@ export const SearchResults: Component<{
 						>
 							Play
 						</button>
-						<button on:click={() => this.openRelease(this.selectedMbid)}>Open Release</button>
+						<button on:click={() => this.openRelease(selectedMbid.value)}>Open Release</button>
 					</div>
 				);
 			})}
 		</div>
 	);
 };
-
 export const Search: Component<
 	{
 		mb: MusicBrainz,
