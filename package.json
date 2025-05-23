@@ -45,6 +45,7 @@
 	"nodemonConfig": {
 		"execMap": {
 			"ts": "tsx"
-		}
+		},
+		"ext": "ts,js,json"
 	}
 }

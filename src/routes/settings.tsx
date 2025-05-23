@@ -1,11 +1,5 @@
-import { scope, Component, ComponentInstance } from "dreamland/core";
-import { MusicBrainz } from "../utils/MusicBrainz";
-
-export const Config: Component<
-	{
-		mb: MusicBrainz;
-	},
-	{},
+import type { Component, ComponentInstance } from "dreamland/core";
+export const Settings: Component<{},{},
 	{
 		apiUrl: string;
 	}
@@ -18,7 +12,7 @@ export const Config: Component<
 				id="musicBrainzApiUrl"
 				value={use(this.apiUrl).bind()}
 			/>
-			<button id="apiUrlSetBtn" on:click={() => this.mb.SetApiUrl(this.apiUrl)}>
+			<button id="apiUrlSetBtn" on:click={() => window.mb.SetApiUrl(this.apiUrl)}>
 				Set MusicBrainz API URL
 			</button>
 		</div>

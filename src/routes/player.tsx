@@ -1,4 +1,4 @@
-import { scope, Component, ComponentInstance } from "dreamland/core";
+import type { Component, ComponentInstance } from "dreamland/core";
 import { error, t } from "try";
 
 export const Player: Component<
