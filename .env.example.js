@@ -6,3 +6,8 @@ export const slskd = {
 	path: "/home/[user]/.local/share/slskd/downloads/",
 	allowFiletypes: [".mp3", ".flac", ".ogg", ".m4a", ".wma"],
 };
+
+export const ytdlp = {
+	binary: "yt-dlp",
+	path: "/path/to/set/yt-dlp/downloads/",
+};

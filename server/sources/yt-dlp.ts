@@ -1,6 +1,7 @@
 import { exec } from "child_process";
 import quote from "shell-quote/quote";
 import fs from "fs";
+import { ytdlp } from "../../.env";
 
 const execPromise = (input) => {
 	return new Promise((resolve, reject) => {
@@ -26,7 +27,7 @@ export const YTDLPSearchAndDownload = async (query) => {
 	try {
 		let resultsRaw = JSON.parse(
 			(await execPromise(
-				`yt-dlp --default-search ytsearch ytsearch10:"${quote([query])} song" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
+				`${ytdlp.binary} --default-search ytsearch ytsearch10:"${quote([query])} song" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
 			)) as string
 		).entries;
 		for (let result in resultsRaw) {
@@ -107,7 +108,7 @@ export const YTDLPSearchAndDownload = async (query) => {
 	let filePath = (
 		(await execPromise(
 			// We don't use -x because the file path doesn't properly print the new extension. Instead, let's just make sure it's the smallest/worst video file.
-			`yt-dlp "${quote([results[0].id])}" -f wv+ba -P ./tests/yt-dlp --print "after_move:filename"`
+			`${ytdlp.binary} "${quote([results[0].id])}" -f wv+ba -P ${ytdlp.path} --print "after_move:filename"`
 		)) as string
 	).split("\n")[0];
 
