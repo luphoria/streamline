@@ -108,7 +108,7 @@ export const YTDLPSearchAndDownload = async (query) => {
 	let filePath = (
 		(await execPromise(
 			// We don't use -x because the file path doesn't properly print the new extension. Instead, let's just make sure it's the smallest/worst video file.
-			`${ytdlp.binary} "${quote([results[0].id])}" -f wv+ba -P ${ytdlp.path} --print "after_move:filename"`
+			`${ytdlp.binary} "${quote([results[0].id])}" -f wv+ba -P ${ytdlp.path} --restrict-filenames --print "after_move:filepath"`
 		)) as string
 	).split("\n")[0];
 
