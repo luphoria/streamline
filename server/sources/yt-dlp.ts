@@ -22,7 +22,7 @@ const execPromise = (input) => {
 
 export const YTDLPSearchAndDownload = async (query) => {
 	// Search
-	let results: {channel: string,title: string,id: string}[] = [];
+	let results: { channel: string; title: string; id: string }[] = [];
 	try {
 		let resultsRaw = JSON.parse(
 			(await execPromise(
@@ -42,7 +42,6 @@ export const YTDLPSearchAndDownload = async (query) => {
 	} catch (err) {
 		console.error(err);
 	}
-	console.log(results);
 	console.log(`${results.length} results before filtering`);
 	// Filter results
 	query = query.toLowerCase();
@@ -79,7 +78,16 @@ export const YTDLPSearchAndDownload = async (query) => {
 
 	console.log(`${results.length} results after filtering`);
 
-	// TODO: Sort results by things like if channel author is artist
+	// TODO: More sorting
+    // Sort by containing "audio" in title (to avoid music video cuts) (if the title also includes the song title)
+	results.sort((a, b) => {
+		return (
+			+(b.title.includes("audio") && a.title.includes(query.split(" - ")[1])) -
+			+(a.title.includes("audio") && b.title.includes(query.split(" - ")[1]))
+		);
+	});
+
+	console.log(results);
 
 	console.log(results[0]);
 
