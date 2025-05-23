@@ -4,7 +4,7 @@ import {
 	type ComponentInstance,
 } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
-import { Link } from "dreamland-router";
+import { Link } from "../components/link";
 
 export const SearchResults: Component<{
 	results: [];

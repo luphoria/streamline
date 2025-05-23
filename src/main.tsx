@@ -5,7 +5,7 @@ import "./styles/main.css";
 window.mb = new MusicBrainz("https://musicbrainz.org/ws/2/");
 
 const App: Component = function (cx) {
-	cx.css = scope`
+	cx.css = `
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
