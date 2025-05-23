@@ -79,6 +79,10 @@ export const YTDLPSearchAndDownload = async (query) => {
 	console.log(`${results.length} results after filtering`);
 
 	// TODO: More sorting
+    // Sort by contains correct title
+    results.sort((a,b) => {
+        return +b.title.includes(query.split(" - ")[1]) - +a.title.includes(query.split(" - ")[1]);
+    })
     // Sort by containing "audio" or "lyrics" in title (to avoid music video cuts) (if the title also includes the song title)
 	results.sort((a, b) => {
 		return (
