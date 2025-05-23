@@ -1,73 +1,29 @@
 import { scope, Component, ComponentInstance } from "dreamland/core";
-import { ArtistView } from "./components/artist";
-import { Player } from "./components/player";
-import { ReleaseView } from "./components/release";
-import { Config } from "./components/config";
-
 import { MusicBrainz } from "./utils/MusicBrainz";
 import Router from "./router";
 import "./styles/main.css";
-import { Search, SearchResults } from "./components/search";
 window.mb = new MusicBrainz("https://musicbrainz.org/ws/2/");
 
-const Main: Component<
-	{},
-	{
-		mb: MusicBrainz;
-	},
-	{
-		player: ComponentInstance<typeof Player>;
-		artistView: ComponentInstance<typeof ArtistView>;
-		releaseView: ComponentInstance<typeof ReleaseView>;
-		searchResults: ComponentInstance<typeof SearchResults>;
-		search: ComponentInstance<typeof Search>;
-		config: ComponentInstance<typeof Config>;
-	}
-> = function (cx) {
+const App: Component = function (cx) {
+	cx.css = scope`
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+
+		justify-content: flex-start;
+		align-items: center;
+	`
 	cx.mount = () => {
     	Router.mount(cx.root as HTMLElement);
   	};
-	this.mb = new MusicBrainz("https://musicbrainz.org/ws/2/");
-	this.player = <Player />;
-	this.artistView = <ArtistView mb={use(this.mb)} />;
-	this.releaseView = (
-		<ReleaseView mb={use(this.mb)} artistView={use(this.artistView)} />
-	);
-	this.searchResults = <SearchResults results={[]} />;
-	this.search = (
-		<Search
-			mb={use(this.mb)}
-			sr={(r) =>
-				(this.searchResults = (
-					<SearchResults
-						results={r}
-						playSong={this.player.$.state.update}
-						openRelease={this.releaseView.$.state.update}
-					/>
-				))
-			}
-		/>
-	);
-	this.config = <Config mb={use(this.mb)} />;
 	return (
-		<div id="app">
-			{use(this.search)}
-			<br />
-			<h1>streamline</h1>
-			<div id="fetchers">
-				{use(this.player)}
-				{use(this.releaseView)}
-				{use(this.artistView)}
-				{use(this.config)}
-			</div>
-			{use(this.searchResults)}
-		</div>
+		<div id="app" />
 	);
 };
 
 const root = document.getElementById("app")!;
 try {
-	root.replaceWith(<Main />);
+	root.replaceWith(<App />);
 } catch (e) {
 	root.replaceWith(document.createTextNode("" + e));
 	throw e;
