@@ -49,37 +49,32 @@ export const YTDLPSearchAndDownload = async (query) => {
 	for (let res in results)
 		results[res].title = results[res].title.toLowerCase();
 
-	if (!query.includes("remix"))
-		results = results.filter((res) => {
-			return !res.title.includes("remix");
+    // Put this in .env.js? 
+	const filters = [
+		"remix",
+		"edit",
+		"live",
+		"video",
+		"full album",
+		"cover",
+		"slowed",
+		"reverb",
+		"nightcore",
+        "clean",
+        "bass" // bass-boost versions
+	];
+
+	results = results.filter((res) => {
+		return filters.every((term) => {
+			return query.includes(term) || !res.title.includes(term);
 		});
-	if (!query.includes("edit"))
-		results = results.filter((res) => {
-			return !res.title.includes("edit");
-		});
-	if (!query.includes("live"))
-		results = results.filter((res) => {
-			return !res.title.includes("live");
-		});
-	if (!query.includes("video"))
-		results = results.filter((res) => {
-			return !res.title.includes("video");
-		});
-	if (!query.includes("full album"))
-		// probably doesn't need to be in this if, but just in case
-		results = results.filter((res) => {
-			return !res.title.includes("full album");
-		});
-	if (!query.includes("cover"))
-		results = results.filter((res) => {
-			return !res.title.includes("cover");
-		});
+	});
 
 	if (results.length == 0) return { status: 404, msg: "sorry bro" };
 
 	console.log(`${results.length} results after filtering`);
 
-	// TODO: More sorting
+	// TODO: More sorting (score-based system?)
 	// Sort by containing "audio" or "lyrics" in title (to avoid music video cuts) (if the title also includes the song title)
 	results.sort((a, b) => {
 		return (
@@ -87,10 +82,17 @@ export const YTDLPSearchAndDownload = async (query) => {
 				(b.title.includes("audio") || b.title.includes("lyrics")) &&
 				a.title.includes(query.split(" - ")[1])
 			) -
-			+(
-				(a.title.includes("audio") || a.title.includes("lyrics")) &&
-				b.title.includes(query.split(" - ")[1])
-			)
+                +(
+                    (a.title.includes("audio") || a.title.includes("lyrics")) &&
+                    b.title.includes(query.split(" - ")[1])
+                )
+            );
+	});
+    // Sort by artist matches channel
+    results.sort((a, b) => {
+		return (
+			+b.channel.toLowerCase().includes(query.split(" - ")[0]) -
+			+a.channel.toLowerCase().includes(query.split(" - ")[0])
 		);
 	});
 	// Sort by contains correct title
