@@ -1,4 +1,4 @@
-import { scope, Component, ComponentInstance } from "dreamland/core";
+import type { Component, ComponentInstance } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
 const Artist: Component<{
 	artist: Awaited<ReturnType<MusicBrainz["ArtistInfo"]>>;

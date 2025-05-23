@@ -1,7 +1,7 @@
-import { scope, Component, ComponentInstance } from "dreamland/core";
+import type { Component, ComponentInstance } from "dreamland/core";
 
 const Layout: Component<{}, { outlet: Element }> = function (cx) {
-  cx.css = scope`
+  cx.css = `
     height: 100%;
     width: calc(100%);
     display: flex;

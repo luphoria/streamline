@@ -13,7 +13,7 @@ importers:
         version: 3.2.6
       dreamland:
         specifier: github:MercuryWorkshop/dreamlandjs#vdom
-        version: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/cd58e08952a10e536a0daf0d35af0c78feef2770
+        version: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/00a60b6d4b9f1dc33d348542f9a5c7b621641925
       dreamland-router:
         specifier: link:../dreamland-router
         version: link:../dreamland-router
@@ -78,9 +78,6 @@ importers:
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
-      prettier-plugin-astro:
-        specifier: ^0.14.1
-        version: 0.14.1
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
@@ -95,9 +92,6 @@ importers:
         version: 6.3.5(@types/node@22.15.21)(tsx@4.19.4)
 
 packages:
-
-  '@astrojs/compiler@2.12.0':
-    resolution: {integrity: sha512-7bCjW6tVDpUurQLeKBUN9tZ5kSv5qYrGmcn0sG0IwacL7isR2ZbyyA3AdZ4uxsuUFOS2SlgReTH7wkxO6zpqWA==}
 
   '@esbuild/aix-ppc64@0.25.4':
     resolution: {integrity: sha512-1VCICWypeQKhVbE9oW/sJaAmjLxhVqacdkvPLEjwlttjfwENRSClS8EjBz0KzRyFSCPDIkuXW34Je/vk7zdB7Q==}
@@ -663,8 +657,8 @@ packages:
     resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
     engines: {node: '>=12'}
 
-  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/cd58e08952a10e536a0daf0d35af0c78feef2770:
-    resolution: {tarball: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/cd58e08952a10e536a0daf0d35af0c78feef2770}
+  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/00a60b6d4b9f1dc33d348542f9a5c7b621641925:
+    resolution: {tarball: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/00a60b6d4b9f1dc33d348542f9a5c7b621641925}
     version: 0.1.0
 
   dunder-proto@1.0.1:
@@ -1091,10 +1085,6 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-plugin-astro@0.14.1:
-    resolution: {integrity: sha512-RiBETaaP9veVstE4vUwSIcdATj6dKmXljouXc/DDNwBSPTp8FRkLGDSGFClKsAFeeg+13SB0Z1JZvbD76bigJw==}
-    engines: {node: ^14.15.0 || >=16.0.0}
-
   prettier@3.5.3:
     resolution: {integrity: sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==}
     engines: {node: '>=14'}
@@ -1163,17 +1153,11 @@ packages:
   rxjs@7.8.2:
     resolution: {integrity: sha512-dhKf903U/PQZY6boNNtAGdWbG85WAbjT/1xYoZIC7FAY0yWapOBQVsVrDl58W86//e1VpMNBtRV4MaXfdMySFA==}
 
-  s.color@0.0.15:
-    resolution: {integrity: sha512-AUNrbEUHeKY8XsYr/DYpl+qk5+aM+DChopnWOPEzn8YKzOhv4l2zH6LzZms3tOZP3wwdOyc0RmTciyi46HLIuA==}
-
   safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
 
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
-
-  sass-formatter@0.7.9:
-    resolution: {integrity: sha512-CWZ8XiSim+fJVG0cFLStwDvft1VI7uvXdCNJYXhDvowiv+DsbD1nXLiQ4zrE5UBvj5DWZJ93cwN0NX5PMsr1Pw==}
 
   semver@7.7.2:
     resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
@@ -1246,9 +1230,6 @@ packages:
   strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
-
-  suf-log@2.5.3:
-    resolution: {integrity: sha512-KvC8OPjzdNOe+xQ4XWJV2whQA0aM1kGVczMQ8+dStAO6KfEB140JEVQ9dE76ONZ0/Ylf67ni4tILPJB41U0eow==}
 
   supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
@@ -1402,8 +1383,6 @@ packages:
     engines: {node: '>=10'}
 
 snapshots:
-
-  '@astrojs/compiler@2.12.0': {}
 
   '@esbuild/aix-ppc64@0.25.4':
     optional: true
@@ -1904,7 +1883,7 @@ snapshots:
 
   dotenv@16.5.0: {}
 
-  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/cd58e08952a10e536a0daf0d35af0c78feef2770:
+  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/00a60b6d4b9f1dc33d348542f9a5c7b621641925:
     dependencies:
       htm: 3.1.1
 
@@ -2356,12 +2335,6 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-astro@0.14.1:
-    dependencies:
-      '@astrojs/compiler': 2.12.0
-      prettier: 3.5.3
-      sass-formatter: 0.7.9
-
   prettier@3.5.3: {}
 
   prompt-sync@4.2.0:
@@ -2448,15 +2421,9 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  s.color@0.0.15: {}
-
   safe-buffer@5.2.1: {}
 
   safer-buffer@2.1.2: {}
-
-  sass-formatter@0.7.9:
-    dependencies:
-      suf-log: 2.5.3
 
   semver@7.7.2: {}
 
@@ -2546,10 +2513,6 @@ snapshots:
       ansi-regex: 5.0.1
 
   strip-json-comments@3.1.1: {}
-
-  suf-log@2.5.3:
-    dependencies:
-      s.color: 0.0.15
 
   supports-color@5.5.0:
     dependencies:

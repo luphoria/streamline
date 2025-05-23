@@ -1,6 +1,6 @@
-import { scope, Component, ComponentInstance } from "dreamland/core";
+import type { Component, ComponentInstance } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
-import { Link } from "../components/link";
+import { Link } from "dreamland-router";
 
 const Release: Component<
 	{

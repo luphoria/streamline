@@ -1,8 +1,7 @@
 import {
 	createState,
-	scope,
-	Component,
-	ComponentInstance,
+	type Component,
+	type ComponentInstance,
 } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
 

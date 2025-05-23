@@ -1,11 +1,10 @@
 import {
 	createState,
-	scope,
-	Component,
-	ComponentInstance,
+	type Component,
+	type ComponentInstance,
 } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
-import { Link } from "../components/link";
+import { Link } from "dreamland-router";
 
 export const SearchResults: Component<{
 	results: [];
