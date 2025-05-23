@@ -45,15 +45,13 @@ export const SearchResults: Component<{
 		</div>
 	);
 };
-export const Search: Component<
-	{},
-	{
-		updateSongs: (query: string) => Promise<void>;
-	}
-> = function (cx) {
-	const updateSongs = async (query) => {
+export const Search: Component<{},{}, {
+	query: string
+}> = function (cx) {
+	const updateSongs = async (query: string) => {
 		if (!query) return;
-		const songs = await window.mb.SearchSongs(query);
+		this.searchResults = <div>Loading...</div>
+		const songs = await window.mb.SearchSongs(decodeURIComponent(query));
 		console.log(songs)
 		this.searchResults = <SearchResults results={songs}/>
 	};
