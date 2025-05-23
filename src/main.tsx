@@ -5,8 +5,10 @@ import { ReleaseView } from "./components/release";
 import { Config } from "./components/config";
 
 import { MusicBrainz } from "./utils/MusicBrainz";
+import Router from "./router";
 import "./styles/main.css";
 import { Search, SearchResults } from "./components/search";
+window.mb = new MusicBrainz("https://musicbrainz.org/ws/2/");
 
 const Main: Component<
 	{},
@@ -22,6 +24,9 @@ const Main: Component<
 		config: ComponentInstance<typeof Config>;
 	}
 > = function (cx) {
+	cx.mount = () => {
+    	Router.mount(cx.root as HTMLElement);
+  	};
 	this.mb = new MusicBrainz("https://musicbrainz.org/ws/2/");
 	this.player = <Player />;
 	this.artistView = <ArtistView mb={use(this.mb)} />;

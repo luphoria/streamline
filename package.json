@@ -12,6 +12,7 @@
 		"lint:fix": "eslint ./src/ --fix"
 	},
 	"dependencies": {
+		"dreamland-router": "link:../dreamland-router",
 		"dompurify": "^3.2.6",
 		"dreamland": "github:MercuryWorkshop/dreamlandjs#vdom",
 		"express": "^5.1.0",

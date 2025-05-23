@@ -14,6 +14,9 @@ importers:
       dreamland:
         specifier: github:MercuryWorkshop/dreamlandjs#vdom
         version: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/aaf4fdc0a8756177e0aedcb4e2be5aaa4a69db29
+      dreamland-router:
+        specifier: link:../dreamland-router
+        version: link:../dreamland-router
       express:
         specifier: ^5.1.0
         version: 5.1.0
