@@ -15,8 +15,8 @@ importers:
         specifier: github:MercuryWorkshop/dreamlandjs#vdom
         version: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/00a60b6d4b9f1dc33d348542f9a5c7b621641925
       dreamland-router:
-        specifier: link:../dreamland-router
-        version: link:../dreamland-router
+        specifier: github:MercuryWorkshop/dreamland2-router
+        version: '@dreamlandjs/dreamland-router@https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5'
       express:
         specifier: ^5.1.0
         version: 5.1.0
@@ -92,6 +92,10 @@ importers:
         version: 6.3.5(@types/node@22.15.21)(tsx@4.19.4)
 
 packages:
+
+  '@dreamlandjs/dreamland-router@https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5':
+    resolution: {tarball: https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5}
+    version: 1.0.0
 
   '@esbuild/aix-ppc64@0.25.4':
     resolution: {integrity: sha512-1VCICWypeQKhVbE9oW/sJaAmjLxhVqacdkvPLEjwlttjfwENRSClS8EjBz0KzRyFSCPDIkuXW34Je/vk7zdB7Q==}
@@ -659,6 +663,10 @@ packages:
 
   dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/00a60b6d4b9f1dc33d348542f9a5c7b621641925:
     resolution: {tarball: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/00a60b6d4b9f1dc33d348542f9a5c7b621641925}
+    version: 0.1.0
+
+  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/5fb5ee1188659ac4187ad6df790dff42c4be8c30:
+    resolution: {tarball: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/5fb5ee1188659ac4187ad6df790dff42c4be8c30}
     version: 0.1.0
 
   dunder-proto@1.0.1:
@@ -1384,6 +1392,10 @@ packages:
 
 snapshots:
 
+  '@dreamlandjs/dreamland-router@https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5':
+    dependencies:
+      dreamland: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/5fb5ee1188659ac4187ad6df790dff42c4be8c30
+
   '@esbuild/aix-ppc64@0.25.4':
     optional: true
 
@@ -1884,6 +1896,10 @@ snapshots:
   dotenv@16.5.0: {}
 
   dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/00a60b6d4b9f1dc33d348542f9a5c7b621641925:
+    dependencies:
+      htm: 3.1.1
+
+  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/5fb5ee1188659ac4187ad6df790dff42c4be8c30:
     dependencies:
       htm: 3.1.1
 
