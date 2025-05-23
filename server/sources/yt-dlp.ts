@@ -49,7 +49,7 @@ export const YTDLPSearchAndDownload = async (query) => {
 	for (let res in results)
 		results[res].title = results[res].title.toLowerCase();
 
-    // Put this in .env.js? 
+	// Put this in .env.js?
 	const filters = [
 		"remix",
 		"edit",
@@ -60,8 +60,8 @@ export const YTDLPSearchAndDownload = async (query) => {
 		"slowed",
 		"reverb",
 		"nightcore",
-        "clean",
-        "bass" // bass-boost versions
+		"clean",
+		"bass", // bass-boost versions
 	];
 
 	results = results.filter((res) => {
@@ -75,6 +75,14 @@ export const YTDLPSearchAndDownload = async (query) => {
 	console.log(`${results.length} results after filtering`);
 
 	// TODO: More sorting (score-based system?)
+	// Sort by artist matches channel
+	results.sort((a, b) => {
+		return (
+			+b.channel.toLowerCase().includes(query.split(" - ")[0]) -
+			+a.channel.toLowerCase().includes(query.split(" - ")[0])
+		);
+	});
+
 	// Sort by containing "audio" or "lyrics" in title (to avoid music video cuts) (if the title also includes the song title)
 	results.sort((a, b) => {
 		return (
@@ -82,19 +90,13 @@ export const YTDLPSearchAndDownload = async (query) => {
 				(b.title.includes("audio") || b.title.includes("lyrics")) &&
 				a.title.includes(query.split(" - ")[1])
 			) -
-                +(
-                    (a.title.includes("audio") || a.title.includes("lyrics")) &&
-                    b.title.includes(query.split(" - ")[1])
-                )
-            );
-	});
-    // Sort by artist matches channel
-    results.sort((a, b) => {
-		return (
-			+b.channel.toLowerCase().includes(query.split(" - ")[0]) -
-			+a.channel.toLowerCase().includes(query.split(" - ")[0])
+			+(
+				(a.title.includes("audio") || a.title.includes("lyrics")) &&
+				b.title.includes(query.split(" - ")[1])
+			)
 		);
 	});
+
 	// Sort by contains correct title
 	results.sort((a, b) => {
 		return (
