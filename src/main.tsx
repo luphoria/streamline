@@ -12,13 +12,11 @@ const App: Component = function (cx) {
 
 		justify-content: flex-start;
 		align-items: center;
-	`
+	`;
 	cx.mount = () => {
-    	Router.mount(cx.root as HTMLElement);
-  	};
-	return (
-		<div id="app" />
-	);
+		Router.mount(cx.root as HTMLElement);
+	};
+	return <div id="app" />;
 };
 
 const root = document.getElementById("app")!;

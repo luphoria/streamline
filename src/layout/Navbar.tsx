@@ -1,8 +1,7 @@
 import type { Component, ComponentInstance } from "dreamland/core";
 import router from "../router";
-const Navbar: Component<{}, {}, {}> =
-  function (cx) {
-    cx.css = `
+const Navbar: Component<{}, {}, {}> = function (cx) {
+	cx.css = `
 \       :scope {
             display: flex;
             flex-direction: column;
@@ -39,27 +38,27 @@ const Navbar: Component<{}, {}, {}> =
         #searchbar > span > input {
             flex-grow: 1;
         }
-    `
-    return (
-      <header>
-        <div id="searchbar">
-            <span>
-                <input
-                    type="text"
-                    id="songSearchValue"
-                    placeholder="ARTIST - SONG or search..."
-                    value={use(this.songQuery).bind()}
-                />
-                <button
-                    id="songSearchBtn"
-                    on:click={() => router.navigate(`/search/${this.songQuery}`)}
-                >
-                    Search song
-                </button>
-            </span>
-        </div>
-      </header>
-    );
-  };
+    `;
+	return (
+		<header>
+			<div id="searchbar">
+				<span>
+					<input
+						type="text"
+						id="songSearchValue"
+						placeholder="ARTIST - SONG or search..."
+						value={use(this.songQuery).bind()}
+					/>
+					<button
+						id="songSearchBtn"
+						on:click={() => router.navigate(`/search/${this.songQuery}`)}
+					>
+						Search song
+					</button>
+				</span>
+			</div>
+		</header>
+	);
+};
 
 export default Navbar;

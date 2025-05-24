@@ -20,13 +20,7 @@ const Release: Component<
 			<h3 id="release-title">{this.release.title}</h3>
 			<h4 id="release-artist">
 				{use(this.release.artists).mapEach((artist) => {
-					return (
-						<Link
-							href={`/artist/${artist.mbid}`}
-						>
-							{artist.name}
-						</Link>
-					);
+					return <Link href={`/artist/${artist.mbid}`}>{artist.name}</Link>;
 				})}
 			</h4>
 			<p id="release-tracklist">
@@ -58,13 +52,10 @@ export const ReleaseView: Component<
 		this.release = await window.mb.ReleaseInfo(mbid);
 		const coverArtUrl = await window.mb.HdCoverArtUrl(mbid);
 		this.releaseEl = (
-			<Release
-				release={use(this.release)}
-				coverArt={coverArtUrl}
-			/>
+			<Release release={use(this.release)} coverArt={coverArtUrl} />
 		);
 	};
-	use(this.mbid).listen(updateReleases)
+	use(this.mbid).listen(updateReleases);
 	return (
 		<div class="musicbrainz-search input-row">
 			<input id="releaseMbid" value={use(this.mbid).bind()} type="text" />

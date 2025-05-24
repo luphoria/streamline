@@ -24,17 +24,20 @@ const Artist: Component<{
 	);
 };
 
-export const ArtistView: Component<{},{}, {
-	mbid: string;
-}
+export const ArtistView: Component<
+	{},
+	{},
+	{
+		mbid: string;
+	}
 > = function (cx) {
 	const updateArtist = async (mbid) => {
 		if (!mbid) return;
 		this.artistEl = <div>Loading...</div>;
-		const artist = await window.mb.ArtistInfo(mbid)
+		const artist = await window.mb.ArtistInfo(mbid);
 		this.artistEl = <Artist artist={artist} />;
 	};
-	use(this.mbid).listen(updateArtist)
+	use(this.mbid).listen(updateArtist);
 	return (
 		<div class="input-row">
 			<input

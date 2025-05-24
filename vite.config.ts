@@ -14,7 +14,7 @@ export default {
 		},
 	},
 	build: {
-		target: "es2022"
+		target: "es2022",
 	},
 	plugins: [],
 } satisfies UserConfig;

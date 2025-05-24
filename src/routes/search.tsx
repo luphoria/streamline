@@ -5,6 +5,7 @@ import {
 } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
 import { Link } from "../components/link";
+import router from "../router";
 
 export const SearchResults: Component<{
 	results: [];
@@ -32,32 +33,40 @@ export const SearchResults: Component<{
 							})}
 							;
 						</select>
-						<Link href={`/play/${firstResult.artist} - ${firstResult.title}`}>
+						<button
+							on:click={() =>
+								router.navigate(
+									`/play/${firstResult.artist} - ${firstResult.title}`
+								)
+							}
+						>
 							Play
-						</Link>
-						<Link href={`/release/${selectedMbid.value}`}>
+						</button>
+						<button
+							on:click={() => router.navigate(`/release/${selectedMbid.value}`)}
+						>
 							Open Release
-						</Link>
+						</button>
 					</div>
 				);
 			})}
 		</div>
 	);
 };
-export const Search: Component<{},{}, {
-	query: string
-}> = function (cx) {
+export const Search: Component<
+	{},
+	{},
+	{
+		query: string;
+	}
+> = function (cx) {
 	const updateSongs = async (query: string) => {
 		if (!query) return;
-		this.searchResults = <div>Loading...</div>
+		this.searchResults = <div>Loading...</div>;
 		const songs = await window.mb.SearchSongs(decodeURIComponent(query));
-		console.log(songs)
-		this.searchResults = <SearchResults results={songs}/>
+		console.log(songs);
+		this.searchResults = <SearchResults results={songs} />;
 	};
-	use(this.query).listen(updateSongs)
-	return (
-		<div id="search-results">
-			{use(this.searchResults)}
-		</div>
-	);
+	use(this.query).listen(updateSongs);
+	return <div id="search-results">{use(this.searchResults)}</div>;
 };

@@ -10,16 +10,16 @@ import { Settings } from "./routes/settings";
 import { Player } from "./routes/player";
 
 export default new Router(
-  (
-    <Route show={<Layout />}>
-      <Route path="/" show={<Home />} />
-      <Route path="/play/:input" show={<Player />} />
-      <Route path="/search/:query" show={<Search />} />
-      <Route path="/artist/:mbid" show={<ArtistView />} />
-      <Route path="/release/:mbid" show={<ReleaseView />} />
-      <Route path="/settings" show={<Settings />} />
+	(
+		<Route show={<Layout />}>
+			<Route path="/" show={<Home />} />
+			<Route path="/play/:input" show={<Player />} />
+			<Route path="/search/:query" show={<Search />} />
+			<Route path="/artist/:mbid" show={<ArtistView />} />
+			<Route path="/release/:mbid" show={<ReleaseView />} />
+			<Route path="/settings" show={<Settings />} />
 
-      <Route path="*" show={<Home />} />
-    </Route>
-  ),
+			<Route path="*" show={<Home />} />
+		</Route>
+	)
 );

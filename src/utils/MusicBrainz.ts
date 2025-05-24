@@ -155,7 +155,7 @@ export class MusicBrainz {
 
 	// Search recordings
 	SearchSongs = async (query: string) => {
-		query = "\"" + query.replaceAll(/ /g, "\" \"") + "\"";
+		query = '"' + query.replaceAll(/ /g, '" "') + '"';
 		const data = await this.releaseFetch(
 			`recording/?query=${encodeURIComponent(query)}&limit=50&fmt=json`
 		);
