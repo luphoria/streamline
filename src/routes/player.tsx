@@ -1,18 +1,13 @@
 import type { Component, ComponentInstance } from "dreamland/core";
 import { error, t } from "try";
 
-export const Player: Component<
-	{},
-	{
-		update: (input: string) => Promise<void>;
-	},
+export const Player: Component<{},{},
 	{
 		player: HTMLElement;
 		input: string;
 	}
 > = function (cx) {
-	this.update = async (input) => {
-		this.input = input;
+	const playSong = async (input) => {
 		this.player = <div>loading...</div>;
 		const response = await t(
 			fetch(`/api/source?query=${encodeURIComponent(input)}`)
@@ -30,10 +25,11 @@ export const Player: Component<
 		player.play();
 		this.player = player;
 	};
+	use(this.input).listen(playSong);
 	return (
 		<div class="input-row">
 			<input id="recordingId" value={use(this.input).bind()} type="text" />
-			<button on:click={() => this.update(this.input)}>fetch song</button>
+			<button on:click={() => playSong(this.input)}>fetch song</button>
 			<br />
 			{use(this.player)}
 		</div>
