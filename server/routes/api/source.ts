@@ -9,9 +9,18 @@ export const get: Handler = async (req, res, next) => {
 	const searchParams = new URLSearchParams(url.search);
 
 	const query = decodeURIComponent(searchParams.get("query"));
-	//TODO: make this actually do something (when we have multiple sources ofc)
-	const source = decodeURIComponent(searchParams.get("source")) || "yt-dlp";
-	const stream = await t(YTDLPSearchAndDownload(query));
+	const source = decodeURIComponent(searchParams.get("source"));
+	let stream;
+	switch (source) {
+		case "slsk":
+			stream = await t(slskSearch(query));
+			break;
+		case "yt-dlp":
+			stream = await t(YTDLPSearchAndDownload(query));
+			break;
+		default:
+			res.status(500).send("No source specified")
+	}
 	if (!stream.ok) {
 		console.log(stream.error);
 

@@ -1,4 +1,5 @@
 import type { Component, ComponentInstance } from "dreamland/core";
+import store from "../store";
 export const Settings: Component<
 	{},
 	{},
@@ -6,7 +7,9 @@ export const Settings: Component<
 		apiUrl: string;
 	}
 > = function (cx) {
-	this.apiUrl = "https://musicbrainz.org/ws/2/";
+	cx.mount = () => {
+		this.apiUrl = "https://musicbrainz.org/ws/2/";
+	};
 	return (
 		<div class="input-row">
 			<input
@@ -20,6 +23,11 @@ export const Settings: Component<
 			>
 				Set MusicBrainz API URL
 			</button>
+			<div>pick a source</div>
+			<select value={use(store.source).bind()}>
+				<option value="yt-dlp">yt-dlp</option>
+				<option value="slsk">slsk</option>
+			</select>	
 		</div>
 	);
 };

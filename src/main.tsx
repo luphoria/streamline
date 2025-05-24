@@ -1,6 +1,8 @@
 import type { Component, ComponentInstance } from "dreamland/core";
 import { MusicBrainz } from "./utils/MusicBrainz";
 import Router from "./router";
+import store from "./store";
+
 import "./styles/main.css";
 window.mb = new MusicBrainz("https://musicbrainz.org/ws/2/");
 

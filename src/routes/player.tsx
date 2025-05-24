@@ -1,5 +1,6 @@
 import type { Component, ComponentInstance } from "dreamland/core";
 import { error, t } from "try";
+import store from "../store";
 
 export const Player: Component<
 	{},
@@ -11,8 +12,9 @@ export const Player: Component<
 > = function (cx) {
 	const playSong = async (input) => {
 		this.player = <div>loading...</div>;
+		console.log(store.source)
 		const response = await t(
-			fetch(`/api/source?query=${encodeURIComponent(input)}`)
+			fetch(`/api/source?query=${encodeURIComponent(input)}&source=${store.source}`)
 		);
 		if (!response.ok) {
 			this.player = <div>an error occured: {response.error}</div>;
