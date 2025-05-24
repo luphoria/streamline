@@ -56,29 +56,7 @@ export const Search: Component<{},{}, {
 	};
 	use(this.query).listen(updateSongs)
 	return (
-		<div id="searchbar">
-			<span>
-				<input
-					type="text"
-					id="songSearchValue"
-					placeholder="ARTIST - SONG or search..."
-					value={use(this.songQuery).bind()}
-				/>
-				<button
-					id="songSearchBtn"
-					on:click={() => updateSongs()}
-				>
-					Search song
-				</button>
-			</span>
-			<span>
-				<input
-					type="text"
-					id="artistSearchValue"
-					placeholder="ARTIST or search..."
-				/>
-				<button id="artistSearchBtn">Search artist</button>
-			</span>
+		<div id="search-results">
 			{use(this.searchResults)}
 		</div>
 	);

@@ -28,7 +28,7 @@ export const Player: Component<{},{},
 	use(this.input).listen(playSong);
 	return (
 		<div class="input-row">
-			<input id="recordingId" value={use(this.input).bind()} type="text" />
+			<input id="recordingId" value={use(this.input).map((val) => decodeURIComponent(val)).bind()} type="text" />
 			<button on:click={() => playSong(this.input)}>fetch song</button>
 			<br />
 			{use(this.player)}

@@ -44,7 +44,7 @@ export const ArtistView: Component<{},{}, {
 				type="text"
 			/>
 			<br />
-			<button id="artistButton" on:click={() => updateArtist()}>
+			<button id="artistButton" on:click={() => updateArtist(this.mbid)}>
 				view artist
 			</button>
 			{use(this.artistEl)}
