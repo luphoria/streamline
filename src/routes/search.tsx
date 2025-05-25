@@ -6,9 +6,10 @@ import {
 import { MusicBrainz } from "../utils/MusicBrainz";
 import { Link } from "../components/link";
 import router from "../router";
+import type { SongGroup } from "../stores/searchResults";
 
 export const SearchResults: Component<{
-	results: [];
+	results: SongGroup[];
 }> = function (cx) {
 	return (
 		<div id="searchresults">
@@ -57,6 +58,7 @@ export const Search: Component<
 	{},
 	{},
 	{
+		searchResults: HTMLElement;
 		query: string;
 	}
 > = function (cx) {
