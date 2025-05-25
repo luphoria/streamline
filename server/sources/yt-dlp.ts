@@ -2,6 +2,7 @@ import { exec } from "child_process";
 import quote from "shell-quote/quote";
 import fs from "fs";
 import { ytdlp } from "../../.env";
+import { AddRecording } from "../db/db";
 
 const execPromise = (input) => {
 	return new Promise((resolve, reject) => {
@@ -120,6 +121,7 @@ export const YTDLPSearchAndDownload = async (query, mbid) => {
 	console.log(filePath);
 
 	// TODO: Create a cache db associating mbid to filepath
+	AddRecording(mbid, filePath, "yt-dlp")
 	const readStream = fs.createReadStream(filePath);
 
 	return readStream;

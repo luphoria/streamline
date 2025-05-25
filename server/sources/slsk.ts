@@ -3,6 +3,7 @@
 import * as fs from "fs";
 import { slskd } from "../../.env.js";
 import search from "./slsk_search";
+import { AddRecording } from "../db/db.ts";
 
 const CreateDownload = async (username, filePath, size) => {
 	const response = await fetch(
@@ -94,7 +95,7 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	};
 };
 
-export default async function (query) {
+export default async function (query, mbid) {
 	// Downloader
 	let downloadResult;
 	const chosenRes: { username: string; files: any[] } = await search(query);
@@ -123,10 +124,11 @@ export default async function (query) {
 		if (!downloadResult.isComplete) {
 			throw new Response("Could not download", { status: 404 });
 		}
+
 	}
 
 	try {
-		// TODO: Create a cache db associating mbid to filepath
+		AddRecording(mbid, `${slskd.path}${filePath}`, "slsk")
 		const readStream = fs.createReadStream(`${slskd.path}${filePath}`);
 
 		return readStream;

@@ -16,8 +16,8 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.production
-
 .env.js
+pnpm-workspace.yaml
 
 # macOS-specific files
 .DS_Store
@@ -34,3 +34,6 @@ tests/yt-dlp/*
 
 # slskd app directory
 slskd/
+
+# streamline db 
+streamline.db

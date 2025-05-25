@@ -12,9 +12,10 @@
 		"lint:fix": "eslint ./src/ --fix"
 	},
 	"dependencies": {
-		"dreamland-router": "github:MercuryWorkshop/dreamland2-router",
+		"better-sqlite3": "^11.10.0",
 		"dompurify": "^3.2.6",
 		"dreamland": "github:MercuryWorkshop/dreamlandjs#vdom-functional",
+		"dreamland-router": "github:MercuryWorkshop/dreamland2-router",
 		"express": "^5.1.0",
 		"express-file-routing": "^3.1.0",
 		"prompt-sync": "^4.2.0",
