@@ -44,15 +44,14 @@ export const ReleaseView: Component<
 		update: (mbid: string) => Promise<void>;
 		releaseEl: HTMLElement;
 		mbid: string;
-		release: Awaited<ReturnType<MusicBrainz["ReleaseInfo"]>>;
 	}
 > = function (cx) {
 	const updateReleases = async (mbid: string) => {
 		this.releaseEl = <div>Loading...</div>;
-		this.release = await window.mb.ReleaseInfo(mbid);
+		const release = await window.mb.ReleaseInfo(mbid);
 		const coverArtUrl = await window.mb.HdCoverArtUrl(mbid);
 		this.releaseEl = (
-			<Release release={use(this.release)} coverArt={coverArtUrl} />
+			<Release release={release} coverArt={coverArtUrl} />
 		);
 	};
 	use(this.mbid).listen(updateReleases);

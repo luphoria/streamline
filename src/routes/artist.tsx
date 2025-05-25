@@ -28,10 +28,11 @@ export const ArtistView: Component<
 	{},
 	{},
 	{
+		artistEl: HTMLElement;
 		mbid: string;
 	}
 > = function (cx) {
-	const updateArtist = async (mbid) => {
+	const updateArtist = async (mbid: string) => {
 		if (!mbid) return;
 		this.artistEl = <div>Loading...</div>;
 		const artist = await window.mb.ArtistInfo(mbid);
