@@ -9,14 +9,16 @@ export const get: Handler = async (req, res, next) => {
 	const searchParams = new URLSearchParams(url.search);
 
 	const query = decodeURIComponent(searchParams.get("query"));
+	const mbid = decodeURIComponent(searchParams.get("mbid"));
+	// TODO: Get query from MBID instead of just getting both from client
 	const source = decodeURIComponent(searchParams.get("source"));
 	let stream;
 	switch (source) {
 		case "slsk":
-			stream = await t(slskSearch(query));
+			stream = await t(slskSearch(query, mbid));
 			break;
 		case "yt-dlp":
-			stream = await t(YTDLPSearchAndDownload(query));
+			stream = await t(YTDLPSearchAndDownload(query, mbid));
 			break;
 		default:
 			res.status(500).send("No source specified")

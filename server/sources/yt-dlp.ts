@@ -21,7 +21,8 @@ const execPromise = (input) => {
 	});
 };
 
-export const YTDLPSearchAndDownload = async (query) => {
+export const YTDLPSearchAndDownload = async (query, mbid) => {
+	console.log(`MBID ${mbid}`);
 	// Search
 	let results: { channel: string; title: string; id: string }[] = [];
 	try {

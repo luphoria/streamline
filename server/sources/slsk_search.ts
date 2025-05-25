@@ -84,7 +84,8 @@ const SearchResponses = async (id) => {
 	return data;
 };
 
-export default async function (query) {
+export default async function (query, mbid) {
+	console.log(`MBID ${mbid}`);
 	let search;
 	try {
 		search = await CreateSearch(query);

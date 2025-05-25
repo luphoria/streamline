@@ -13,7 +13,7 @@ export default new Router(
 	(
 		<Route show={<Layout />}>
 			<Route path="/" show={<Home />} />
-			<Route path="/play/:input" show={<Player />} />
+			<Route path="/play/:input/:mbid" show={<Player />} />
 			<Route path="/search/:query" show={<Search />} />
 			<Route path="/artist/:mbid" show={<ArtistView />} />
 			<Route path="/release/:mbid" show={<ReleaseView />} />
