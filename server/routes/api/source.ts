@@ -27,7 +27,7 @@ export const get: Handler = async (req, res, next) => {
 	console.log("Checking DB for MBID . . .");
 	const DBReq = GetRecording(mbid);
 	console.log(DBReq);
-	if (DBReq.filepath) {
+	if (DBReq) {
 		console.log(`File already in cache: ${DBReq.filepath}`);
 		// TODO: download anyway if flag is fixed to try specific source that isn't cached or if some kind of force flag sent
 
