@@ -29,6 +29,12 @@ export const AddRecording = (mbid, filepath, source?) => {
 
 export const GetRecording = (mbid) => {
     const get = db.prepare("SELECT * FROM songs WHERE mbid = ?");
-    
+
     return get.get(mbid);
+}
+
+export const DeleteRecording = (mbid) => {
+  const del = db.prepare("DELETE FROM songs WHERE mbid = ?");
+
+  return del.run(mbid);
 }

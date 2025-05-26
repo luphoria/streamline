@@ -23,6 +23,7 @@ export const get: Handler = async (req, res, next) => {
 	// TODO: Get query from MBID instead of just getting both from client
 	const source = decodeURIComponent(searchParams.get("source"));
 	let stream;
+	let usedSource;
 
 	console.log("Checking DB for MBID . . .");
 	const DBReq = GetRecording(mbid);
@@ -32,26 +33,58 @@ export const get: Handler = async (req, res, next) => {
 		// TODO: download anyway if flag is fixed to try specific source that isn't cached or if some kind of force flag sent
 
 		stream = await t(fs.createReadStream(DBReq.filepath));
+		usedSource = "cache";
 	} else {
 		// Not already cached
 		switch (source) {
 			case "slsk":
+				usedSource = "slsk";
 				stream = await t(slskSearch(query, mbid));
 				break;
 			case "yt-dlp":
+				usedSource = "yt-dlp";
 				stream = await t(YTDLPSearchAndDownload(query, mbid));
 				break;
-			default:
-				res.status(500).send("No source specified");
 		}
 	}
 
 	if (!stream.ok) {
 		console.log(stream.error);
 
+		console.log("Trying another source . . . ")
+		// TODO: There's a better way to do this
+		switch (usedSource) {
+			case "cache":
+				switch (source) {
+					case "slsk":
+						usedSource = "slsk";
+						stream = await t(slskSearch(query, mbid));
+						break;
+					case "yt-dlp":
+						usedSource = "yt-dlp";
+						stream = await t(YTDLPSearchAndDownload(query, mbid));
+						break;
+					default:
+						return res.status(500).send("No source specified");
+				}
+				break;
+			case "slsk":
+				usedSource = "yt-dlp";
+				stream = await t(YTDLPSearchAndDownload(query, mbid));
+				break;
+			case "yt-dlp":
+				usedSource = "yt-dlp";
+				stream = await t(YTDLPSearchAndDownload(query, mbid));
+				break;
+			default: 
+				return res.status(500).send("No source specified; song not in cache");
+		}
+	}
+
+	if (!stream.ok) {
 		return res
-			.status((stream.error as Response).status)
-			.send(await (stream.error as Response).text());
+		.status((stream.error as Response).status)
+		.send(await (stream.error as Response).text());
 	}
 
 	return stream.value.pipe(res);
