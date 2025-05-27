@@ -2,7 +2,7 @@ import { GetRecording, DeleteRecording } from "../../db/db";
 import * as fs from "fs";
 
 export const get: Handler = async (req, res, next) => {
-    // TODO: Authentication settings for this option? 
+	// TODO: Authentication settings for this option?
 	console.log(req.originalUrl);
 	const url = new URL(req.url, "https://streamline.invalid");
 
@@ -11,10 +11,10 @@ export const get: Handler = async (req, res, next) => {
 	const mbid = decodeURIComponent(searchParams.get("mbid"));
 
 	// Only accept requests with a valid MBID
-	if (!mbid.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g)) {
-		return res
-		.status(400)
-		.send("Bad MBID");
+	if (
+		!mbid.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g)
+	) {
+		return res.status(400).send("Bad MBID");
 	}
 
 	console.log(`Checking DB to delete ${mbid} . . .`);
@@ -26,15 +26,17 @@ export const get: Handler = async (req, res, next) => {
 
 		DeleteRecording(mbid);
 
-        // TODO: Maybe make this optional? 
-        console.log(`Deleting ${DBReq.filepath} . . .`);
-        fs.unlink(DBReq.filepath, (err) => {
-            return res.send(err);
-        })
+		// TODO: Maybe make this optional?
+		console.log(`Deleting ${DBReq.filepath} . . .`);
+		try {
+			await fs.unlinkSync(DBReq.filepath);
+            console.log("Deleted.");
 
-        return res.status(200).send(mbid);
-	} 
+			return res.status(200).send(mbid);
+		} catch (err) {
+			return res.send(err);
+		}
+	}
 
     return res.status(404).send("Not Found");
-
 };
