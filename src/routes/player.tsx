@@ -31,6 +31,35 @@ export const Player: Component<
 		player.play();
 		this.player = player;
 	};
+
+	const deleteCached = async (mbid) => {
+		this.player = <div>loading...</div>;
+		const response = await t(
+			fetch(`/api/deleteItem?mbid=${mbid}`)
+		);
+
+		if (!response.ok) {
+			this.player = <div>an error occured: {response.error}</div>;
+			console.error(response.error);
+			return;
+		}
+
+		switch (response.value.status) {
+			case 200: 
+				this.player = <div>deleted item from cache</div>
+				break;
+			case 404:
+				this.player = <div>file not in cache</div>
+				break;
+			case 500: 
+				this.player = <div>error: ${response.error}</div>
+				break;
+			default: 
+				this.player = <div>unknown error or lack of response</div>
+		}
+
+	}
+
 	// TODO : use mbid 
 	use(this.input).listen(playSong);
 	return (
@@ -50,6 +79,7 @@ export const Player: Component<
 				type="text"
 			/>
 			<button on:click={() => playSong(this.input, this.mbid)}>fetch song</button>
+			<button on:click={() => deleteCached(this.mbid)}>delete from cache</button>
 			<br />
 			{use(this.player)}
 		</div>
