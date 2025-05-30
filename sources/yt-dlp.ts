@@ -1,8 +1,8 @@
 import { exec } from "child_process";
 import quote from "shell-quote/quote";
 import fs from "fs";
-import { ytdlp } from "../../.env";
-import { AddRecording } from "../db/db";
+import { ytdlp } from "../.env";
+import { AddRecording } from "../server/db/db";
 
 const execPromise = (input) => {
 	return new Promise((resolve, reject) => {
@@ -22,7 +22,7 @@ const execPromise = (input) => {
 	});
 };
 
-export const YTDLPSearchAndDownload = async (query, mbid) => {
+export const DownloadBySearch = async (query, mbid) => {
 	console.log(`MBID ${mbid}`);
 	// Search
 	let results: { channel: string; title: string; id: string }[] = [];

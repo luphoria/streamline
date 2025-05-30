@@ -1,10 +1,9 @@
 import type { Handler } from "express";
-import slskSearch from "../../sources/slsk";
-import { YTDLPSearchAndDownload } from "../../sources/yt-dlp";
 import { t } from "try";
 import { GetRecording } from "../../db/db";
 import * as fs from "fs";
 import { MusicBrainz } from "../../../src/utils/MusicBrainz"
+import { sources } from "../../../.env.js"
 
 export const get: Handler = async (req, res, next) => {
 	console.log(req.originalUrl);
@@ -20,8 +19,8 @@ export const get: Handler = async (req, res, next) => {
 		.status(400)
 		.send("Bad MBID");
 	}
-	// TODO: Get query from MBID instead of just getting both from client
 
+	// Get song info by MBID
 	const mb = new MusicBrainz("https://musicbrainz.org/ws/2/");
 	const recordingInfo = await mb.RecordingInfo(mbid);
 	// TODO: sort related releases, pass selected release to scraper (for sorting responses), pass other listed artist credits (for filtering and sorting)
@@ -41,49 +40,27 @@ export const get: Handler = async (req, res, next) => {
 		stream = await t(fs.createReadStream(DBReq.filepath));
 		usedSource = "cache";
 	} else {
-		// Not already cached
-		switch (source) {
-			case "slsk":
-				usedSource = "slsk";
-				stream = await t(slskSearch(query, mbid));
-				break;
-			case "yt-dlp":
-				usedSource = "yt-dlp";
-				stream = await t(YTDLPSearchAndDownload(query, mbid));
-				break;
+		// Fetch all sourcing modules (from .env.js)
+		let sourceModules = [];
+
+		for (let src in sources) {
+			// Is there a better way to do this? Dynamically import each module by its path. 
+			eval(`import { DownloadBySearch } as ${sources[src].name}Download from ${sources[src].path}`);
+			sourceModules.push(sources[src].name);
 		}
-	}
 
-	if (!stream.ok) {
-		console.log(stream.error);
+		// Prioritize client-specified src
+		if (sourceModules.includes(source)) {
+			eval(`stream = await t(${source}Download(${query}, ${mbid}));`);
+		}
 
-		console.log("Trying another source . . . ")
-		// TODO: There's a better way to do this
-		switch (usedSource) {
-			case "cache":
-				switch (source) {
-					case "slsk":
-						usedSource = "slsk";
-						stream = await t(slskSearch(query, mbid));
-						break;
-					case "yt-dlp":
-						usedSource = "yt-dlp";
-						stream = await t(YTDLPSearchAndDownload(query, mbid));
-						break;
-					default:
-						return res.status(500).send("No source specified");
-				}
-				break;
-			case "slsk":
-				usedSource = "yt-dlp";
-				stream = await t(YTDLPSearchAndDownload(query, mbid));
-				break;
-			case "yt-dlp":
-				usedSource = "yt-dlp";
-				stream = await t(YTDLPSearchAndDownload(query, mbid));
-				break;
-			default: 
-				return res.status(500).send("No source specified; song not in cache");
+		if (!stream.ok) {
+			// Go by order
+			for (let src in sourceModules) {
+				eval(`stream = await t(${sourceModules[src]}Download(${query}, ${mbid}));`);
+				if (stream.ok) break;
+				console.log("Trying another source . . . ");
+			}
 		}
 	}
 

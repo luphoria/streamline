@@ -1,9 +1,9 @@
 // Download a file from soulseek and then send it to the client.
 
 import * as fs from "fs";
-import { slskd } from "../../.env.js";
+import { slskd } from "../.env.js";
 import search from "./slsk_search";
-import { AddRecording } from "../db/db.ts";
+import { AddRecording } from "../server/db/db.ts";
 
 const CreateDownload = async (username, filePath, size) => {
 	const response = await fetch(
@@ -95,7 +95,7 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	};
 };
 
-export default async function (query, mbid) {
+export default async function DownloadBySearch (query, mbid) {
 	// Downloader
 	let downloadResult;
 	const chosenRes: { username: string; files: any[] } = await search(query);

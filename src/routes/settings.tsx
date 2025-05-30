@@ -7,6 +7,7 @@ export const Settings: Component<
 		apiUrl: string;
 	}
 > = function (cx) {
+	// TODO: Populate options by .env
 	cx.mount = () => {
 		this.apiUrl = "https://musicbrainz.org/ws/2/";
 	};
@@ -25,7 +26,7 @@ export const Settings: Component<
 			</button>
 			<div>pick a source</div>
 			<select value={use(store.source).bind()}>
-				<option value="yt-dlp">yt-dlp</option>
+				<option value="ytdlp">yt-dlp</option>
 				<option value="slsk">slsk</option>
 			</select>	
 		</div>

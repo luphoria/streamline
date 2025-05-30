@@ -2,7 +2,7 @@ import { createStore } from "dreamland/core";
 
 export const store = createStore(
 	{
-		source: "yt-dlp",
+		source: "ytdlp",
 	},
 	{ ident: "settings", backing: "localstorage", autosave: "auto" }
 );
