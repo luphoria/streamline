@@ -41,23 +41,24 @@ export const get: Handler = async (req, res, next) => {
 		usedSource = "cache";
 	} else {
 		// Fetch all sourcing modules (from .env.js)
-		let sourceModules = [];
+		let sourceModules = {};
 
 		for (let src in sources) {
-			// Is there a better way to do this? Dynamically import each module by its path. 
-			eval(`import { DownloadBySearch } as ${sources[src].name}Download from ${sources[src].path}`);
-			sourceModules.push(sources[src].name);
+			// Dynamically import each module by its path. (Does the file:/// uri work x-platform?)
+			sourceModules[sources[src].name] = (await import(`file:///${sources[src].path}`)).default
 		}
 
 		// Prioritize client-specified src
-		if (sourceModules.includes(source)) {
-			eval(`stream = await t(${source}Download(${query}, ${mbid}));`);
+		if (sourceModules[source]) {
+			stream = await t(sourceModules[source](query, mbid));
+			if (!stream.ok) delete sourceModules[source];
 		}
 
-		if (!stream.ok) {
+		if (!stream || !stream.ok) {
+			console.log("Stream not yet OK");
 			// Go by order
 			for (let src in sourceModules) {
-				eval(`stream = await t(${sourceModules[src]}Download(${query}, ${mbid}));`);
+				stream = await t(sourceModules[src](query, mbid));
 				if (stream.ok) break;
 				console.log("Trying another source . . . ");
 			}

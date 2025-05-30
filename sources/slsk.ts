@@ -95,7 +95,7 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	};
 };
 
-export default async function DownloadBySearch (query, mbid) {
+export default async function slskDownloadBySearch (query, mbid) {
 	// Downloader
 	let downloadResult;
 	const chosenRes: { username: string; files: any[] } = await search(query);

@@ -1,6 +1,6 @@
 // Search soulseek with ARTIST - TITLE
 
-import { slskd } from "../../.env.js";
+import { slskd } from "../.env.js";
 
 // Create a search in slskd
 const CreateSearch = async (query) => {

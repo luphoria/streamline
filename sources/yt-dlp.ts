@@ -22,7 +22,7 @@ const execPromise = (input) => {
 	});
 };
 
-export const DownloadBySearch = async (query, mbid) => {
+export default async function ytdlpDownloadBySearch (query, mbid) {
 	console.log(`MBID ${mbid}`);
 	// Search
 	let results: { channel: string; title: string; id: string }[] = [];
