@@ -12,11 +12,11 @@ export const Player: Component<
 	}
 > = function (cx) {
 	// TODO: No `input`, only `mbid`
-	const playSong = async (input, mbid) => {
+	const playSong = async (mbid) => {
 		this.player = <div>loading...</div>;
 		console.log(store.source)
 		const response = await t(
-			fetch(`/api/source?query=${encodeURIComponent(input)}&mbid=${mbid}&source=${store.source}`)
+			fetch(`/api/source?mbid=${mbid}&source=${store.source}`)
 		);
 		if (!response.ok) {
 			this.player = <div>an error occured: {response.error}</div>;
@@ -61,7 +61,7 @@ export const Player: Component<
 	}
 
 	// TODO : use mbid 
-	use(this.input).listen(playSong);
+	use(this.mbid).listen(playSong);
 	return (
 		<div class="input-row">
 			<input
@@ -78,7 +78,7 @@ export const Player: Component<
 					.bind()}
 				type="text"
 			/>
-			<button on:click={() => playSong(this.input, this.mbid)}>fetch song</button>
+			<button on:click={() => playSong(this.mbid)}>fetch song</button>
 			<button on:click={() => deleteCached(this.mbid)}>delete from cache</button>
 			<br />
 			{use(this.player)}

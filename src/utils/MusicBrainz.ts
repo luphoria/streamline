@@ -13,7 +13,7 @@ export class MusicBrainz {
 	}
 
 	// should not be used outside of this file. queries musicbrainz api
-	releaseFetch = async (path: string) => {
+	queryApi = async (path: string) => {
 		const res = await (
 			await fetch(this.apiUrl + path, {
 				headers: {
@@ -44,9 +44,50 @@ export class MusicBrainz {
 		return res;
 	};
 
+	// Recording (song)
+	RecordingInfo = async (mbid) => {
+		const recordingFetch = await this.queryApi(
+			`recording/${mbid}?inc=artists+releases&fmt=json`
+		);
+
+		console.info("RecordingInfo: recordingFetch:");
+		console.info(recordingFetch);
+
+		const res = {
+			title: recordingFetch["title"],
+			artists: [],
+			releases: [],
+			length: recordingFetch["length"],
+			releaseDate: recordingFetch["first-release-date"]
+		}
+
+		for (const artist in recordingFetch["artist-credit"]) {
+			res.artists.push({
+				name: recordingFetch["artist-credit"][artist]["name"],
+				mbid: recordingFetch["artist-credit"][artist]["id"],
+			});
+		}
+
+		for (const release in recordingFetch["release-list"]) {
+			res.releases.push({
+				title: recordingFetch["release-list"][release]["title"],
+				disambiguation: recordingFetch["release-list"][release]["disambiguation"] ? true : false,
+				artists: []
+			});
+			for (const artist in recordingFetch["release-list"][release]["artist-credit"]) {
+				res.artists.push({
+					name: recordingFetch["release-list"][release]["artist-credit"][artist]["name"],
+					mbid: recordingFetch["release-list"][release]["artist-credit"][artist]["id"],
+				});
+			}
+		}
+
+		return res;
+	}
+
 	// Release
 	ReleaseInfo = async (mbid) => {
-		const releaseFetch = await this.releaseFetch(
+		const releaseFetch = await this.queryApi(
 			`release/${mbid}?inc=recordings+release-groups+artists&fmt=json`
 		);
 
@@ -92,7 +133,7 @@ export class MusicBrainz {
 
 	// Artist
 	ArtistInfo = async (mbid) => {
-		const artistFetch = await this.releaseFetch(
+		const artistFetch = await this.queryApi(
 			`artist/${mbid}?inc=release-groups+releases&fmt=json`
 		);
 		console.info("ArtistInfo: artistFetch:");
@@ -156,7 +197,7 @@ export class MusicBrainz {
 	// Search recordings
 	SearchSongs = async (query: string) => {
 		query = '"' + query.replaceAll(/ /g, '" "') + '"';
-		const data = await this.releaseFetch(
+		const data = await this.queryApi(
 			`recording/?query=${encodeURIComponent(query)}&limit=50&fmt=json`
 		);
 
@@ -282,7 +323,7 @@ export class MusicBrainz {
 	SearchArtists = async (query: string) => {
 		// Limit is much lower for artists because there are fewer artists in general.
 		// TODO: Sort artists into the main search res list by score?
-		const data = await this.releaseFetch(
+		const data = await this.queryApi(
 			`artist/?query=${encodeURIComponent(query)}&limit=10&fmt=json`
 		);
 		console.log(data);

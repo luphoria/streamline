@@ -4,6 +4,7 @@ import { YTDLPSearchAndDownload } from "../../sources/yt-dlp";
 import { t } from "try";
 import { GetRecording } from "../../db/db";
 import * as fs from "fs";
+import { MusicBrainz } from "../../../src/utils/MusicBrainz"
 
 export const get: Handler = async (req, res, next) => {
 	console.log(req.originalUrl);
@@ -11,7 +12,6 @@ export const get: Handler = async (req, res, next) => {
 
 	const searchParams = new URLSearchParams(url.search);
 
-	const query = decodeURIComponent(searchParams.get("query"));
 	const mbid = decodeURIComponent(searchParams.get("mbid"));
 
 	// Only accept requests with a valid MBID
@@ -21,6 +21,12 @@ export const get: Handler = async (req, res, next) => {
 		.send("Bad MBID");
 	}
 	// TODO: Get query from MBID instead of just getting both from client
+
+	const mb = new MusicBrainz("https://musicbrainz.org/ws/2/");
+	const recordingInfo = await mb.RecordingInfo(mbid);
+	// TODO: sort related releases, pass selected release to scraper (for sorting responses), pass other listed artist credits (for filtering and sorting)
+	const query = `${recordingInfo.artists[0].name} - ${recordingInfo.title}`;
+
 	const source = decodeURIComponent(searchParams.get("source"));
 	let stream;
 	let usedSource;

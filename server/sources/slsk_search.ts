@@ -93,7 +93,7 @@ export default async function (query) {
 		return new Response(`Search error: ${err}`, { status: 500 });
 	}
 	// TODO: find a better way to avoid this race condition.
-	await new Promise((resolve) => setTimeout(resolve, 250));
+	await new Promise((resolve) => setTimeout(resolve, 500));
 	let searchRes = await SearchResponses(search.id);
 
 	if (searchRes.length == 0)
