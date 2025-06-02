@@ -209,6 +209,9 @@ export class MusicBrainz {
 				return;
 			}
 
+			console.log(recording);
+			console.log("================================")
+
 			const artist = recording["artist-credit"][0].name;
 			const title = recording.title;
 			const key = `${artist}|${title}`;
@@ -219,8 +222,15 @@ export class MusicBrainz {
 			const releases = recording.releases;
 			if (releases.length > 1) {
 				releases.sort((a, b) => {
-					// Sort by release media type (prefer digital) and country
+					// Sort by release media type (prefer digital), country release date, and song length matching
 					// TODO: more sorting for parent release
+					if ((recording.length && a.length && b.length) && (a.length !== b.length)) {
+						return (recording.length == a.length) ? -1 : 1
+					}
+					if (a.date == recording["first-release-date"] &&
+						b.date != recording["first-release-date"]
+					)
+						return -1;
 					if (
 						a.media[0].format == "Digital Media" &&
 						b.media[0].format != "Digital Media"
@@ -241,7 +251,7 @@ export class MusicBrainz {
 			if (recording.video !== null) score += 50; // Heavily prioritize videos
 			if (parentMbid) score += 15; // Favor recordings with associated releases
 			score += recording.releases.length * 4; // For each version add 4 to the score
-			if (recording.length) score += 5; // Favor recordings with length information
+			if (recording.length) score += 15; // Favor recordings with length information
 			if (recording["first-release-date"]) score += 3; // Favor recordings with release dates
 
 			const songVersion: SongVersion = {
@@ -273,9 +283,6 @@ export class MusicBrainz {
 				// Certain releases have an empty string set for release date
 				if (a.releaseDate == "") {
 					return 1;
-					// Releases prioritized if there is more than just a year in the release date (help filter bootlegs)
-				} else if (a.releaseDate.includes("-") != b.releaseDate.includes("-")) {
-					return a.releaseDate.includes("-") ? -1 : 1;
 				} else {
 					return (
 						new Date(a.releaseDate || 0).getTime() -

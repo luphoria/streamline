@@ -51,7 +51,7 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
 					/>
 					<button
 						id="songSearchBtn"
-						on:click={() => router.navigate(`/search/${this.songQuery}`)}
+						on:click={() => router.navigate(`/search/${encodeURIComponent(this.songQuery)}`)}
 					>
 						Search song
 					</button>
