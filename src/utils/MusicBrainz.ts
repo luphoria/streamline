@@ -198,7 +198,7 @@ export class MusicBrainz {
 	SearchSongs = async (query: string) => {
 		query = '"' + query.replaceAll(/ /g, '" "') + '"';
 		const data = await this.queryApi(
-			`recording/?query=${encodeURIComponent(query)}&limit=50&fmt=json`
+			`recording/?query=${encodeURIComponent(query)}&limit=100&fmt=json`
 		);
 
 		const songMap = new Map<string, SongVersion[]>();
