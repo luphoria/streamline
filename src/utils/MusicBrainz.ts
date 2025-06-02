@@ -121,7 +121,7 @@ export class MusicBrainz {
 		for (const track in releaseFetch["media"][0]["tracks"]) {
 			res.trackList.push({
 				title: releaseFetch["media"][0]["tracks"][track]["title"],
-				mbid: releaseFetch["media"][0]["tracks"][track]["id"],
+				mbid: releaseFetch["media"][0]["tracks"][track]["recording"]["id"],
 			});
 		}
 
