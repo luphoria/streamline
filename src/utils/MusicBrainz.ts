@@ -209,9 +209,6 @@ export class MusicBrainz {
 				return;
 			}
 
-			console.log(recording);
-			console.log("================================")
-
 			const artist = recording["artist-credit"][0].name;
 			const title = recording.title;
 			const key = `${artist}|${title}`;

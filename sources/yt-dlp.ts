@@ -77,6 +77,14 @@ export default async function ytdlpDownloadBySearch (query, mbid) {
 	console.log(`${results.length} results after filtering`);
 
 	// TODO: More sorting (score-based system?)
+	// Sort by channel name has "Topic"
+	results.sort((a, b) => {
+		return (
+			+b.channel.toLowerCase().endsWith(" - Topic") -
+			+a.channel.toLowerCase().endsWith(" - Topic")
+		);
+	});
+
 	// Sort by artist matches channel
 	results.sort((a, b) => {
 		return (
