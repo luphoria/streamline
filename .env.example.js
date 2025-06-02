@@ -11,3 +11,14 @@ export const ytdlp = {
 	binary: "yt-dlp",
 	path: "/path/to/set/yt-dlp/downloads/",
 };
+
+export const sources = [
+  {
+    name: "slsk", 
+    path: "C:\\Users\\user\\streamline\\sources\\slsk.ts"
+  },
+  {
+    name: "ytdlp",
+    path: "C:\\Users\\user\\streamline\\sources\\yt-dlp.ts"
+  }
+]
