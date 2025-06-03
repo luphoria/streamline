@@ -262,15 +262,16 @@ export class MusicBrainz {
 			// Sort releases for recording
 			// TODO: Improve and prefer cover 
 			recordingResult.versions.sort((a, b) => {
-				if (a.country != "XW" && b.country == "XW") return 1; // Deprioritize country releases
-				if (a.country == "XW" && b.country != "XW") return -1;
+				if ((a.country != "XW" && a.country != "XE") && (b.country == "XW" || b.country == "XE")) return 1; // Deprioritize country releases
+				if ((a.country == "XW" || a.country == "XE") && (b.country != "XW" && b.country != "XE")) return -1;
 
-				return (
-					// Prioritize oldest
-					new Date(a.releaseDate || 0).getTime() -
-					new Date(b.releaseDate || 0).getTime()
-				);
+				// US/GB is next priority
+				if ((a.country != "US" && a.country != "GB") && (b.country == "US" || b.country == "GB")) return 1; // Deprioritize country releases
+				if ((a.country == "US" || a.country == "GB") && (b.country != "US" && b.country != "GB")) return -1;
+
+				return 0;
 			});
+
 			recordingResult.versions.sort((a, b) => {
 				if (!!a.releaseDate && !!b.releaseDate) {
 					return (
@@ -280,6 +281,11 @@ export class MusicBrainz {
 					);
 				}
 			});
+
+			recordingResult.versions.sort((a, b) => {
+				return a.releaseDate.includes("-") ? 1 : 0;
+			});
+
 			recordingResult.versions.sort((a, b) => {
 				if (
 					a.secondaryType == "Compilation" &&
