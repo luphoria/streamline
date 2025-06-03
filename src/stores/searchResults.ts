@@ -2,23 +2,35 @@ import { atom } from "nanostores";
 
 export interface SongVersion {
 	mbid: string;
-	parentMbid: string | null;
 	title: string;
 	artist: string;
-	releaseTitle: string;
+	versions: Release[];
 	length: number | null;
-	coverArt: string | null;
 	hasVideo: boolean;
 	releaseDate: string;
 	score: number;
 }
 
-export interface SongGroup {
+export interface Release {
+	mbid: string;
+	title: string;
+	artist: string;
+	releaseDate: string;
+	coverArt: string | null;
+	disambiguation: string | null;
+	country: string | null;
+	status: string | null;
+	secondaryType: string | null;
+}
+
+export interface RecordingGroup {
 	artist: string;
 	title: string;
 	versions: SongVersion[];
 	hasVideo: boolean;
 	score: number;
+	releaseDate: string;
+	mbid: string;
 }
 
 interface Song {

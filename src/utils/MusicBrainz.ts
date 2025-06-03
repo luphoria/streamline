@@ -1,4 +1,4 @@
-import type { SongGroup, SongVersion } from "../stores/searchResults";
+import type { RecordingGroup, SongVersion } from "../stores/searchResults";
 import DOMPurify from "dompurify";
 
 export class MusicBrainz {
@@ -58,8 +58,8 @@ export class MusicBrainz {
 			artists: [],
 			releases: [],
 			length: recordingFetch["length"],
-			releaseDate: recordingFetch["first-release-date"]
-		}
+			releaseDate: recordingFetch["first-release-date"],
+		};
 
 		for (const artist in recordingFetch["artist-credit"]) {
 			res.artists.push({
@@ -71,19 +71,29 @@ export class MusicBrainz {
 		for (const release in recordingFetch["release-list"]) {
 			res.releases.push({
 				title: recordingFetch["release-list"][release]["title"],
-				disambiguation: recordingFetch["release-list"][release]["disambiguation"] ? true : false,
-				artists: []
+				disambiguation: recordingFetch["release-list"][release][
+					"disambiguation"
+				]
+					? true
+					: false,
+				artists: [],
 			});
-			for (const artist in recordingFetch["release-list"][release]["artist-credit"]) {
+			for (const artist in recordingFetch["release-list"][release][
+				"artist-credit"
+			]) {
 				res.artists.push({
-					name: recordingFetch["release-list"][release]["artist-credit"][artist]["name"],
-					mbid: recordingFetch["release-list"][release]["artist-credit"][artist]["id"],
+					name: recordingFetch["release-list"][release]["artist-credit"][
+						artist
+					]["name"],
+					mbid: recordingFetch["release-list"][release]["artist-credit"][
+						artist
+					]["id"],
 				});
 			}
 		}
 
 		return res;
-	}
+	};
 
 	// Release
 	ReleaseInfo = async (mbid) => {
@@ -201,7 +211,7 @@ export class MusicBrainz {
 			`recording/?query=${encodeURIComponent(query)}&limit=100&fmt=json`
 		);
 
-		const songMap = new Map<string, SongVersion[]>();
+		let recordingsArray = [];
 
 		data.recordings.forEach((recording) => {
 			if (!recording.releases) {
@@ -209,119 +219,132 @@ export class MusicBrainz {
 				return;
 			}
 
+			console.log(recording);
+
 			const artist = recording["artist-credit"][0].name;
 			const title = recording.title;
-			const key = `${artist}|${title}`;
 
-			// Sort parent releases.
-			// Possible sorting factors:
-			// Country, media types (prefer digital), release date (although they should all be equal)... more?
-			const releases = recording.releases;
-			if (releases.length > 1) {
-				releases.sort((a, b) => {
-					// Sort by release media type (prefer digital), country release date, and song length matching
-					// TODO: more sorting for parent release
-					if ((recording.length && a.length && b.length) && (a.length !== b.length)) {
-						return (recording.length == a.length) ? -1 : 1
-					}
-					if (a.date == recording["first-release-date"] &&
-						b.date != recording["first-release-date"]
-					)
-						return -1;
-					if (
-						a.media[0].format == "Digital Media" &&
-						b.media[0].format != "Digital Media"
-					)
-						return -1;
-					if (a.country == "XW" && b.country != "XW") return -1;
-
-					return 1;
-				});
-			}
-
-			const parentRelease = recording.releases[0];
-			const parentMbid = parentRelease ? parentRelease.id : null;
-
-			let score = recording.score;
-
-			// Additional scoring factors
-			if (recording.video !== null) score += 50; // Heavily prioritize videos
-			if (parentMbid) score += 15; // Favor recordings with associated releases
-			score += recording.releases.length * 4; // For each version add 4 to the score
-			if (recording.length) score += 15; // Favor recordings with length information
-			if (recording["first-release-date"]) score += 3; // Favor recordings with release dates
-
-			const songVersion: SongVersion = {
+			let recordingResult: SongVersion = {
 				mbid: recording.id,
-				parentMbid: parentMbid ? parentMbid : null,
 				title: DOMPurify.sanitize(title),
 				artist: DOMPurify.sanitize(artist),
-				releaseTitle: parentRelease.title,
+				versions: [],
 				length: recording.length,
-				coverArt: parentMbid
-					? `https://archive.org/download/mbid-${parentMbid}/__ia_thumb.jpg`
-					: null,
 				hasVideo: recording.video !== null,
 				releaseDate: DOMPurify.sanitize(recording["first-release-date"] || ""),
-				score: score,
+				score: recording.score,
 			};
 
-			if (!songMap.has(key)) {
-				songMap.set(key, []);
-			}
+			recording.releases.forEach((release) => {
+				console.log(release);
+				recordingResult.versions.push({
+					mbid: release.id,
+					title: release.title,
+					artist: recordingResult.artist,
+					releaseDate: release["date"],
+					coverArt: `https://archive.org/download/mbid-${release.id}/__ia_thumb.jpg`,
+					disambiguation: release["disambiguation"]
+						? release["disambiguation"]
+						: null,
+					country: release["country"] ? release["country"] : null,
+					status: release["status"] ? release["status"] : null,
+					secondaryType: release["secondary-types"]
+						? release["secondary-types"][0]
+						: null,
+				});
+			});
 
-			songMap.get(key)!.push(songVersion);
-		});
+			// Remove releases with no release date
+			recordingResult.versions = recordingResult.versions.filter((version) => {
+				return version.releaseDate;
+			});
 
-		const songsArray: SongGroup[] = Array.from(songMap, ([key, versions]) => {
-			// Sort versions by release date (oldest first)
-			versions.sort((a, b) => {
-				if (b.score !== a.score) return b.score - a.score;
-				// Certain releases have an empty string set for release date
-				if (a.releaseDate == "") {
-					return 1;
-				} else {
+			// Sort releases for recording
+			// TODO: Improve and prefer cover 
+			recordingResult.versions.sort((a, b) => {
+				if (a.country != "XW" && b.country == "XW") return 1; // Deprioritize country releases
+				if (a.country == "XW" && b.country != "XW") return -1;
+
+				return (
+					// Prioritize oldest
+					new Date(a.releaseDate || 0).getTime() -
+					new Date(b.releaseDate || 0).getTime()
+				);
+			});
+			recordingResult.versions.sort((a, b) => {
+				if (!!a.releaseDate && !!b.releaseDate) {
 					return (
+						// Prioritize oldest
 						new Date(a.releaseDate || 0).getTime() -
 						new Date(b.releaseDate || 0).getTime()
 					);
 				}
 			});
+			recordingResult.versions.sort((a, b) => {
+				if (
+					a.secondaryType == "Compilation" &&
+					!(b.secondaryType == "Compilation")
+				)
+					return 1;
+				if (
+					b.secondaryType == "Compilation" &&
+					!(a.secondaryType == "Compilation")
+				)
+					return -1;
 
-			// If there is a release with a parent, then we filter out the releases without a parent so that cover art will always display if available.
-			let hasRecordingWithParent = false;
-			versions.forEach((version) => {
-				if (hasRecordingWithParent) return;
-				if (version.parentMbid) {
-					hasRecordingWithParent = true;
-				}
+				return 0;
+			});
+			recordingResult.versions.sort((a, b) => {
+				if (a.status == "Bootleg" && !(b.status == "Bootleg")) return 1;
+				if (b.status == "Bootleg" && !(a.status == "Bootleg")) return -1;
+
+				return 0;
 			});
 
-			if (hasRecordingWithParent) {
-				versions = versions.filter((release) => {
-					return release.coverArt !== null;
-				});
-			}
-
-			const [artist, title] = key.split("|");
-
-			return {
-				artist,
-				title,
-				versions,
-				hasVideo: versions.some((v) => v.hasVideo),
-				score: versions[0].score, // Use the highest score among versions
-			};
+			if (recordingResult.versions.length != 0)
+				recordingsArray.push(recordingResult);
 		});
 
-		// Sort songs: those with videos first, then by highest score
-		songsArray.sort((a, b) => {
-			if (a.hasVideo !== b.hasVideo) return b.hasVideo ? 1 : -1;
+		// Sort recordings 
+		// TODO: Internal score-based re-rank system
 
+		// More releases == hoisted
+		recordingsArray.sort((a, b) => {
+			return b.versions.length - a.versions.length;
+		});
+
+		// Higher score == hoisted
+		recordingsArray.sort((a, b) => {
 			return b.score - a.score;
 		});
+		
+		// Downrank bootlegs
+		recordingsArray.sort((a, b) => {
+			if (
+				a.versions[0].status == "Bootleg" &&
+				!(b.versions[0].status == "Bootleg")
+			)
+				return 1;
+			if (
+				b.versions[0].status == "Bootleg" &&
+				!(a.versions[0].status == "Bootleg")
+			)
+				return -1;
 
-		return songsArray;
+			return 0;
+		});
+
+		return recordingsArray;
+
+		// If there is a release with a parent, then we filter out the releases without a parent so that cover art will always display if available.
+
+		return {
+			artist,
+			title,
+			versions,
+			hasVideo: versions.some((v) => v.hasVideo),
+			score: versions[0].score, // Use the highest score among versions
+		};
 	};
 
 	SearchArtists = async (query: string) => {

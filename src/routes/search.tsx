@@ -6,29 +6,28 @@ import {
 import { MusicBrainz } from "../utils/MusicBrainz";
 import { Link } from "../components/link";
 import router from "../router";
-import type { SongGroup } from "../stores/searchResults";
+import type { RecordingGroup } from "../stores/searchResults";
 
 export const SearchResults: Component<{
-	results: SongGroup[];
+	results: RecordingGroup[];
 }> = function (cx) {
 	return (
 		<div id="searchresults">
 			{use(this.results).mapEach((song) => {
 				const firstResult = song.versions[0];
-				console.log(firstResult);
 				const selectedMbid = createState({
 					value: firstResult.parentMbid,
 				});
 				return (
 					<div>
 						<img height="75px" width="75px" src={firstResult.coverArt} />
-						<span>{firstResult.artist}</span> - <b>{firstResult.title}</b> (
-						{firstResult.releaseDate})
+						<span>{song.artist}</span> - <b>{song.title}</b> (
+						{song.releaseDate})
 						<select value={use(selectedMbid.value).bind()}>
-							{song.versions.map((version) => {
+							{song.versions.map((release) => {
 								return (
-									<option value={version.parentMbid}>
-										{version.releaseTitle} ({version.releaseDate})
+									<option value={release.mbid}>
+										{release.title} ({release.releaseDate}) {release.country == "XW" ? "[global]" : `[${release.country}]`} {release.disambiguation ? `[${release.disambiguation}]` : ""}
 									</option>
 								);
 							})}
@@ -37,7 +36,7 @@ export const SearchResults: Component<{
 						<button
 							on:click={() =>
 								router.navigate(
-									`/play/${encodeURIComponent(`${firstResult.artist} - ${firstResult.title}`)}/${firstResult.mbid}`
+									`/play/${encodeURIComponent(`${song.artist} - ${song.title}`)}/${song.mbid}`
 								)
 							}
 						>
