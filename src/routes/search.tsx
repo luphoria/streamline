@@ -16,7 +16,7 @@ export const SearchResults: Component<{
 			{use(this.results).mapEach((song) => {
 				const firstResult = song.versions[0];
 				const selectedMbid = createState({
-					value: firstResult.parentMbid,
+					value: firstResult.mbid,
 				});
 				return (
 					<div>
