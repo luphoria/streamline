@@ -58,6 +58,8 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	const fileId = file[0].id;
 	console.log(fileId);
 
+	let startTime = Date.now();
+
 	// Repeatedly check to see if the file is at 100% yet
 	while (true) {
 		const response = await fetch(
@@ -73,11 +75,17 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 		);
 		const data = await response.json();
 
-		// TODO: If the ETA is extremely long (i.e. queue, or just download speed), maybe we can concurrently try another download
-		// based on configs.
 		process.stdout.write(
 			`\rDownloading ${username}/${filePath} (${Math.round(data.percentComplete * 100) / 100}%) . . .`
 		);
+
+		// TODO: Configurable
+		if (data.percentComplete == 0 && Date.now() - startTime > 10000) {
+			console.log(`Download for ${username}/${filePath} timed out.`);
+
+			return {isComplete: false};
+		}
+
 		// TODO: Progress report on client side? Maybe/maybe not.
 		if (data.percentComplete >= 100) {
 			break;
@@ -95,40 +103,51 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	};
 };
 
-export default async function slskDownloadBySearch (query, mbid) {
+export default async function slskDownloadBySearch(query, mbid) {
 	// Downloader
 	let downloadResult;
-	const chosenRes: { username: string; files: any[] } = await search(query);
-	if (!chosenRes.files) throw new Response("No songs found.", { status: 404 });
-	const chosenFile: { filename: string; size: number } = chosenRes.files[0];
+	let filePath;
+	const searchQuery = await search(query);
+	let tries = 3; // Number of different results to try before giving up
+	if (tries > searchQuery.length) tries = searchQuery.length;
+	for (let i = 0; i < tries; i++) {
+		const chosenRes: { username: string; files: any[] } =
+			searchQuery[i];
+		if (!chosenRes.files)
+			throw new Response("No songs found.", { status: 404 });
+		const chosenFile: { filename: string; size: number } = chosenRes.files[0];
 
-	// slskd will auto-save the file in this directory format. TODO -- check for edge cases?
-	const filename_arr = chosenFile.filename.split("\\");
-	const filePath = filename_arr
-		.slice(Math.max(filename_arr.length - 2, 0))
-		.join("/");
+		// slskd will auto-save the file in this directory format. TODO -- check for edge cases?
+		const filename_arr = chosenFile.filename.split("\\");
+		filePath = filename_arr
+			.slice(Math.max(filename_arr.length - 2, 0))
+			.join("/");
 
-	// Don't dowload if we already have it
-	if (!fs.existsSync(`${slskd.path}${filePath}`)) {
-		await CreateDownload(
-			chosenRes.username,
-			chosenFile.filename,
-			chosenFile.size
-		);
+		// Don't dowload if we already have it
+		if (!fs.existsSync(`${slskd.path}${filePath}`)) {
+			await CreateDownload(
+				chosenRes.username,
+				chosenFile.filename,
+				chosenFile.size
+			);
 
-		downloadResult = await AwaitDownloadCompletion(
-			chosenRes.username,
-			chosenFile.filename
-		);
-
-		if (!downloadResult.isComplete) {
-			throw new Response("Could not download", { status: 404 });
+			downloadResult = await AwaitDownloadCompletion(
+				chosenRes.username,
+				chosenFile.filename
+			);
 		}
-
+		
+		if (downloadResult.isComplete) {
+			break;
+		} else {
+			console.log(`Could not download ${chosenRes.username}/${chosenFile.filename}`);
+		}
 	}
 
+	if (!downloadResult.isComplete) throw new Response(`Could not download after ${tries} tries`, { status: 404 });
+
 	try {
-		AddRecording(mbid, `${slskd.path}${filePath}`, "slsk")
+		AddRecording(mbid, `${slskd.path}${filePath}`, "slsk");
 		const readStream = fs.createReadStream(`${slskd.path}${filePath}`);
 
 		return readStream;

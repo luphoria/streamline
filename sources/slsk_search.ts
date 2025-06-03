@@ -164,5 +164,5 @@ export default async function (query) {
 	console.log(`${searchRes.length} responses after filtering :-)`);
 
 	// For now let's assume the first one will do
-	return searchRes[0];
+	return searchRes;
 }
