@@ -7,12 +7,10 @@ export const Player: Component<
 	{},
 	{
 		player: HTMLElement;
-		input: string;
 		mbid: string
 	}
 > = function (cx) {
-	// TODO: No `input`, only `mbid`
-	const playSong = async (mbid) => {
+	const playSong = async (mbid: string) => {
 		this.player = <div>loading...</div>;
 		console.log(store.source)
 		const response = await t(
@@ -32,7 +30,7 @@ export const Player: Component<
 		this.player = player;
 	};
 
-	const deleteCached = async (mbid) => {
+	const deleteCached = async (mbid: string) => {
 		this.player = <div>loading...</div>;
 		const response = await t(
 			fetch(`/api/deleteItem?mbid=${mbid}`)
@@ -64,13 +62,6 @@ export const Player: Component<
 	use(this.mbid).listen(playSong);
 	return (
 		<div class="input-row">
-			<input
-				id="recordingId"
-				value={use(this.input)
-					.map((val) => decodeURIComponent(val))
-					.bind()}
-				type="text"
-			/>
 			<input
 				id="recordingMbid"
 				value={use(this.mbid)

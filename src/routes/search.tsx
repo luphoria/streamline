@@ -36,7 +36,7 @@ export const SearchResults: Component<{
 						<button
 							on:click={() =>
 								router.navigate(
-									`/play/${encodeURIComponent(`${song.artist} - ${song.title}`)}/${song.mbid}`
+									`/play/${song.mbid}`
 								)
 							}
 						>

@@ -13,7 +13,7 @@ export class MusicBrainz {
 	}
 
 	// should not be used outside of this file. queries musicbrainz api
-	queryApi = async (path: string) => {
+	async queryApi(path: string) {
 		const res = await (
 			await fetch(this.apiUrl + path, {
 				headers: {
@@ -25,14 +25,14 @@ export class MusicBrainz {
 		return res;
 	};
 
-	SetApiUrl = (URL) => {
+	SetApiUrl(URL: string) {
 		this.apiUrl = URL;
 
 		return this.apiUrl;
 	};
 
 	// Returns a string (url)
-	HdCoverArtUrl = async (mbid) => {
+	async HdCoverArtUrl(mbid) {
 		const coverArtFetch = await (
 			await fetch(`https://coverartarchive.org/release/${mbid}`)
 		).json();
@@ -45,7 +45,7 @@ export class MusicBrainz {
 	};
 
 	// Recording (song)
-	RecordingInfo = async (mbid) => {
+	 async RecordingInfo(mbid)  {
 		const recordingFetch = await this.queryApi(
 			`recording/${mbid}?inc=artists+releases&fmt=json`
 		);
@@ -96,7 +96,7 @@ export class MusicBrainz {
 	};
 
 	// Release
-	ReleaseInfo = async (mbid) => {
+	async ReleaseInfo(mbid) {
 		const releaseFetch = await this.queryApi(
 			`release/${mbid}?inc=recordings+release-groups+artists&fmt=json`
 		);
@@ -142,7 +142,7 @@ export class MusicBrainz {
 	};
 
 	// Artist
-	ArtistInfo = async (mbid) => {
+	async ArtistInfo(mbid) {
 		const artistFetch = await this.queryApi(
 			`artist/${mbid}?inc=release-groups+releases&fmt=json`
 		);
@@ -205,7 +205,7 @@ export class MusicBrainz {
 	};
 
 	// Search recordings
-	SearchSongs = async (query: string) => {
+	async SearchSongs(query: string) {
 		query = '"' + query.replaceAll(/ /g, '" "') + '"';
 		const data = await this.queryApi(
 			`recording/?query=${encodeURIComponent(query)}&limit=100&fmt=json`
@@ -353,7 +353,7 @@ export class MusicBrainz {
 		};
 	};
 
-	SearchArtists = async (query: string) => {
+	async SearchArtists(query: string) {
 		// Limit is much lower for artists because there are fewer artists in general.
 		// TODO: Sort artists into the main search res list by score?
 		const data = await this.queryApi(
