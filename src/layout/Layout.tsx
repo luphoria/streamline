@@ -7,18 +7,20 @@ const Layout: Component<{}, { outlet: Element }> = function (cx) {
       height: 100%;
       width: calc(100%);
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
     }
 
     main {
       justify-content: center;
       flex: 1;
+      overflow-y: auto;
+      padding: 1.5em;
     }
   `;
 	return (
 		<div>
 			<Navbar />
-			<main this={use(this.container).bind()}>{use(this.outlet)}</main>
+			<main this={use(this.container).bind()}><fieldset>{use(this.outlet)}</fieldset></main>
 		</div>
 	);
 };

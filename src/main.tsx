@@ -4,12 +4,13 @@ import Router from "./router";
 import store from "./store";
 
 import "./styles/main.css";
+import "xp.css/dist/XP.css";
 window.mb = new MusicBrainz("https://musicbrainz.org/ws/2/");
 
 const App: Component = function (cx) {
 	cx.css = `
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		gap: 1rem;
 
 		justify-content: flex-start;

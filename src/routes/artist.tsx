@@ -1,5 +1,6 @@
 import type { Component, ComponentInstance } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
+import { Icon } from "../components/icon";
 const Artist: Component<{
 	artist: Awaited<ReturnType<MusicBrainz["ArtistInfo"]>>;
 }> = function (cx) {
@@ -34,7 +35,7 @@ export const ArtistView: Component<
 > = function (cx) {
 	const updateArtist = async (mbid: string) => {
 		if (!mbid) return;
-		this.artistEl = <div>Loading...</div>;
+		this.artistEl = <div class="loader"><Icon name="search_doc" /></div>;
 		const artist = await window.mb.ArtistInfo(mbid);
 		this.artistEl = <Artist artist={artist} />;
 	};

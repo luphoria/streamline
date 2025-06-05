@@ -1,32 +1,34 @@
 import type { Component, ComponentInstance } from "dreamland/core";
 import router from "../router";
+import { Link } from "../components/link";
 const Navbar: Component<{}, {}, {}> = function (cx) {
 	cx.css = `
 \       :scope {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-start;
+            padding: 1.5rem;
+            align-items: flex-start;
             background-color: var(--mantle);
-            height: 50px;
+            height: 100vh;
+            width: 25em;
             flex-shrink: 0;
-            gap: 32px;
+            gap: 1em;
             box-shadow: 0 -4px 8px 0 var(--mantle);
-            margin-top: 32px;
+
+            background: var(--bg-grad);
+            color: var(--on-grad);
+
+            font-size: 0.9rem;
         }
-        
+
         /* Searchbar */
         #searchbar {
-            position: absolute;
-            top: 1rem;
-            left: 0;
-            right: 0;
-
             display: flex;
             justify-content: space-evenly;
             flex-wrap: wrap;
             gap: 0.5rem 2rem;
-            padding: 0 2rem;
+            width: 100%;
         }
 
         #searchbar > span {
@@ -38,9 +40,28 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
         #searchbar > span > input {
             flex-grow: 1;
         }
+
+
+        .home {
+          font-size: 3rem!important;
+          color: var(--on-grad);
+          text-decoration: none;
+          font-weight: regular;
+        }
     `;
 	return (
 		<header>
+  	 <a
+  			href="/"
+  			class="home"
+  			on:click={(e) => {
+  				e.preventDefault();
+  				if (!window.r) throw new Error("No router exists");
+  				window.r.navigate((cx.root as HTMLAnchorElement).href);
+  			}}
+  		>
+  			Streamline
+  		</a>
 			<div id="searchbar">
 				<span>
 					<input
@@ -53,10 +74,11 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
 						id="songSearchBtn"
 						on:click={() => router.navigate(`/search/${encodeURIComponent(this.songQuery)}`)}
 					>
-						Search song
+						Search!
 					</button>
 				</span>
 			</div>
+			<Link href="/settings">Settings</Link>
 		</header>
 	);
 };

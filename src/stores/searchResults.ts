@@ -26,7 +26,7 @@ export interface Release {
 export interface RecordingGroup {
 	artist: string;
 	title: string;
-	versions: SongVersion[];
+	versions: Release[];
 	hasVideo: boolean;
 	score: number;
 	releaseDate: string;

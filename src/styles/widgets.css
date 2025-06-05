@@ -1,34 +1,23 @@
 /* Default widget styles */
 @import "./styles.css";
 
-h1 {
+/* h1 {
 	font-size: 5rem;
 	font-weight: 600;
 	letter-spacing: -0.3rem;
 	margin-bottom: 0;
-}
-
-input[type="text"] {
-	background-color: var(--secondary);
-	color: var(--text);
-
-	border: 1px solid var(--dividor);
-	outline-color: var(--text);
-
-	padding: 0.5rem;
-	border-radius: 0.5rem;
-}
+} */
 
 input[type="submit"],
 button {
 	cursor: pointer;
+}
 
-	background-color: var(--secondary);
-	color: var(--text);
-
-	border: 1px solid var(--dividor);
-	outline-color: var(--text);
-
-	padding: 0.5rem;
-	border-radius: 0.5rem;
+.loader {
+    padding: 0 5vw;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

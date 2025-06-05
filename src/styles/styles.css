@@ -1,12 +1,8 @@
 :root {
-	--background: #141418;
-	--text: #ffffff;
-	--secondary-text: #9f9f9f;
-
-	--primary: #6f07e6;
-	--secondary: #282828;
-
-	--dividor: #646464;
+    --bg-grad: linear-gradient(to top, #6475DE, #83A6EA);
+    --on-grad: #fafaff;
+    --bg-solid: #ece9d8;
+    --on-solid: #222;
 }
 
 body,
@@ -17,18 +13,25 @@ html,
 	margin: 0;
 	padding: 0;
 
-	background-color: var(--background);
-	color: var(--text);
-
-	font-family: "Courier", sans-serif;
+	font-family: "Tahoma", "Arial", "Helvetica", system-ui, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	font-smooth: never;
 }
 
-#app {
-	overflow-y: scroll;
+body {
+	overflow: hidden;
+	background: var(--bg-solid);
+	color: var(--on-solid);
 }
 
 * {
 	box-sizing: border-box;
 
 	font: inherit;
+}
+
+
+header a {
+  color: var(--on-grad)!important;
+  font-weight: regular;
 }

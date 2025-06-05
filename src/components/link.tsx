@@ -6,6 +6,7 @@ export const Link: Component<{
 	return (
 		<a
 			href={this.href}
+			class={`component-link ${this.class}`}
 			on:click={(e) => {
 				e.preventDefault();
 				if (!window.r) throw new Error("No router exists");
