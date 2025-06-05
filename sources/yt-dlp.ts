@@ -110,8 +110,8 @@ export default async function ytdlpDownloadBySearch (query, mbid) {
 	// Sort by contains correct title
 	results.sort((a, b) => {
 		return (
-			+b.title.includes(query.split(" - ")[1]) -
-			+a.title.includes(query.split(" - ")[1])
+			+b.title.replaceAll(/[^a-z0-9 ]/g,"").includes(query.split(" - ")[1].replaceAll(/[^a-z0-9 ]/g,"")) -
+			+a.title.replaceAll(/[^a-z0-9 ]/g,"").includes(query.split(" - ")[1].replaceAll(/[^a-z0-9 ]/g,""))
 		);
 	});
 
