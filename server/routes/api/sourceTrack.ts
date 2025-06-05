@@ -3,7 +3,7 @@ import { t } from "try";
 import { GetRecording } from "../../db/db";
 import * as fs from "fs";
 import { MusicBrainz } from "../../../src/utils/MusicBrainz"
-import { sources } from "../../../.env.js"
+import { MB_URL, sources } from "../../../.env.js"
 
 export const get: Handler = async (req, res, next) => {
 	console.log(req.originalUrl);
@@ -21,7 +21,7 @@ export const get: Handler = async (req, res, next) => {
 	}
 
 	// Get song info by MBID
-	const mb = new MusicBrainz("https://musicbrainz.org/ws/2/");
+	const mb = new MusicBrainz(MB_URL);
 	const recordingInfo = await mb.RecordingInfo(mbid);
 	// TODO: sort related releases, pass selected release to scraper (for sorting responses), pass other listed artist credits (for filtering and sorting)
 	const query = `${recordingInfo.artists[0].name} - ${recordingInfo.title}`;

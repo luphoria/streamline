@@ -5,7 +5,7 @@ import store from "./store";
 
 import "./styles/main.css";
 import "xp.css/dist/XP.css";
-window.mb = new MusicBrainz("https://musicbrainz.org/ws/2/");
+window.mb = new MusicBrainz(store.MB_URL);
 
 const App: Component = function (cx) {
 	cx.css = `

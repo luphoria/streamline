@@ -2,7 +2,7 @@ import type { Handler } from "express";
 import { t } from "try";
 import { GetRecording } from "../../db/db";
 import { MusicBrainz } from "../../../src/utils/MusicBrainz";
-import { sources } from "../../../.env.js";
+import { MB_URL, sources } from "../../../.env.js";
 
 export const get: Handler = async (req, res, next) => {
 	console.log(req.originalUrl);
@@ -20,7 +20,7 @@ export const get: Handler = async (req, res, next) => {
 	}
 
 	// Get release info by MBID
-	const mb = new MusicBrainz("https://musicbrainz.org/ws/2/");
+	const mb = new MusicBrainz(MB_URL);
 	const releaseInfo = await mb.ReleaseInfo(mbid);
 	console.log(releaseInfo);
 	const source = decodeURIComponent(searchParams.get("source"));

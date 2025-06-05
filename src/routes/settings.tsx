@@ -9,7 +9,7 @@ export const Settings: Component<
 > = function (cx) {
 	// TODO: Populate options by .env
 	cx.mount = () => {
-		this.apiUrl = "https://musicbrainz.org/ws/2/";
+		this.apiUrl = store.MB_URL;
 	};
 	return (
 		<div class="input-row">
