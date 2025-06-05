@@ -50,7 +50,7 @@ export const Player: Component<
 				this.player = <div>file not in cache</div>
 				break;
 			case 500: 
-				this.player = <div>error: ${response.error}</div>
+				this.player = <div>error: {response.error}</div>
 				break;
 			default: 
 				this.player = <div>unknown error or lack of response</div>

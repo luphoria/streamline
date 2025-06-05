@@ -86,7 +86,7 @@ export const ResultItem: Component<
 					return (
 						<option value={release.mbid}>
 							{release.title} ({release.releaseDate}){" "}
-							{release.country == "XW" ? "[global]" : `[${release.country}]`}{" "}
+							{(release.country == "XW" || release.country == "XE") ? "[global]" : `[${release.country}]`}{" "}
 							{release.disambiguation ? `[${release.disambiguation}]` : ""}
 						</option>
 					);
