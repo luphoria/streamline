@@ -2,6 +2,7 @@ import type { Component, ComponentInstance } from "dreamland/core";
 import router from "../router";
 import { Link } from "../components/link";
 const Navbar: Component<{}, {}, {}> = function (cx) {
+    this.songQuery = "";
 	cx.css = `
 \       :scope {
             display: flex;
