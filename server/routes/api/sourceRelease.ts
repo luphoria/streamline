@@ -29,7 +29,7 @@ export const get: Handler = async (req, res, next) => {
 
 	for (const track in releaseInfo.trackList) {
 		const query = `${releaseInfo.artists[0].name} - ${releaseInfo.trackList[track].title}`;
-
+		const keywords = releaseInfo.title;
 		let usedSource;
 
 		console.log("Checking DB for MBID . . .");
@@ -61,14 +61,14 @@ export const get: Handler = async (req, res, next) => {
 			// Prioritize client-specified src
 			usedSource = source;
 			// TODO: Make a function that fetches the song but doesn't return a stream
-			stream = await t(sourceModules[source](query, releaseInfo.trackList[track].mbid));
+			stream = await t(sourceModules[source](query, releaseInfo.trackList[track].mbid, keywords));
 			if (!stream.ok) {
 				delete sourceModules[source];
 				console.log("Stream not yet OK");
 				// Go by order
 				for (let src in sourceModules) {
 					usedSource = src;
-					stream = await t(sourceModules[src](query, releaseInfo.trackList[track].mbid));
+					stream = await t(sourceModules[src](query, releaseInfo.trackList[track].mbid, keywords));
 					if (stream.ok) {
 						break;
 					}

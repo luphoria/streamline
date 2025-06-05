@@ -23,13 +23,13 @@ export class MusicBrainz {
 		).json();
 
 		return res;
-	};
+	}
 
 	SetApiUrl(URL: string) {
 		this.apiUrl = URL;
 
 		return this.apiUrl;
-	};
+	}
 
 	// Returns a string (url)
 	async HdCoverArtUrl(mbid) {
@@ -42,10 +42,10 @@ export class MusicBrainz {
 			: null;
 
 		return res;
-	};
+	}
 
 	// Recording (song)
-	 async RecordingInfo(mbid)  {
+	async RecordingInfo(mbid) {
 		const recordingFetch = await this.queryApi(
 			`recording/${mbid}?inc=artists+releases&fmt=json`
 		);
@@ -53,7 +53,13 @@ export class MusicBrainz {
 		console.info("RecordingInfo: recordingFetch:");
 		console.info(recordingFetch);
 
-		const res = {
+		const res: {
+			title: string;
+			artists: { name: string; mbid: string }[];
+			releases: { title: string; disambiguation: boolean; artists: string[] }[];
+			length: number;
+			releaseDate: string;
+		} = {
 			title: recordingFetch["title"],
 			artists: [],
 			releases: [],
@@ -64,36 +70,38 @@ export class MusicBrainz {
 		for (const artist in recordingFetch["artist-credit"]) {
 			res.artists.push({
 				name: recordingFetch["artist-credit"][artist]["name"],
-				mbid: recordingFetch["artist-credit"][artist]["id"],
+				mbid: recordingFetch["artist-credit"][artist]["artist"]["id"],
 			});
 		}
 
-		for (const release in recordingFetch["release-list"]) {
+
+		for (const release in recordingFetch.releases) {
+			console.log(release)
 			res.releases.push({
-				title: recordingFetch["release-list"][release]["title"],
-				disambiguation: recordingFetch["release-list"][release][
+				title: recordingFetch.releases[release]["title"],
+				disambiguation: recordingFetch.releases[release][
 					"disambiguation"
 				]
 					? true
 					: false,
 				artists: [],
 			});
-			for (const artist in recordingFetch["release-list"][release][
+			for (const artist in recordingFetch.releases[release][
 				"artist-credit"
 			]) {
 				res.artists.push({
-					name: recordingFetch["release-list"][release]["artist-credit"][
+					name: recordingFetch.releases[release]["artist-credit"][
 						artist
 					]["name"],
-					mbid: recordingFetch["release-list"][release]["artist-credit"][
+					mbid: recordingFetch.releases[release]["artist-credit"][
 						artist
-					]["id"],
+					]["artist"]["id"],
 				});
 			}
 		}
 
 		return res;
-	};
+	}
 
 	// Release
 	async ReleaseInfo(mbid) {
@@ -139,7 +147,7 @@ export class MusicBrainz {
 		console.info(res);
 
 		return res;
-	};
+	}
 
 	// Artist
 	async ArtistInfo(mbid) {
@@ -202,7 +210,7 @@ export class MusicBrainz {
 		}
 
 		return res;
-	};
+	}
 
 	// Search recordings
 	async SearchSongs(query: string) {
@@ -260,14 +268,34 @@ export class MusicBrainz {
 			});
 
 			// Sort releases for recording
-			// TODO: Improve and prefer cover 
+			// TODO: Improve and prefer cover
 			recordingResult.versions.sort((a, b) => {
-				if ((a.country != "XW" && a.country != "XE") && (b.country == "XW" || b.country == "XE")) return 1; // Deprioritize country releases
-				if ((a.country == "XW" || a.country == "XE") && (b.country != "XW" && b.country != "XE")) return -1;
+				if (
+					a.country != "XW" &&
+					a.country != "XE" &&
+					(b.country == "XW" || b.country == "XE")
+				)
+					return 1; // Deprioritize country releases
+				if (
+					(a.country == "XW" || a.country == "XE") &&
+					b.country != "XW" &&
+					b.country != "XE"
+				)
+					return -1;
 
 				// US/GB is next priority
-				if ((a.country != "US" && a.country != "GB") && (b.country == "US" || b.country == "GB")) return 1; // Deprioritize country releases
-				if ((a.country == "US" || a.country == "GB") && (b.country != "US" && b.country != "GB")) return -1;
+				if (
+					a.country != "US" &&
+					a.country != "GB" &&
+					(b.country == "US" || b.country == "GB")
+				)
+					return 1; // Deprioritize country releases
+				if (
+					(a.country == "US" || a.country == "GB") &&
+					b.country != "US" &&
+					b.country != "GB"
+				)
+					return -1;
 
 				return 0;
 			});
@@ -311,7 +339,7 @@ export class MusicBrainz {
 				recordingsArray.push(recordingResult);
 		});
 
-		// Sort recordings 
+		// Sort recordings
 		// TODO: Internal score-based re-rank system
 
 		// More releases == hoisted
@@ -323,7 +351,7 @@ export class MusicBrainz {
 		recordingsArray.sort((a, b) => {
 			return b.score - a.score;
 		});
-		
+
 		// Downrank bootlegs
 		recordingsArray.sort((a, b) => {
 			if (
@@ -351,7 +379,7 @@ export class MusicBrainz {
 			hasVideo: versions.some((v) => v.hasVideo),
 			score: versions[0].score, // Use the highest score among versions
 		};
-	};
+	}
 
 	async SearchArtists(query: string) {
 		// Limit is much lower for artists because there are fewer artists in general.
@@ -375,5 +403,5 @@ export class MusicBrainz {
 		}
 
 		return res;
-	};
+	}
 }

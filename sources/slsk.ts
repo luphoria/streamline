@@ -103,7 +103,7 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	};
 };
 
-export default async function slskDownloadBySearch(query, mbid) {
+export default async function slskDownloadBySearch(query, mbid, keywords?) {
 	// Downloader
 	let downloadResult;
 	let filePath;

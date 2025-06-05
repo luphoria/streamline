@@ -22,14 +22,17 @@ const execPromise = (input) => {
 	});
 };
 
-export default async function ytdlpDownloadBySearch (query, mbid) {
+export default async function ytdlpDownloadBySearch (query, mbid, keywords?) {
 	console.log(`MBID ${mbid}`);
 	// Search
 	let results: { channel: string; title: string; id: string }[] = [];
 	try {
+		if (!keywords) keywords = "";
+		else keywords = keywords.replaceAll(/[()[\].!?/]/g,"")
+		console.log(`Searching YouTube for "${query} ${keywords}"...`)
 		let resultsRaw = JSON.parse(
 			(await execPromise(
-				`${ytdlp.binary} --default-search ytsearch ytsearch10:"${quote([query])} song" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
+				`${ytdlp.binary} --default-search ytsearch ytsearch10:"${quote([`${query} ${keywords}`])} song" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
 			)) as string
 		).entries;
 		for (let result in resultsRaw) {
@@ -136,6 +139,20 @@ export default async function ytdlpDownloadBySearch (query, mbid) {
 			)
 		);
 	});
+
+		//  Sort for keywords (release title) in title (to avoid music video cuts) (if the title also includes the song title)
+		results.sort((a, b) => {
+			return (
+				+(
+					(b.title.includes(keywords)) &&
+					a.title.includes(query.split(" - ")[1])
+				) -
+				+(
+					(a.title.includes(keywords)) &&
+					b.title.includes(query.split(" - ")[1])
+				)
+			);
+		});
 
 	// Sort by contains correct title
 	results.sort((a, b) => {
