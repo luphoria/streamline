@@ -109,15 +109,29 @@ export default async function ytdlpDownloadBySearch (query, mbid) {
 		);
 	});
 
-	// Sort by containing "audio" or "lyrics" in title (to avoid music video cuts) (if the title also includes the song title)
+	// Sort by containing "lyrics" in title (to avoid music video cuts) (if the title also includes the song title)
 	results.sort((a, b) => {
 		return (
 			+(
-				(b.title.includes("audio") || b.title.includes("lyrics")) &&
+				(b.title.includes("lyrics")) &&
 				a.title.includes(query.split(" - ")[1])
 			) -
 			+(
-				(a.title.includes("audio") || a.title.includes("lyrics")) &&
+				(a.title.includes("lyrics")) &&
+				b.title.includes(query.split(" - ")[1])
+			)
+		);
+	});
+
+	//  Sort for "audio" in title (to avoid music video cuts) (if the title also includes the song title)
+	results.sort((a, b) => {
+		return (
+			+(
+				(b.title.includes("audio")) &&
+				a.title.includes(query.split(" - ")[1])
+			) -
+			+(
+				(a.title.includes("audio")) &&
 				b.title.includes(query.split(" - ")[1])
 			)
 		);
