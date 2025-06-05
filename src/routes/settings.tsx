@@ -20,7 +20,10 @@ export const Settings: Component<
 			/>
 			<button
 				id="apiUrlSetBtn"
-				on:click={() => window.mb.SetApiUrl(this.apiUrl)}
+				on:click={() =>{
+					window.mb.SetApiUrl(this.apiUrl);
+					store.MB_URL = this.apiUrl;
+				}}
 			>
 				Set MusicBrainz API URL
 			</button>
