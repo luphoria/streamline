@@ -97,12 +97,12 @@ export default async function ytdlpDownloadBySearch (query, mbid) {
 	results.sort((a, b) => {
 		return (
 			+(
-				(b.title.includes("explicit") || b.title.includes("explicit")) &&
+				(b.title.includes("explicit") || b.title.includes("dirty")) &&
 				a.title.includes(query.split(" - ")[1]) &&
 				!query.includes("clean")
 			) -
 			+(
-				(a.title.includes("explicit") || a.title.includes("explicit")) &&
+				(a.title.includes("explicit") || a.title.includes("dirty")) &&
 				b.title.includes(query.split(" - ")[1]) &&
 				!query.includes("clean")
 			)
