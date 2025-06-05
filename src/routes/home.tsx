@@ -3,7 +3,7 @@ import { Link } from "../components/link";
 export const Home: Component = function (cx) {
 	return (
 		<div>
-			<h2>home</h2>
+			<h2>Home</h2>
 		</div>
 	);
 };
