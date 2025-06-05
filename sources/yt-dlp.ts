@@ -47,9 +47,9 @@ export default async function ytdlpDownloadBySearch (query, mbid) {
 	}
 	console.log(`${results.length} results before filtering`);
 	// Filter results
-	query = query.toLowerCase();
+	query = query.toLowerCase().replaceAll(/[()[\].!?/]/g,"");
 	for (let res in results)
-		results[res].title = results[res].title.toLowerCase();
+		results[res].title = results[res].title.toLowerCase().replaceAll(/[()[\].!?/]/g,"");
 
 	// Put this in .env.js?
 	const filters = [
@@ -93,6 +93,22 @@ export default async function ytdlpDownloadBySearch (query, mbid) {
 		);
 	});
 
+	// YouTube has a lot of untagged clean versions of songs on the platform so this is an attempt at getting around some of that
+	results.sort((a, b) => {
+		return (
+			+(
+				(b.title.includes("explicit") || b.title.includes("explicit")) &&
+				a.title.includes(query.split(" - ")[1]) &&
+				!query.includes("clean")
+			) -
+			+(
+				(a.title.includes("explicit") || a.title.includes("explicit")) &&
+				b.title.includes(query.split(" - ")[1]) &&
+				!query.includes("clean")
+			)
+		);
+	});
+
 	// Sort by containing "audio" or "lyrics" in title (to avoid music video cuts) (if the title also includes the song title)
 	results.sort((a, b) => {
 		return (
@@ -110,7 +126,7 @@ export default async function ytdlpDownloadBySearch (query, mbid) {
 	// Sort by contains correct title
 	results.sort((a, b) => {
 		return (
-			+b.title.replaceAll(/[^a-z0-9 ]/g,"").includes(query.split(" - ")[1].replaceAll(/[^a-z0-9 ]/g,"")) -
+			+b.title.includes(query.split(" - ")[1].replaceAll(/[^a-z0-9 ]/g,"")) -
 			+a.title.replaceAll(/[^a-z0-9 ]/g,"").includes(query.split(" - ")[1].replaceAll(/[^a-z0-9 ]/g,""))
 		);
 	});
