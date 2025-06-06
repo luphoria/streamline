@@ -14,10 +14,9 @@ const Artist: Component<{
 					const number = resNumber;
 					resNumber += 1;
 					return (
-					    // @ts-expect-error
+						// @ts-expect-error
 						<span id={`release${number}`} mbid={group.mbid}>
-
-						    {/* @ts-expect-error */}
+							{/* @ts-expect-error */}
 							<b>{group.title}</b> ({group.date}) [{group.type}]
 							<br />
 						</span>
@@ -35,27 +34,49 @@ export const ArtistView: Component<
 		artistEl: HTMLElement;
 		mbid: string;
 	}
-> = function () {
+> = function (cx) {
 	const updateArtist = async (mbid: string) => {
 		if (!mbid) return;
-		this.artistEl = <div class="loader"><Icon name="search_doc" /></div>;
+		this.artistEl = (
+			<div class="loader">
+				<Icon name="search_doc" />
+			</div>
+		);
 		const artist = await window.mb.ArtistInfo(mbid);
 		this.artistEl = <Artist artist={artist} />;
 	};
 	use(this.mbid).listen(updateArtist);
+
+	cx.css = `
+    :scope {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      justify-content: center;
+      flex-direction: column;
+      padding: 0.5rem;
+    }
+
+    .artist {
+      width: 100%;
+    }
+  `;
+
 	return (
-		<div class="input-row">
-			<input
-				value={use(this.mbid).bind()}
-				id="artistMbid"
-				placeholder="e0c97a4d-c392-41a9-a374-57af3e3eeab3"
-				type="text"
-			/>
-			<br />
-			<button id="artistButton" on:click={() => updateArtist(this.mbid)}>
-				view artist
-			</button>
-			{use(this.artistEl)}
+		<div>
+			<div>
+				<input
+					value={use(this.mbid).bind()}
+					id="artistMbid"
+					placeholder="e0c97a4d-c392-41a9-a374-57af3e3eeab3"
+					type="text"
+				/>
+				<br />
+				<button id="artistButton" on:click={() => updateArtist(this.mbid)}>
+					view artist
+				</button>
+			</div>
+			<div class="artist">{use(this.artistEl)}</div>
 		</div>
 	);
 };
