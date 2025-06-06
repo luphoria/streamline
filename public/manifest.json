@@ -1,10 +1,10 @@
 {
 	"short_name": "Streamline",
 	"name": "Streamline",
-	"description": "A webOS and development environment powered by v86",
+	"description": "A click and goon environment powered without v86",
 	"icons": [
 		{
-			"src": "pencil_logo.jpg",
+			"src": "s-temp.jpg",
 			"sizes": "16x16 32x32 48x48 72x72 96x96 128x128 256x256 512x512 1024x1024 2048x2048",
 			"type": "image/png",
 			"purpose": "any maskable"

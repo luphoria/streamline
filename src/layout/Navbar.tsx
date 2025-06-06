@@ -49,11 +49,11 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
             align-items: center;
             gap: 0.5rem;
             font-weight: 600;
+            margin: auto;
         }
 
         #logo {
-            width: 3.75em;
-            height: 3.75em;
+            height: 12em;
         }
 
         .home {
@@ -78,7 +78,7 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
 	return (
 		<header>
 			<div class="title">
-				<img src="/pencil_logo.jpg" alt="Streamline Logo" id="logo" />
+				<img src="/streamline-temp-logo.png" alt="Streamline Logo" id="logo" />
 				<a
 					href="/"
 					class="home"
@@ -88,7 +88,6 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
 						window.r.navigate((cx.root as HTMLAnchorElement).href);
 					}}
 				>
-					Streamline
 				</a>
 			</div>
 			<div id="searchbar">
