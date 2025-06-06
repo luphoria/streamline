@@ -7,7 +7,7 @@ export const CoverArt: Component<{
 	cx.css = `
     :scope {
       image-rendering: pixelated;
-      width: auto;
+      aspect-ratio: 1 / 1;
     }
   `;
 	this.size = this.size || 32;
