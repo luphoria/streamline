@@ -78,16 +78,15 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
 	return (
 		<header>
 			<div class="title">
-				<img src="/streamline-temp-logo.png" alt="Streamline Logo" id="logo" />
 				<a
 					href="/"
-					class="home"
 					on:click={(e: any) => {
 						e.preventDefault();
 						if (!window.r) throw new Error("No router exists");
 						window.r.navigate((cx.root as HTMLAnchorElement).href);
 					}}
 				>
+                    <img src="/streamline-temp-logo.png" alt="Streamline Logo" id="logo" />
 				</a>
 			</div>
 			<div id="searchbar">

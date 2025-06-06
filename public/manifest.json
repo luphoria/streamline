@@ -4,7 +4,7 @@
 	"description": "A click and goon environment powered without v86",
 	"icons": [
 		{
-			"src": "s-temp.jpg",
+			"src": "s-temp.png",
 			"sizes": "16x16 32x32 48x48 72x72 96x96 128x128 256x256 512x512 1024x1024 2048x2048",
 			"type": "image/png",
 			"purpose": "any maskable"
