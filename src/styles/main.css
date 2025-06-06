@@ -36,3 +36,14 @@
 	flex-direction: column;
 	justify-content: start;
 }
+
+@media (orientation: portrait) {
+    #app,#app>div {
+        flex-direction: column!important;
+    }
+
+    header {
+        height: 12em!important;
+        width: 100vw!important;
+    }
+}
