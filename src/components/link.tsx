@@ -3,6 +3,7 @@ export const Link: Component<{
 	href: string;
 	class?: string;
 }> = function (cx) {
+	this.class ??= "";
 	return (
 		<a
 			href={this.href}

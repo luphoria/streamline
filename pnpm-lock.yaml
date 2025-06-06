@@ -16,7 +16,7 @@ importers:
         version: 3.2.6
       dreamland:
         specifier: github:MercuryWorkshop/dreamlandjs#vdom
-        version: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/e6cf2b6ae7e487144a33ac38f66d4bae3fe59d14
+        version: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/07b76e8ccef036edc136c96f4f64e6431c657749
       dreamland-router:
         specifier: github:MercuryWorkshop/dreamland2-router
         version: '@dreamlandjs/dreamland-router@https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5'
@@ -49,8 +49,8 @@ importers:
         specifier: ^9.6.1
         version: 9.6.1
       '@types/estree':
-        specifier: ^1.0.7
-        version: 1.0.7
+        specifier: ^1.0.8
+        version: 1.0.8
       '@types/express':
         specifier: 5.0.2
         version: 5.0.2
@@ -95,7 +95,7 @@ importers:
         version: 5.8.3
       vite:
         specifier: ^6.3.5
-        version: 6.3.5(@types/node@22.15.29)(tsx@4.19.4)
+        version: 6.3.5(@types/node@22.15.30)(tsx@4.19.4)
 
 packages:
 
@@ -435,6 +435,9 @@ packages:
   '@types/estree@1.0.7':
     resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
 
+  '@types/estree@1.0.8':
+    resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
+
   '@types/express-serve-static-core@5.0.6':
     resolution: {integrity: sha512-3xhRnjJPkULekpSzgtoNYYcTWgEZkp4myc+Saevii5JPnHNvHMRlBSHDbs7Bh1iPPoVTERHEZXyhyLbMEsExsA==}
 
@@ -456,8 +459,8 @@ packages:
   '@types/msgpack-lite@0.1.11':
     resolution: {integrity: sha512-cdCZS/gw+jIN22I4SUZUFf1ZZfVv5JM1//Br/MuZcI373sxiy3eSSoiyLu0oz+BPatTbGGGBO5jrcvd0siCdTQ==}
 
-  '@types/node@22.15.29':
-    resolution: {integrity: sha512-LNdjOkUDlU1RZb8e1kOIUpN1qQUlzGkEtbVNo53vbrwDg5om6oduhm4SiUaPW5ASTXhAiP0jInWG8Qx9fVlOeQ==}
+  '@types/node@22.15.30':
+    resolution: {integrity: sha512-6Q7lr06bEHdlfplU6YRbgG1SFBdlsfNC4/lX+SkhiTs0cpJkOElmWls8PxDFv4yY/xKb8Y6SO0OmSX4wgqTZbA==}
 
   '@types/qs@6.14.0':
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
@@ -709,8 +712,8 @@ packages:
     resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
     engines: {node: '>=12'}
 
-  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/e6cf2b6ae7e487144a33ac38f66d4bae3fe59d14:
-    resolution: {tarball: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/e6cf2b6ae7e487144a33ac38f66d4bae3fe59d14}
+  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/07b76e8ccef036edc136c96f4f64e6431c657749:
+    resolution: {tarball: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/07b76e8ccef036edc136c96f4f64e6431c657749}
     version: 0.1.0
 
   dunder-proto@1.0.1:
@@ -1522,7 +1525,7 @@ snapshots:
 
   '@dreamlandjs/dreamland-router@https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5':
     dependencies:
-      dreamland: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/e6cf2b6ae7e487144a33ac38f66d4bae3fe59d14
+      dreamland: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/07b76e8ccef036edc136c96f4f64e6431c657749
 
   '@esbuild/aix-ppc64@0.25.5':
     optional: true
@@ -1731,22 +1734,24 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 22.15.29
+      '@types/node': 22.15.30
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 22.15.29
+      '@types/node': 22.15.30
 
   '@types/eslint@9.6.1':
     dependencies:
-      '@types/estree': 1.0.7
+      '@types/estree': 1.0.8
       '@types/json-schema': 7.0.15
 
   '@types/estree@1.0.7': {}
 
+  '@types/estree@1.0.8': {}
+
   '@types/express-serve-static-core@5.0.6':
     dependencies:
-      '@types/node': 22.15.29
+      '@types/node': 22.15.30
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -1767,9 +1772,9 @@ snapshots:
 
   '@types/msgpack-lite@0.1.11':
     dependencies:
-      '@types/node': 22.15.29
+      '@types/node': 22.15.30
 
-  '@types/node@22.15.29':
+  '@types/node@22.15.30':
     dependencies:
       undici-types: 6.21.0
 
@@ -1780,12 +1785,12 @@ snapshots:
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 22.15.29
+      '@types/node': 22.15.30
 
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 22.15.29
+      '@types/node': 22.15.30
       '@types/send': 0.17.4
 
   '@types/trusted-types@2.0.7':
@@ -1793,7 +1798,7 @@ snapshots:
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 22.15.29
+      '@types/node': 22.15.30
 
   '@typescript-eslint/eslint-plugin@8.33.1(@typescript-eslint/parser@8.33.1(eslint@9.28.0)(typescript@5.8.3))(eslint@9.28.0)(typescript@5.8.3)':
     dependencies:
@@ -2070,7 +2075,7 @@ snapshots:
 
   dotenv@16.5.0: {}
 
-  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/e6cf2b6ae7e487144a33ac38f66d4bae3fe59d14:
+  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/07b76e8ccef036edc136c96f4f64e6431c657749:
     dependencies:
       htm: 3.1.1
 
@@ -2154,7 +2159,7 @@ snapshots:
       '@humanfs/node': 0.16.6
       '@humanwhocodes/module-importer': 1.0.1
       '@humanwhocodes/retry': 0.4.3
-      '@types/estree': 1.0.7
+      '@types/estree': 1.0.8
       '@types/json-schema': 7.0.15
       ajv: 6.12.6
       chalk: 4.1.2
@@ -2863,7 +2868,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@6.3.5(@types/node@22.15.29)(tsx@4.19.4):
+  vite@6.3.5(@types/node@22.15.30)(tsx@4.19.4):
     dependencies:
       esbuild: 0.25.5
       fdir: 6.4.5(picomatch@4.0.2)
@@ -2872,7 +2877,7 @@ snapshots:
       rollup: 4.41.1
       tinyglobby: 0.2.14
     optionalDependencies:
-      '@types/node': 22.15.29
+      '@types/node': 22.15.30
       fsevents: 2.3.3
       tsx: 4.19.4
 
