@@ -19,7 +19,7 @@ export const CoverArt: Component<{
 			src={this.src}
 			on:error={(e: any) => {
 				let el = e.target as HTMLImageElement;
-				el.src = "/public/shell32/cd_unknown.gif";
+				el.src = "/shell32/cd_unknown.gif";
 				el.style = "image-rendering: pixelated; scale: 0.6;";
 			}}
 			alt="Cover Art"
