@@ -1,4 +1,4 @@
-import type { Component, ComponentInstance } from "dreamland/core";
+import type { Component } from "dreamland/core";
 import { MusicBrainz } from "./utils/MusicBrainz";
 import Router from "./router";
 import store from "./store";

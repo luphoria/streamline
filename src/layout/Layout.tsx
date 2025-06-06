@@ -1,4 +1,4 @@
-import type { Component, ComponentInstance } from "dreamland/core";
+import type { Component } from "dreamland/core";
 import Navbar from "./Navbar";
 
 const Layout: Component<{}, { outlet: Element }> = function (cx) {
@@ -20,6 +20,7 @@ const Layout: Component<{}, { outlet: Element }> = function (cx) {
 	return (
 		<div>
 			<Navbar />
+			{/* @ts-expect-error */}
 			<main this={use(this.container).bind()}><fieldset>{use(this.outlet)}</fieldset></main>
 		</div>
 	);

@@ -1,4 +1,4 @@
-import type { Component, ComponentInstance } from "dreamland/core";
+import type { Component } from "dreamland/core";
 export const Icon: Component<{
 	name: string;
   class?: string;

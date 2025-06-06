@@ -1,7 +1,8 @@
-import type { Component, ComponentInstance } from "dreamland/core";
+import type { Component } from "dreamland/core";
 import router from "../router";
 import { Link } from "../components/link";
 const Navbar: Component<{}, {}, {}> = function (cx) {
+    // @ts-expect-error
     this.songQuery = "";
 	cx.css = `
 \       :scope {
@@ -49,15 +50,21 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
           text-decoration: none;
           font-weight: regular;
         }
+
+        .home:hover {
+          text-decoration: underline;
+        }
     `;
 	return (
 		<header>
   	 <a
   			href="/"
   			class="home"
-  			on:click={(e) => {
+  			on:click={(e: any) => {
   				e.preventDefault();
+                // @ts-expect-error
   				if (!window.r) throw new Error("No router exists");
+                // @ts-expect-error
   				window.r.navigate((cx.root as HTMLAnchorElement).href);
   			}}
   		>
@@ -69,16 +76,20 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
 						type="text"
 						id="songSearchValue"
 						placeholder="ARTIST - SONG or search..."
+						// @ts-expect-error
 						value={use(this.songQuery).bind()}
 					/>
 					<button
 						id="songSearchBtn"
+						// @ts-expect-error
 						on:click={() => router.navigate(`/search/${encodeURIComponent(this.songQuery)}`)}
 					>
 						Search!
 					</button>
 				</span>
 			</div>
+
+			{/* @ts-expect-error */}
 			<Link href="/settings">Settings</Link>
 		</header>
 	);

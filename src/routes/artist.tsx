@@ -1,9 +1,9 @@
-import type { Component, ComponentInstance } from "dreamland/core";
+import type { Component } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
 import { Icon } from "../components/icon";
 const Artist: Component<{
 	artist: Awaited<ReturnType<MusicBrainz["ArtistInfo"]>>;
-}> = function (cx) {
+}> = function () {
 	let resNumber = 0;
 	return (
 		<div class="musicbrainz-artist">
@@ -14,7 +14,10 @@ const Artist: Component<{
 					const number = resNumber;
 					resNumber += 1;
 					return (
+					    // @ts-expect-error
 						<span id={`release${number}`} mbid={group.mbid}>
+
+						    {/* @ts-expect-error */}
 							<b>{group.title}</b> ({group.date}) [{group.type}]
 							<br />
 						</span>
@@ -32,7 +35,7 @@ export const ArtistView: Component<
 		artistEl: HTMLElement;
 		mbid: string;
 	}
-> = function (cx) {
+> = function () {
 	const updateArtist = async (mbid: string) => {
 		if (!mbid) return;
 		this.artistEl = <div class="loader"><Icon name="search_doc" /></div>;

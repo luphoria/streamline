@@ -1,4 +1,4 @@
-import type { Component, ComponentInstance } from "dreamland/core";
+import type { Component } from "dreamland/core";
 import store from "../store";
 export const Settings: Component<
 	{},

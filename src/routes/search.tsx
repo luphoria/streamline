@@ -1,16 +1,11 @@
 import {
 	createState,
 	type Component,
-	type ComponentInstance,
 	type Stateful,
 } from "dreamland/core";
-import { MusicBrainz } from "../utils/MusicBrainz";
-import { Link } from "../components/link";
 import router from "../router";
 import type {
 	RecordingGroup,
-	Release,
-	SongVersion,
 } from "../stores/searchResults";
 import { Icon } from "../components/icon";
 
@@ -112,7 +107,7 @@ export const ResultItem: Component<
 
 export const SearchResults: Component<{
 	results: RecordingGroup[];
-}> = function (cx) {
+}> = function () {
 	return (
 		<div id="searchresults">
 			{use(this.results).mapEach((song) => {
@@ -128,7 +123,7 @@ export const Search: Component<
 		searchResults: HTMLElement;
 		query: string;
 	}
-> = function (cx) {
+> = function () {
 	const updateSongs = async (query: string) => {
 		if (!query) return;
 		this.searchResults = (

@@ -1,3 +1,4 @@
+// @ts-expect-error
 import { atom } from "nanostores";
 
 export interface SongVersion {

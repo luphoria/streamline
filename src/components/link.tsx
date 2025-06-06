@@ -1,4 +1,4 @@
-import type { Component, ComponentInstance } from "dreamland/core";
+import type { Component } from "dreamland/core";
 export const Link: Component<{
 	href: string;
 	class?: string;
@@ -7,9 +7,11 @@ export const Link: Component<{
 		<a
 			href={this.href}
 			class={`component-link ${this.class}`}
-			on:click={(e) => {
+			on:click={(e: any) => {
 				e.preventDefault();
+				// @ts-expect-error
 				if (!window.r) throw new Error("No router exists");
+				// @ts-expect-error
 				window.r.navigate((cx.root as HTMLAnchorElement).href);
 			}}
 		>

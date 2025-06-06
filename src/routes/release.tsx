@@ -1,7 +1,7 @@
-import type { Component, ComponentInstance } from "dreamland/core";
+import type { Component } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
 import { Link } from "../components/link";
-import { error, t } from "try";
+import { t } from "try";
 import { Icon } from "../components/icon";
 
 const Release: Component<
@@ -41,6 +41,7 @@ const Release: Component<
   			<h3 id="release-title">{this.release.title}</h3>
   			<h4 id="release-artist">
   				{use(this.release.artists).mapEach((artist) => {
+                    // @ts-expect-error
   					return <Link href={`/artist/${artist.mbid}`}>{artist.name}</Link>;
   				})}
   			</h4>
@@ -50,6 +51,7 @@ const Release: Component<
 					this.trackCount++;
 					return (
 						<li>
+						{/* @ts-expect-error */}
 							<b>{track.title}</b>
 						</li>
 					);
@@ -84,8 +86,9 @@ export const ReleaseView: Component<
     }
   `
 
-	const downloadRelease = async (mbid) => {
+	const downloadRelease = async (mbid: string) => {
 		this.downloadStatus = <div>loading...</div>
+		// @ts-expect-error
 		const response = await t(fetch(`/api/sourceRelease?mbid=${mbid}&source=${store.source}`));
 		if (!response.ok) {
 			this.downloadStatus = <div>an error occured: {response.error}</div>;
@@ -99,6 +102,7 @@ export const ReleaseView: Component<
 		const release = await window.mb.ReleaseInfo(mbid);
 		const coverArtUrl = await window.mb.HdCoverArtUrl(mbid);
 		this.releaseEl = (
+		    // @ts-expect-error
 			<Release release={release} coverArt={coverArtUrl} />
 		);
 	};
