@@ -16,7 +16,7 @@ button {
 .loader {
     padding: 0 5vw;
     width: 100%;
-    height: 100vh;
+    height: calc(60vh);
     display: flex;
     justify-content: center;
     align-items: center;

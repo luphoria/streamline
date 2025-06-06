@@ -43,12 +43,25 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
             flex-grow: 1;
         }
 
+        .title {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        #logo {
+            width: 3.75em;
+            height: 3.75em;
+        }
 
         .home {
-          font-size: 3rem!important;
-          color: var(--on-grad);
           text-decoration: none;
-          font-weight: regular;
+          font-size: 3rem !important;
+          font-weight: 600;
+          font-style: oblique;
+          letter-spacing: -0.05em;
         }
 
         .home:hover {
@@ -57,6 +70,8 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
     `;
 	return (
 		<header>
+		<div class="title">
+		<img src="/pencil_logo.jpg" alt="Streamline Logo" id="logo" />
   	 <a
   			href="/"
   			class="home"
@@ -70,6 +85,7 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
   		>
   			Streamline
   		</a>
+		</div>
 			<div id="searchbar">
 				<span>
 					<input

@@ -32,16 +32,22 @@ export class MusicBrainz {
 	}
 
 	// Returns a string (url)
-	async HdCoverArtUrl(mbid) {
-		const coverArtFetch = await (
-			await fetch(`https://coverartarchive.org/release/${mbid}`)
-		).json();
-		// Grab first image
-		const res = coverArtFetch["images"][0]["image"]
-			? coverArtFetch["images"][0]["image"]
-			: null;
+	async HdCoverArtUrl(mbid: string) {
+		try {
+			const coverArtFetch = await (
+				await fetch(`https://coverartarchive.org/release/${mbid}`)
+			).json();
+			// Grab first image
+			const res = coverArtFetch["images"][0]["image"]
+				? coverArtFetch["images"][0]["image"]
+				: null;
 
-		return res;
+			return res;
+		} catch (e) {
+			console.error("Error fetching cover art:", e);
+
+			return undefined;
+		}
 	}
 
 	// Recording (song)

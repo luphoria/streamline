@@ -8,6 +8,7 @@ import type {
 	RecordingGroup,
 } from "../stores/searchResults";
 import { Icon } from "../components/icon";
+import { CoverArt } from "../components/coverart";
 
 export const ResultItem: Component<
 	{
@@ -59,17 +60,7 @@ export const ResultItem: Component<
 	return (
 		<div>
 			<span>
-				<img
-					height="75px"
-					width="75px"
-					src={this.firstResult.coverArt}
-					on:error={(e: any) => {
-						let el = e.target as HTMLImageElement;
-						el.src = "/public/shell32/cd_unknown.gif";
-						el.style = "image-rendering: pixelated; scale: 0.6;";
-					}}
-					alt="Cover Art"
-				/>
+				<CoverArt src={this.firstResult.coverArt} size={75} />
 				<span class="song-info">
 					<div class="artist">{this.song.artist}</div>
 					<div class="title"><b>{this.song.title}</b> ({this.song.releaseDate})</div>

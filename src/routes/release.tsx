@@ -3,6 +3,7 @@ import { MusicBrainz } from "../utils/MusicBrainz";
 import { Link } from "../components/link";
 import { t } from "try";
 import { Icon } from "../components/icon";
+import { CoverArt } from "../components/coverart";
 
 const Release: Component<
 	{
@@ -20,6 +21,7 @@ const Release: Component<
 	cx.css = `
 	  :scope {
 			display: flex;
+			gap: 1.5em;
 		}
 
 		.release-header {
@@ -32,31 +34,41 @@ const Release: Component<
 		.release-header * {
       margin: 0;
     }
+
+    ol {
+      padding: 0;
+      margin-left: 1em;
+      width: 100%;
+    }
+
+    li {
+      width: 100%;
+      padding: 0.5rem;
+      border-bottom: 1px solid #999;
+      font-size: .95rem;
+    }
 	`
 
 	return (
 		<div>
   		<div class="release-header">
-  			<img id="release-art" height="250" width="250" src={this.coverArt} />
+        <CoverArt src={this.coverArt} size={250} />
   			<h3 id="release-title">{this.release.title}</h3>
   			<h4 id="release-artist">
   				{use(this.release.artists).mapEach((artist) => {
-                    // @ts-expect-error
+            // @ts-expect-error
   					return <Link href={`/artist/${artist.mbid}`}>{artist.name}</Link>;
   				})}
   			</h4>
   		</div>
-			<ul id="release-tracklist">
-				{use(this.release.trackList).mapEach((track) => {
-					this.trackCount++;
-					return (
+			<ol id="release-tracklist">
+				{use(this.release.trackList).mapEach((track) => (
 						<li>
-						{/* @ts-expect-error */}
-							<b>{track.title}</b>
+						  {/* @ts-expect-error */}
+							{track.title}
 						</li>
-					);
-				})}
-			</ul>
+				))}
+			</ol>
 		</div>
 	);
 };
