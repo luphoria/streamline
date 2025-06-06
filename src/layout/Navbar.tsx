@@ -29,17 +29,17 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
             display: flex;
             justify-content: space-evenly;
             flex-wrap: wrap;
-            gap: 0.5rem 2rem;
+            gap: 0.5rem;
             width: 100%;
         }
 
-        #searchbar > span {
+        #searchbar > form {
             flex-grow: 1;
             display: flex;
             gap: 0.5rem;
         }
 
-        #searchbar > span > input {
+        #searchbar input {
             flex-grow: 1;
         }
 
@@ -92,7 +92,10 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
 				</a>
 			</div>
 			<div id="searchbar">
-				<span>
+				<form on:submit={(e: any) => {
+				  e.preventDefault();
+          router.navigate(`/search/${encodeURIComponent(this.songQuery)}`);
+				}}>
 					<input
 						type="text"
 						id="songSearchValue"
@@ -101,13 +104,11 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
 					/>
 					<button
 						id="songSearchBtn"
-						on:click={() =>
-							router.navigate(`/search/${encodeURIComponent(this.songQuery)}`)
-						}
+						type="submit"
 					>
 						Search!
 					</button>
-				</span>
+				</form>
 			</div>
 
 			<ul class="tree-view">

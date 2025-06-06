@@ -16,7 +16,7 @@ html,
 	font-size: 0.95rem;
 
 	font-family: "Tahoma", "Arial", "Helvetica", system-ui, sans-serif;
-	-webkit-font-smoothing: antialiased;
+	-webkit-font-smoothing: none;
 	font-smooth: never;
 }
 
@@ -31,6 +31,6 @@ body {
 }
 
 button, select, input, label, textarea, ul.tree-view {
-    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: none;
     font-size: 0.85rem;
 }
