@@ -21,6 +21,7 @@
 		"prompt-sync": "^4.2.0",
 		"shell-quote": "^1.8.3",
 		"try": "1.0.0-beta.8",
+		"webamp": "1.5.0",
 		"xp.css": "^0.2.6"
 	},
 	"devDependencies": {

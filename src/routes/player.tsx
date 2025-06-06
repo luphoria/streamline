@@ -1,20 +1,21 @@
 import type { Component } from "dreamland/core";
 import { t } from "try";
 import store from "../store";
+import Webamp from "webamp";
 
 export const Player: Component<
 	{},
 	{},
 	{
 		player: HTMLElement;
-		mbid: string
+		mbid: string;
 	}
 > = function (cx) {
-  cx.css = ``
+	cx.css = ``;
 
 	const playSong = async (mbid: string) => {
-		this.player = <div>loading...</div>;
-		console.log(store.source)
+		this.player = <div>Loading...</div>;
+		console.log(store.source);
 		const response = await t(
 			fetch(`/api/sourceTrack?mbid=${mbid}&source=${store.source}`)
 		);
@@ -24,19 +25,42 @@ export const Player: Component<
 			return;
 		}
 		const blob = await response.value.blob();
-
 		const url = URL.createObjectURL(blob);
-		const player = new Audio(url);
-		player.controls = true;
-		player.play();
-		this.player = player;
+		try {
+			if (!Webamp.browserIsSupported()) {
+				throw new Error("Webamp is not supported in this browser");
+			}
+
+			const recordingInfo = await window.mb.RecordingInfo(mbid);
+
+			this.player = <div class="loader">Loading Webamp...</div>;
+			const webamp = new Webamp({
+				initialTracks: [
+					{
+						metaData: {
+							title: recordingInfo.title,
+							artist: recordingInfo.artists[0].name,
+						},
+						url: url,
+					},
+				],
+				initialSkin: {
+					url: "/skin.wsz",
+				},
+			});
+			await webamp.renderWhenReady(this.player);
+		} catch (e) {
+			console.error(e);
+			const player = new Audio(url);
+			player.controls = true;
+			player.play();
+			this.player = player;
+		}
 	};
 
 	const deleteCached = async (mbid: string) => {
 		this.player = <div>loading...</div>;
-		const response = await t(
-			fetch(`/api/deleteItem?mbid=${mbid}`)
-		);
+		const response = await t(fetch(`/api/deleteItem?mbid=${mbid}`));
 
 		if (!response.ok) {
 			this.player = <div>an error occured: {response.error}</div>;
@@ -46,19 +70,18 @@ export const Player: Component<
 
 		switch (response.value.status) {
 			case 200:
-				this.player = <div>deleted item from cache</div>
+				this.player = <div>deleted item from cache</div>;
 				break;
 			case 404:
-				this.player = <div>file not in cache</div>
+				this.player = <div>file not in cache</div>;
 				break;
 			case 500:
-				this.player = <div>error: {response.error}</div>
+				this.player = <div>error: {response.error}</div>;
 				break;
 			default:
-				this.player = <div>unknown error or lack of response</div>
+				this.player = <div>unknown error or lack of response</div>;
 		}
-
-	}
+	};
 
 	// TODO : use mbid
 	use(this.mbid).listen(playSong);
@@ -72,7 +95,9 @@ export const Player: Component<
 				type="text"
 			/>
 			<button on:click={() => playSong(this.mbid)}>fetch song</button>
-			<button on:click={() => deleteCached(this.mbid)}>delete from cache</button>
+			<button on:click={() => deleteCached(this.mbid)}>
+				delete from cache
+			</button>
 			<br />
 			{use(this.player)}
 		</div>
