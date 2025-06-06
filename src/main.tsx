@@ -3,8 +3,8 @@ import { MusicBrainz } from "./utils/MusicBrainz";
 import Router from "./router";
 import store from "./store";
 
-import "./styles/main.css";
 import "xp.css/dist/XP.css";
+import "./styles/main.css";
 window.mb = new MusicBrainz(store.MB_URL);
 
 const App: Component = function (cx) {

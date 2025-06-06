@@ -1,11 +1,11 @@
+// @ts-nocheck
 import type { Component } from "dreamland/core";
 import router from "../router";
 import { Link } from "../components/link";
 const Navbar: Component<{}, {}, {}> = function (cx) {
-    // @ts-expect-error
-    this.songQuery = "";
+	this.songQuery = "";
 	cx.css = `
-\       :scope {
+       :scope {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -62,51 +62,62 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
           font-weight: 600;
           font-style: oblique;
           letter-spacing: -0.05em;
+          color: var(--on-grad);
         }
 
         .home:hover {
           text-decoration: underline;
         }
+
+        ul {
+            width: 100%;
+            height: 100%;
+            color: var(--on-solid);
+        }
     `;
 	return (
 		<header>
-		<div class="title">
-		<img src="/pencil_logo.jpg" alt="Streamline Logo" id="logo" />
-  	 <a
-  			href="/"
-  			class="home"
-  			on:click={(e: any) => {
-  				e.preventDefault();
-                // @ts-expect-error
-  				if (!window.r) throw new Error("No router exists");
-                // @ts-expect-error
-  				window.r.navigate((cx.root as HTMLAnchorElement).href);
-  			}}
-  		>
-  			Streamline
-  		</a>
-		</div>
+			<div class="title">
+				<img src="/pencil_logo.jpg" alt="Streamline Logo" id="logo" />
+				<a
+					href="/"
+					class="home"
+					on:click={(e: any) => {
+						e.preventDefault();
+						if (!window.r) throw new Error("No router exists");
+						window.r.navigate((cx.root as HTMLAnchorElement).href);
+					}}
+				>
+					Streamline
+				</a>
+			</div>
 			<div id="searchbar">
 				<span>
 					<input
 						type="text"
 						id="songSearchValue"
 						placeholder="ARTIST - SONG or search..."
-						// @ts-expect-error
 						value={use(this.songQuery).bind()}
 					/>
 					<button
 						id="songSearchBtn"
-						// @ts-expect-error
-						on:click={() => router.navigate(`/search/${encodeURIComponent(this.songQuery)}`)}
+						on:click={() =>
+							router.navigate(`/search/${encodeURIComponent(this.songQuery)}`)
+						}
 					>
 						Search!
 					</button>
 				</span>
 			</div>
 
-			{/* @ts-expect-error */}
-			<Link href="/settings">Settings</Link>
+			<ul class="tree-view">
+  			<li>
+     			<ul>
+     			  <li><Link href="/">Home</Link></li>
+     			  <li><Link href="/settings">Settings</Link></li>
+     			</ul>
+  			</li>
+			</ul>
 		</header>
 	);
 };
