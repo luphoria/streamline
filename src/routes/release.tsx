@@ -64,7 +64,6 @@ const Release: Component<
 			<ol id="release-tracklist">
 				{use(this.release.trackList).mapEach((track) => (
 						<li>
-						  {/* @ts-expect-error */}
 							{track.title}
 						</li>
 				))}

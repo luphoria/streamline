@@ -1,5 +1,5 @@
-import type { Component, ComponentInstance } from "dreamland/core";
-import { error, t } from "try";
+import type { Component } from "dreamland/core";
+import { t } from "try";
 import store from "../store";
 
 export const Player: Component<
@@ -10,6 +10,8 @@ export const Player: Component<
 		mbid: string
 	}
 > = function (cx) {
+  cx.css = ``
+
 	const playSong = async (mbid: string) => {
 		this.player = <div>loading...</div>;
 		console.log(store.source)
@@ -43,22 +45,22 @@ export const Player: Component<
 		}
 
 		switch (response.value.status) {
-			case 200: 
+			case 200:
 				this.player = <div>deleted item from cache</div>
 				break;
 			case 404:
 				this.player = <div>file not in cache</div>
 				break;
-			case 500: 
+			case 500:
 				this.player = <div>error: {response.error}</div>
 				break;
-			default: 
+			default:
 				this.player = <div>unknown error or lack of response</div>
 		}
 
 	}
 
-	// TODO : use mbid 
+	// TODO : use mbid
 	use(this.mbid).listen(playSong);
 	return (
 		<div class="input-row">

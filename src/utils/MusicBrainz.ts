@@ -1,10 +1,10 @@
-import type { RecordingGroup, SongVersion } from "../stores/searchResults";
+import type { SongVersion } from "../stores/searchResults";
 import DOMPurify from "dompurify";
 
 export class MusicBrainz {
 	apiUrl: string;
 	userAgent: string;
-	constructor(apiUrl: string, userAgent?) {
+	constructor(apiUrl: string, userAgent?: string) {
 		console.info("== MusicBrainz: new MusicBrainz class instance created ==");
 		this.apiUrl = apiUrl;
 		this.userAgent = userAgent
@@ -51,7 +51,7 @@ export class MusicBrainz {
 	}
 
 	// Recording (song)
-	async RecordingInfo(mbid) {
+	async RecordingInfo(mbid: string) {
 		const recordingFetch = await this.queryApi(
 			`recording/${mbid}?inc=artists+releases&fmt=json`
 		);
@@ -110,7 +110,7 @@ export class MusicBrainz {
 	}
 
 	// Release
-	async ReleaseInfo(mbid) {
+	async ReleaseInfo(mbid: string) {
 		const releaseFetch = await this.queryApi(
 			`release/${mbid}?inc=recordings+release-groups+artists&fmt=json`
 		);
@@ -122,16 +122,23 @@ export class MusicBrainz {
 		if (releaseFetch["cover-art-archive"])
 			coverArt = releaseFetch["cover-art-archive"]["artwork"];
 
-		const res = {
-			title: releaseFetch["title"],
-			artists: [],
-			trackList: [],
-			coverArt: coverArt,
-			mbid: mbid,
-			releaseGroup: releaseFetch["release-group"]
-				? releaseFetch["release-group"]["id"]
-				: null,
-		};
+			const res: {
+				title: string;
+				artists: { name: string; mbid: string }[];
+				trackList: { title: string; mbid: string }[];
+				coverArt: any;
+				mbid: string;
+				releaseGroup: string | null;
+			} = {
+				title: releaseFetch["title"],
+				artists: [],
+				trackList: [],
+				coverArt: coverArt,
+				mbid: mbid,
+				releaseGroup: releaseFetch["release-group"]
+					? releaseFetch["release-group"]["id"]
+					: null,
+			};
 
 		// Populate artists
 		for (const artist in releaseFetch["artist-credit"]) {
@@ -156,14 +163,25 @@ export class MusicBrainz {
 	}
 
 	// Artist
-	async ArtistInfo(mbid) {
+	async ArtistInfo(mbid: string) {
 		const artistFetch = await this.queryApi(
 			`artist/${mbid}?inc=release-groups+releases&fmt=json`
 		);
 		console.info("ArtistInfo: artistFetch:");
 		console.info(artistFetch);
 
-		const res = {
+		const res: {
+			name: string;
+			disambiguation: string | null;
+			releaseGroups: {
+				album: any[];
+				single: any[];
+				ep: any[];
+				live: any[];
+				compilation: any[];
+				all: any[];
+			};
+		} = {
 			name: artistFetch.name,
 			disambiguation: artistFetch.disambiguation
 				? artistFetch.disambiguation
@@ -220,14 +238,17 @@ export class MusicBrainz {
 
 	// Search recordings
 	async SearchSongs(query: string) {
+	  // @ts-ignore
+	  // eslint-disable-next-line
 		query = '"' + query.replaceAll(/ /g, '" "') + '"';
 		const data = await this.queryApi(
 			`recording/?query=${encodeURIComponent(query)}&limit=100&fmt=json`
 		);
 
-		let recordingsArray = [];
+		// eslint-disable-next-line
+		let recordingsArray: any[] = [];
 
-		data.recordings.forEach((recording) => {
+		data.recordings.forEach((recording: any) => {
 			if (!recording.releases) {
 				// We don't want it
 				return;
@@ -238,7 +259,7 @@ export class MusicBrainz {
 			const artist = recording["artist-credit"][0].name;
 			const title = recording.title;
 
-			let recordingResult: SongVersion = {
+			const recordingResult: SongVersion = {
 				mbid: recording.id,
 				title: DOMPurify.sanitize(title),
 				artist: DOMPurify.sanitize(artist),
@@ -249,7 +270,7 @@ export class MusicBrainz {
 				score: recording.score,
 			};
 
-			recording.releases.forEach((release) => {
+			recording.releases.forEach((release: any) => {
 				console.log(release);
 				recordingResult.versions.push({
 					mbid: release.id,
@@ -306,17 +327,18 @@ export class MusicBrainz {
 				return 0;
 			});
 
+			// @ts-expect-error
 			recordingResult.versions.sort((a, b) => {
 				if (!!a.releaseDate && !!b.releaseDate) {
-					return (
-						// Prioritize oldest
-						new Date(a.releaseDate || 0).getTime() -
-						new Date(b.releaseDate || 0).getTime()
-					);
+          return (
+            // Prioritize oldest
+            new Date(a.releaseDate || 0).getTime() -
+            new Date(b.releaseDate || 0).getTime()
+          );
 				}
 			});
 
-			recordingResult.versions.sort((a, b) => {
+			recordingResult.versions.sort((a, _b) => {
 				return a.releaseDate.includes("-") ? 1 : 0;
 			});
 
@@ -378,13 +400,13 @@ export class MusicBrainz {
 
 		// If there is a release with a parent, then we filter out the releases without a parent so that cover art will always display if available.
 
-		return {
-			artist,
-			title,
-			versions,
-			hasVideo: versions.some((v) => v.hasVideo),
-			score: versions[0].score, // Use the highest score among versions
-		};
+		// return {
+		// 	artist,
+		// 	title,
+		// 	versions,
+		// 	hasVideo: versions.some((v) => v.hasVideo),
+		// 	score: versions[0].score, // Use the highest score among versions
+		// };
 	}
 
 	async SearchArtists(query: string) {

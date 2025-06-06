@@ -14,9 +14,7 @@ const Artist: Component<{
 					const number = resNumber;
 					resNumber += 1;
 					return (
-						// @ts-expect-error
 						<span id={`release${number}`} mbid={group.mbid}>
-							{/* @ts-expect-error */}
 							<b>{group.title}</b> ({group.date}) [{group.type}]
 							<br />
 						</span>
