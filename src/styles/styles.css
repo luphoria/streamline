@@ -30,11 +30,6 @@ body {
 	box-sizing: border-box;
 }
 
-/* button, select, input, label, textarea, ul.tree-view { */
-    /* -webkit-font-smoothing: none; */
-    /* font-size: 0.85rem; */
-/* } */
-
 
 button, input[type="button"], input[type="submit"] {
     user-select: none;

@@ -18,6 +18,7 @@
 		"dreamland-router": "github:MercuryWorkshop/dreamland2-router",
 		"express": "^5.1.0",
 		"express-file-routing": "^3.1.0",
+		"is-mobile": "^5.0.0",
 		"prompt-sync": "^4.2.0",
 		"shell-quote": "^1.8.3",
 		"try": "1.0.0-beta.8",

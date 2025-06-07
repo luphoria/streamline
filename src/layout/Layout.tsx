@@ -1,6 +1,7 @@
 import type { Component } from "dreamland/core";
 import Navbar from "./Navbar";
 import Webamp from "webamp";
+import isMobile from "is-mobile";
 
 const Layout: Component<{}, { outlet: Element, container: HTMLElement, player: HTMLElement }> = function (cx) {
 	cx.css = `
@@ -19,7 +20,7 @@ const Layout: Component<{}, { outlet: Element, container: HTMLElement, player: H
     }
   `;
   cx.mount = () => {
-    if (!Webamp.browserIsSupported()) {
+    if (!Webamp.browserIsSupported() || isMobile()) {
       return;
     }
     window.webamp = new Webamp({
