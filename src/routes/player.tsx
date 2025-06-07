@@ -25,8 +25,8 @@ export const Player: Component<
 			return;
 		}
 		const blob = await response.value.blob();
-		const url = URL.createObjectURL(blob);
 		if (!window.webamp) {
+			const url = URL.createObjectURL(blob);
 			const player = new Audio(url);
 			player.controls = true;
 			player.play();
@@ -37,14 +37,16 @@ export const Player: Component<
 		window.webamp.setTracksToPlay(
 			[
 				{
+
 					metaData: {
 						title: recordingInfo.title,
 						artist: recordingInfo.artists[0].name,
 					},
-					url: url,
+					blob
 				},
 			],
 		)
+		this.player = <div>playing in webamp!</div>
 	};
 
 	const deleteCached = async (mbid: string) => {
