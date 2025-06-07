@@ -25,6 +25,10 @@ export const Settings: Component<
       margin-bottom: 1rem;
 		}
 
+		input[type="text"] {
+		  min-width: 15em;
+		}
+
 	 .h-group {
       display: flex;
       flex-direction: row;
@@ -32,6 +36,14 @@ export const Settings: Component<
       gap: 0.5rem;
     }
 	`;
+
+	const updateURL = async (url: string) => {
+	  console.log(url)
+    window.mb?.SetApiUrl(url);
+    store.MB_URL = url;
+  }
+
+	use(this.apiUrl).listen(updateURL)
 
 	return (
 		<div>
@@ -44,15 +56,6 @@ export const Settings: Component<
 						id="musicBrainzApiUrl"
 						value={use(this.apiUrl).bind()}
 					/>
-					<button
-						id="apiUrlSetBtn"
-						on:click={() => {
-							window.mb.SetApiUrl(this.apiUrl);
-							store.MB_URL = this.apiUrl;
-						}}
-					>
-						Set MusicBrainz API URL
-					</button>
 				</div>
 			</div>
 			<div class="settings-row">
