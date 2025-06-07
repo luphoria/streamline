@@ -54,6 +54,7 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
 
         #logo {
             height: 12em;
+            user-select: none;
         }
 
         .home {
