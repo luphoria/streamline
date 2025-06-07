@@ -34,3 +34,15 @@ button, select, input, label, textarea, ul.tree-view {
     -webkit-font-smoothing: none;
     font-size: 0.85rem;
 }
+
+
+#webamp {
+    top: auto!important;
+    left: calc(1.5rem + 10px)!important;
+    bottom: calc(10px + 1.5rem)!important;
+    height: 348px!important;
+}
+
+& > div > div {
+    height: 348px!important;
+}
