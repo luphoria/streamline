@@ -26,36 +26,25 @@ export const Player: Component<
 		}
 		const blob = await response.value.blob();
 		const url = URL.createObjectURL(blob);
-		try {
-			if (!Webamp.browserIsSupported()) {
-				throw new Error("Webamp is not supported in this browser");
-			}
-
-			const recordingInfo = await window.mb.RecordingInfo(mbid);
-
-			this.player = <div class="loader">Loading Webamp...</div>;
-			const webamp = new Webamp({
-				initialTracks: [
-					{
-						metaData: {
-							title: recordingInfo.title,
-							artist: recordingInfo.artists[0].name,
-						},
-						url: url,
-					},
-				],
-				initialSkin: {
-					url: "/skin.wsz",
-				},
-			});
-			await webamp.renderWhenReady(this.player);
-		} catch (e) {
-			console.error(e);
+		if (!window.webamp) {
 			const player = new Audio(url);
 			player.controls = true;
 			player.play();
 			this.player = player;
+			return;
 		}
+		const recordingInfo = await window.mb.RecordingInfo(mbid);
+		window.webamp.setTracksToPlay(
+			[
+				{
+					metaData: {
+						title: recordingInfo.title,
+						artist: recordingInfo.artists[0].name,
+					},
+					url: url,
+				},
+			],
+		)
 	};
 
 	const deleteCached = async (mbid: string) => {

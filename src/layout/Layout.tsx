@@ -1,7 +1,8 @@
 import type { Component } from "dreamland/core";
 import Navbar from "./Navbar";
+import Webamp from "webamp";
 
-const Layout: Component<{}, { outlet: Element }> = function (cx) {
+const Layout: Component<{}, { outlet: Element, container: HTMLElement, player: HTMLElement }> = function (cx) {
 	cx.css = `
     :scope {
       height: 100%;
@@ -17,11 +18,22 @@ const Layout: Component<{}, { outlet: Element }> = function (cx) {
       padding: 1.5em;
     }
   `;
+  cx.mount = () => {
+    if (!Webamp.browserIsSupported()) {
+      return;
+    }
+    window.webamp = new Webamp({
+				initialSkin: {
+					url: "/skin.wsz",
+				},
+		});
+    window.webamp.renderWhenReady(this.player);
+  }
 	return (
 		<div>
 			<Navbar />
-			{/* @ts-expect-error */}
 			<main this={use(this.container).bind()}><fieldset>{use(this.outlet)}</fieldset></main>
+      <div id="player" this={use(this.player).bind()}></div>
 		</div>
 	);
 };
