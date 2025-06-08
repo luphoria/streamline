@@ -1,4 +1,5 @@
 import type { Handler } from "express";
+import { pipeline } from "node:stream/promises";
 import { t } from "try";
 import { GetRecording } from "../../db/db";
 import * as fs from "fs";
@@ -74,5 +75,5 @@ export const get: Handler = async (req, res, next) => {
 		.send(await (stream.error as Response).text());
 	}
 
-	return stream.value.pipe(res);
+	return await pipeline(stream.value, res);
 };
