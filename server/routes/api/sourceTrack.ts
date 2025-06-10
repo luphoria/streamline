@@ -25,7 +25,8 @@ export const get: Handler = async (req, res, next) => {
 	const mb = new MusicBrainz(MB_URL);
 	const recordingInfo = await mb.RecordingInfo(mbid);
 	// TODO: sort related releases, pass selected release to scraper (for sorting responses), pass other listed artist credits (for filtering and sorting)
-	const query = `${recordingInfo.artists[0].name} - ${recordingInfo.title}`;
+	const artist = recordingInfo.artists[0].name;
+	const songTitle = recordingInfo.title;
 	console.log(recordingInfo);
 	const keywords = recordingInfo.releases[0] ? recordingInfo.releases[0].title : "";
 	console.log(keywords);
@@ -54,7 +55,7 @@ export const get: Handler = async (req, res, next) => {
 
 		// Prioritize client-specified src
 		if (sourceModules[source]) {
-			stream = await t(sourceModules[source](query, mbid, keywords));
+			stream = await t(sourceModules[source](artist, songTitle, mbid, keywords));
 			if (!stream.ok) delete sourceModules[source];
 		}
 
@@ -62,7 +63,7 @@ export const get: Handler = async (req, res, next) => {
 			console.log("Stream not yet OK");
 			// Go by order
 			for (let src in sourceModules) {
-				stream = await t(sourceModules[src](query, mbid, keywords));
+				stream = await t(sourceModules[src](artist, songTitle, mbid, keywords));
 				if (stream.ok) break;
 				console.log("Trying another source . . . ");
 			}
