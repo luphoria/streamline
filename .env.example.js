@@ -12,13 +12,22 @@ export const ytdlp = {
 	path: "/path/to/set/yt-dlp/downloads/",
 };
 
+export const soundcloud = {
+	ytdlpBinary: "yt-dlp",
+	path: "/path/to/set/sc/downloads/",
+};
+
 export const sources = [
-  {
-    name: "slsk", 
-    path: "C:\\Users\\user\\streamline\\sources\\slsk.ts"
-  },
-  {
-    name: "ytdlp",
-    path: "C:\\Users\\user\\streamline\\sources\\yt-dlp.ts"
-  }
-]
+	{
+		name: "slsk",
+		path: "C:\\Users\\user\\streamline\\sources\\slsk.ts",
+	},
+	{
+		name: "soundcloud",
+		path: "C:\\Users\\user\\streamline\\sources\\soundcloud.ts",
+	},
+	{
+		name: "ytdlp",
+		path: "C:\\Users\\user\\streamline\\sources\\yt-dlp.ts",
+	},
+];
