@@ -30,7 +30,7 @@ export default async function soundcloudDownloadBySearch(
 ) {
 	console.log(`MBID ${mbid}`);
 	// Search
-	let results: { uploader: string; title: string; description: string; url: string; score: number }[] =
+	let results: { uploader: string; title: string; description: string; url: string; score: number, duration: number }[] =
 		[];
 	try {
 		if (!keywords) keywords = "";
@@ -40,7 +40,7 @@ export default async function soundcloudDownloadBySearch(
 		);
 		let resultsRaw =
 				(await execPromise(
-					`${soundcloud.ytdlpBinary} --default-search scsearch scsearch10:"${quote([`${artist} - ${title}`])} song" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
+					`${soundcloud.ytdlpBinary} --default-search scsearch scsearch10:"${quote([`${artist} - ${title}`])}" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
 				) as string).split("\n");
 		
 		resultsRaw = JSON.parse(`[${resultsRaw.join(",")}]`.replace(",]","]"))[0]["entries"];
@@ -52,7 +52,8 @@ export default async function soundcloudDownloadBySearch(
 				title: resultsRaw[result]["title"], // There is also "track?"
 				description: resultsRaw[result]["description"],
 				url: resultsRaw[result]["url"],
-				score: 0 // Maybe also viewcount? 
+				score: 0, // Maybe also viewcount? 
+				duration: resultsRaw[result]["duration"]
 			});
 		}
 	} catch (err) {
@@ -91,6 +92,7 @@ export default async function soundcloudDownloadBySearch(
 		"preview",
 	];
 
+	// TODO: Filter results with duration out of range from mb src duration. 
 	results = results.filter((res) => {
 		return filters.every((term) => {
 			return (
@@ -115,6 +117,9 @@ export default async function soundcloudDownloadBySearch(
 		}
 		if (results[res].title.includes(keywords)) {
 			results[res].score += 10;
+		}
+		if (results[res].title.includes(`${artist} - ${songTitle}`)) {
+			results[res].score += 25;
 		}
 		if (results[res].uploader.includes(artist)) {
 			results[res].score += 25;
