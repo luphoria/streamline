@@ -63,6 +63,7 @@ export const Settings: Component<
 				<select value={use(store.source).bind()}>
 					<option value="ytdlp">YouTube</option>
 					<option value="slsk">Soulseek</option>
+					<option value="soundcloud">SoundCloud</option>
 				</select>
 			</div>
 		</div>

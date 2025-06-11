@@ -80,28 +80,23 @@ export class MusicBrainz {
 			});
 		}
 
-
 		for (const release in recordingFetch.releases) {
-			console.log(release)
+			console.log(release);
 			res.releases.push({
 				title: recordingFetch.releases[release]["title"],
-				disambiguation: recordingFetch.releases[release][
-					"disambiguation"
-				]
+				disambiguation: recordingFetch.releases[release]["disambiguation"]
 					? true
 					: false,
 				artists: [],
 			});
-			for (const artist in recordingFetch.releases[release][
-				"artist-credit"
-			]) {
+			for (const artist in recordingFetch.releases[release]["artist-credit"]) {
 				res.artists.push({
-					name: recordingFetch.releases[release]["artist-credit"][
-						artist
-					]["name"],
-					mbid: recordingFetch.releases[release]["artist-credit"][
-						artist
-					]["artist"]["id"],
+					name: recordingFetch.releases[release]["artist-credit"][artist][
+						"name"
+					],
+					mbid: recordingFetch.releases[release]["artist-credit"][artist][
+						"artist"
+					]["id"],
 				});
 			}
 		}
@@ -122,23 +117,23 @@ export class MusicBrainz {
 		if (releaseFetch["cover-art-archive"])
 			coverArt = releaseFetch["cover-art-archive"]["artwork"];
 
-			const res: {
-				title: string;
-				artists: { name: string; mbid: string }[];
-				trackList: { title: string; mbid: string }[];
-				coverArt: any;
-				mbid: string;
-				releaseGroup: string | null;
-			} = {
-				title: releaseFetch["title"],
-				artists: [],
-				trackList: [],
-				coverArt: coverArt,
-				mbid: mbid,
-				releaseGroup: releaseFetch["release-group"]
-					? releaseFetch["release-group"]["id"]
-					: null,
-			};
+		const res: {
+			title: string;
+			artists: { name: string; mbid: string }[];
+			trackList: { title: string; mbid: string }[];
+			coverArt: any;
+			mbid: string;
+			releaseGroup: string | null;
+		} = {
+			title: releaseFetch["title"],
+			artists: [],
+			trackList: [],
+			coverArt: coverArt,
+			mbid: mbid,
+			releaseGroup: releaseFetch["release-group"]
+				? releaseFetch["release-group"]["id"]
+				: null,
+		};
 
 		// Populate artists
 		for (const artist in releaseFetch["artist-credit"]) {
@@ -238,8 +233,8 @@ export class MusicBrainz {
 
 	// Search recordings
 	async SearchSongs(query: string) {
-	  // @ts-ignore
-	  // eslint-disable-next-line
+		// @ts-ignore
+		// eslint-disable-next-line
 		query = '"' + query.replaceAll(/ /g, '" "') + '"';
 		const data = await this.queryApi(
 			`recording/?query=${encodeURIComponent(query)}&limit=100&fmt=json`
@@ -286,6 +281,7 @@ export class MusicBrainz {
 					secondaryType: release["secondary-types"]
 						? release["secondary-types"][0]
 						: null,
+					score: 0,
 				});
 			});
 
@@ -294,73 +290,37 @@ export class MusicBrainz {
 				return version.releaseDate;
 			});
 
-			// Sort releases for recording
-			// TODO: Improve and prefer cover
+			for (let release in recordingResult.versions) {
+				// Sort by oldest
+				let releaseVer = recordingResult.versions[release];
+				if (releaseVer.country == "XW" || releaseVer.country == "XE")
+					recordingResult.versions[release].score += 10;
+				else if (releaseVer.country == "US" || releaseVer.country == "GB")
+					recordingResult.versions[release].score += 5;
+				if (releaseVer.releaseDate) {
+					if (releaseVer.releaseDate.includes("-"))
+						recordingResult.versions[release].score += 30;
+					else recordingResult.versions[release].score += 15;
+				}
+				if (releaseVer.secondaryType == "Compilation")
+					recordingResult.versions[release].score -= 10;
+				if (releaseVer.secondaryType == "Compilation")
+					recordingResult.versions[release].score -= 20;
+			}
+
 			recordingResult.versions.sort((a, b) => {
-				if (
-					a.country != "XW" &&
-					a.country != "XE" &&
-					(b.country == "XW" || b.country == "XE")
-				)
-					return 1; // Deprioritize country releases
-				if (
-					(a.country == "XW" || a.country == "XE") &&
-					b.country != "XW" &&
-					b.country != "XE"
-				)
-					return -1;
-
-				// US/GB is next priority
-				if (
-					a.country != "US" &&
-					a.country != "GB" &&
-					(b.country == "US" || b.country == "GB")
-				)
-					return 1; // Deprioritize country releases
-				if (
-					(a.country == "US" || a.country == "GB") &&
-					b.country != "US" &&
-					b.country != "GB"
-				)
-					return -1;
-
-				return 0;
+				return b.score - a.score;
 			});
 
 			// @ts-expect-error
 			recordingResult.versions.sort((a, b) => {
-				if (!!a.releaseDate && !!b.releaseDate) {
-          return (
-            // Prioritize oldest
-            new Date(a.releaseDate || 0).getTime() -
-            new Date(b.releaseDate || 0).getTime()
-          );
+				if (!!a.releaseDate.includes("-") && !!a.releaseDate.includes("-")) {
+					return (
+						// Prioritize oldest
+						new Date(a.releaseDate || 0).getTime() -
+						new Date(b.releaseDate || 0).getTime()
+					);
 				}
-			});
-
-			recordingResult.versions.sort((a, _b) => {
-				return a.releaseDate.includes("-") ? 1 : 0;
-			});
-
-			recordingResult.versions.sort((a, b) => {
-				if (
-					a.secondaryType == "Compilation" &&
-					!(b.secondaryType == "Compilation")
-				)
-					return 1;
-				if (
-					b.secondaryType == "Compilation" &&
-					!(a.secondaryType == "Compilation")
-				)
-					return -1;
-
-				return 0;
-			});
-			recordingResult.versions.sort((a, b) => {
-				if (a.status == "Bootleg" && !(b.status == "Bootleg")) return 1;
-				if (b.status == "Bootleg" && !(a.status == "Bootleg")) return -1;
-
-				return 0;
 			});
 
 			if (recordingResult.versions.length != 0)

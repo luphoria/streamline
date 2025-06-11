@@ -11,12 +11,10 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
             justify-content: flex-start;
             padding: 1.5rem;
             align-items: flex-start;
-            background-color: var(--mantle);
             height: 100vh;
             width: 25em;
             flex-shrink: 0;
             gap: 1em;
-            box-shadow: 0 -4px 8px 0 var(--mantle);
 
             background: var(--bg-grad);
             color: var(--on-grad);
@@ -54,6 +52,7 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
 
         #logo {
             height: 12em;
+            user-select: none;
         }
 
         .home {

@@ -103,11 +103,11 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	};
 };
 
-export default async function slskDownloadBySearch(query, mbid, keywords?) {
+export default async function slskDownloadBySearch(artist, title, mbid, keywords?) {
 	// Downloader
 	let downloadResult;
 	let filePath;
-	const searchQuery = await search(query);
+	const searchQuery = await search(`${artist} - ${title}`);
 	let tries = 3; // Number of different results to try before giving up
 	if (tries > searchQuery.length) tries = searchQuery.length;
 	for (let i = 0; i < tries; i++) {

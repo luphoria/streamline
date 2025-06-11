@@ -1,7 +1,7 @@
 import { exec } from "child_process";
 import quote from "shell-quote/quote";
 import fs from "fs";
-import { ytdlp } from "../.env";
+import { soundcloud } from "../.env";
 import { AddRecording } from "../server/db/db";
 
 const execPromise = (input) => {
@@ -22,7 +22,7 @@ const execPromise = (input) => {
 	});
 };
 
-export default async function ytdlpDownloadBySearch(
+export default async function soundcloudDownloadBySearch(
 	artist,
 	title,
 	mbid,
@@ -30,43 +30,51 @@ export default async function ytdlpDownloadBySearch(
 ) {
 	console.log(`MBID ${mbid}`);
 	// Search
-	let results: { channel: string; title: string; id: string; score: number }[] =
+	let results: { uploader: string; title: string; description: string; url: string; score: number, duration: number }[] =
 		[];
 	try {
 		if (!keywords) keywords = "";
 		else keywords = keywords.replaceAll(/[()[\].!?/]/g, "");
 		console.log(
-			`Searching YouTube for "${artist} - "${title}" ${keywords}"...`
+			`Searching SoundCloud for "${artist} - "${title}" ${keywords}"...`
 		);
-		let resultsRaw = JSON.parse(
-			(await execPromise(
-				`${ytdlp.binary} --default-search ytsearch ytsearch10:'${quote([`${artist} - "${title}" ${keywords}`])} song' --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
-			)) as string
-		).entries;
+		let resultsRaw =
+				(await execPromise(
+					`${soundcloud.ytdlpBinary} --default-search scsearch scsearch10:"${quote([`${artist} - ${title}`])}" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
+				) as string).split("\n");
+		
+		resultsRaw = JSON.parse(`[${resultsRaw.join(",")}]`.replace(",]","]"))[0]["entries"];
+		console.log(resultsRaw);
 		for (let result in resultsRaw) {
-			console.log(
-				`${resultsRaw[result].channel} - ${resultsRaw[result].title} (${resultsRaw[result].id})`
-			);
+			console.log(resultsRaw[result]);
 			results.push({
-				channel: resultsRaw[result].channel,
-				title: resultsRaw[result].title,
-				id: resultsRaw[result].id,
-				score: 0, // TODO: Favor the results that YT shows first.
+				uploader: resultsRaw[result]["uploader"],
+				title: resultsRaw[result]["title"], // There is also "track?"
+				description: resultsRaw[result]["description"],
+				url: resultsRaw[result]["url"],
+				score: 0, // Maybe also viewcount? 
+				duration: resultsRaw[result]["duration"]
 			});
 		}
 	} catch (err) {
 		console.error(err);
 	}
+
 	console.log(`${results.length} results before filtering`);
 
 	// Filter results
 	artist = artist.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
 	let songTitle = title.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
 
-	for (let res in results)
+	for (let res in results) {
 		results[res].title = results[res].title
 			.toLowerCase()
 			.replaceAll(/[()[\].!?/]/g, "");
+		
+		results[res].uploader = results[res].uploader
+			.toLowerCase()
+			.replaceAll(/[()[\].!?/]/g, "");
+	}
 
 	// Put this in .env.js?
 	const filters = [
@@ -74,19 +82,17 @@ export default async function ytdlpDownloadBySearch(
 		"edit",
 		"live",
 		"video",
-		"full album",
 		"cover",
 		"slowed",
 		"reverb",
 		"nightcore",
 		"clean",
 		"bass", // bass-boost versions
-		"reacting",
-		"reaction",
 		"take ", // different takes -- whitespace intensional
 		"preview",
 	];
 
+	// TODO: Filter results with duration out of range from mb src duration. 
 	results = results.filter((res) => {
 		return filters.every((term) => {
 			return (
@@ -109,20 +115,14 @@ export default async function ytdlpDownloadBySearch(
 		) {
 			results[res].score += 5;
 		}
-		if (results[res].title.includes("lyrics")) {
-			results[res].score += 10;
-		}
-		if (results[res].title.includes("audio")) {
-			results[res].score += 10;
-		}
 		if (results[res].title.includes(keywords)) {
 			results[res].score += 10;
 		}
-		if (results[res].channel.endsWith(" - Topic")) {
-			results[res].score += 10;
+		if (results[res].title.includes(`${artist} - ${songTitle}`)) {
+			results[res].score += 25;
 		}
-		if (results[res].channel.includes(artist)) {
-			results[res].score += 10;
+		if (results[res].uploader.includes(artist)) {
+			results[res].score += 25;
 		}
 	}
 
@@ -137,15 +137,15 @@ export default async function ytdlpDownloadBySearch(
 
 	let filePath = (
 		(await execPromise(
-			// We don't use -x because the file path doesn't properly print the new extension. Instead, let's just make sure it's the smallest/worst video file.
-			`${ytdlp.binary} "${quote([results[0].id])}" -f wv+ba -P ${ytdlp.path} --no-warnings --restrict-filenames --print "after_move:filepath" --sponsorblock-remove all`
+			`${soundcloud.ytdlpBinary} ${results[0].url} -P ${soundcloud.path} --no-warnings --restrict-filenames --print "after_move:filepath"`
 		)) as string
 	).split("\n")[0];
 
+	console.log("===")
 	console.log(filePath);
 
 	// TODO: Create a cache db associating mbid to filepath
-	AddRecording(mbid, filePath, "yt-dlp");
+	AddRecording(mbid, filePath, "soundcloud");
 	const readStream = fs.createReadStream(filePath);
 
 	return readStream;

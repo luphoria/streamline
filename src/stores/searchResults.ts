@@ -22,6 +22,7 @@ export interface Release {
 	country: string | null;
 	status: string | null;
 	secondaryType: string | null;
+	score: number;
 }
 
 export interface RecordingGroup {
