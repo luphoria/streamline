@@ -1,24 +1,31 @@
 import type { Component } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
 import { Icon } from "../components/icon";
+import { Link } from "../components/link";
+
 const Artist: Component<{
 	artist: Awaited<ReturnType<MusicBrainz["ArtistInfo"]>>;
 }> = function () {
 	let resNumber = 0;
+	console.log(this.artist.releaseGroups);
 	return (
 		<div class="musicbrainz-artist">
 			<h3 id="artist-name">{this.artist.name}</h3>
 			<h4 id="artist-disambiguation">{this.artist.disambiguation}</h4>
 			<p>
-				{use(this.artist.releaseGroups.all).mapEach((group) => {
-					const number = resNumber;
-					resNumber += 1;
-					return (
-						<span id={`release${number}`} mbid={group.mbid}>
-							<b>{group.title}</b> ({group.date}) [{group.type}]
-							<br />
-						</span>
-					);
+				{use(this.artist.releaseGroups).mapEach((group) => {
+					if (group.releases.length > 0) {
+						const number = resNumber;
+						resNumber += 1; // what is the point of this? 
+						console.log(group);
+						return (
+							<span id={`release${number}`} mbid={group.mbid}>
+								<b><Link href={`/release/${group.releases[0].mbid}`}>{group.title}</Link> </b>
+								({group.date}) [{group.type}]
+								<br />
+							</span>
+						);
+					}
 				})}
 			</p>
 		</div>

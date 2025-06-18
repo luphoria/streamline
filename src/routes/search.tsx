@@ -58,9 +58,6 @@ export const ResultItem: Component<
 		value: this.firstResult.mbid,
 	});
 
-	console.log("============");
-	console.log(this.song);
-
 	return (
 		<div>
 			<span>

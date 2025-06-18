@@ -162,37 +162,40 @@ export class MusicBrainz {
 		const artistFetch = await this.queryApi(
 			`artist/${mbid}?inc=release-groups+releases&fmt=json`
 		);
+		const artistReleases = await this.queryApi(
+			// Do we need the artistFetch for anything? I think the disambiguation, but anything else? 
+			`release?artist=${mbid}&inc=release-groups+artist-credits&limit=100&fmt=json`
+		);
+		/* TODO: MB API: Special note for releases: To ensure requests can complete without timing out, we limit the number of releases 
+		returned such that the entire list contains no more than 500 tracks. 
+		(However, at least one full release is always returned, even if it has more than 500 tracks; we don't return "partial" 
+		releases.) This means that you may not get 100 releases per page if you set limit=100; in fact the number will vary per 
+		page depending on the size of the releases. In order to page through the results properly, increment offset by the number of 
+		releases you get from each response, rather than the (larger, fixed) limit size.
+		*/
+		// If we have a cleaner way to get both release-groups and releases
+
 		console.info("ArtistInfo: artistFetch:");
 		console.info(artistFetch);
-
+		console.info("ArtistInfo: artistReleases:");
+		console.info(artistReleases);
 		const res: {
 			name: string;
 			disambiguation: string | null;
-			releaseGroups: {
-				album: any[];
-				single: any[];
-				ep: any[];
-				live: any[];
-				compilation: any[];
-				all: any[];
-			};
+			releaseGroups: any;
 		} = {
 			name: artistFetch.name,
 			disambiguation: artistFetch.disambiguation
 				? artistFetch.disambiguation
 				: null,
-			releaseGroups: {
-				album: [],
-				single: [],
-				ep: [],
-				live: [],
-				compilation: [],
-				all: [], // Is this necessary?
-			},
+			releaseGroups: [],
 		};
+
+		let releaseGroups = {}
 
 		for (const releaseGroup in artistFetch["release-groups"]) {
 			const resReleaseGroup = {
+
 				title: artistFetch["release-groups"][releaseGroup]["title"],
 				date: artistFetch["release-groups"][releaseGroup]["first-release-date"],
 				mbid: artistFetch["release-groups"][releaseGroup]["id"],
@@ -201,32 +204,31 @@ export class MusicBrainz {
 							"primary-type"
 						].toLowerCase()
 					: "release",
+				releases: []
 			};
 
 			// Add all of the releases to one object -- not sure if we will need this.
-			res.releaseGroups.all.push(resReleaseGroup);
+			releaseGroups[resReleaseGroup.mbid] = resReleaseGroup;
+		}
 
-			// Sort the release by its primary type.
-			switch (artistFetch["release-groups"][releaseGroup]["primary-type"]) {
-				case "Album":
-					res.releaseGroups.album.push(resReleaseGroup);
-					break;
-				case "Single":
-					res.releaseGroups.single.push(resReleaseGroup);
-					break;
-				case "EP":
-					res.releaseGroups.ep.push(resReleaseGroup);
-					break;
-				case "Live":
-					res.releaseGroups.live.push(resReleaseGroup);
-					break;
-				case "Compilation":
-					res.releaseGroups.compilation.push(resReleaseGroup);
-					break;
-				default:
-					break;
+		for (const release in artistReleases["releases"]) {
+			console.log(artistReleases["releases"][release]);
+			if (artistReleases["releases"][release]["release-group"]) {
+				const releaseGroupId = artistReleases["releases"][release]["release-group"]["id"];
+				console.log(`${releaseGroupId}?`)
+				if(Object.keys(releaseGroups).includes(releaseGroupId)) {
+					releaseGroups[releaseGroupId].releases.push({
+						title: artistReleases["releases"][release]["title"],
+						disambiguation: artistReleases["releases"][release]["disambiguation"] ? artistReleases["releases"][release]["disambiguation"] : null,
+						mbid: artistReleases["releases"][release]["id"]
+					});
+				}
 			}
 		}
+
+		res.releaseGroups = [...Object.values(releaseGroups)];
+
+		console.log(res);
 
 		return res;
 	}
