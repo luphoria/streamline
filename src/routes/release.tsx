@@ -64,7 +64,7 @@ const Release: Component<
 			<ol id="release-tracklist">
 				{use(this.release.trackList).mapEach((track) => (
 						<li>
-							{track.title}
+							<Link href={`/play/${track.mbid}`}>{track.title}</Link>
 						</li>
 				))}
 			</ol>

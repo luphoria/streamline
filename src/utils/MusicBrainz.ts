@@ -173,7 +173,8 @@ export class MusicBrainz {
 		page depending on the size of the releases. In order to page through the results properly, increment offset by the number of 
 		releases you get from each response, rather than the (larger, fixed) limit size.
 		*/
-		// If we have a cleaner way to get both release-groups and releases
+		// This breaks for artists with a ton of releases (i.e. the beatles). 
+		// If we have a cleaner way to get both release-groups and releases, we could bypass pagination as well. 
 
 		console.info("ArtistInfo: artistFetch:");
 		console.info(artistFetch);
