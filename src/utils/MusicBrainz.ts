@@ -250,20 +250,23 @@ export class MusicBrainz {
 			}
 
 			console.log(recording);
-
-			const artist = recording["artist-credit"][0].name;
 			const title = recording.title;
 
 			const recordingResult: SongVersion = {
 				mbid: recording.id,
 				title: DOMPurify.sanitize(title),
-				artist: DOMPurify.sanitize(artist),
+				artists: [],
 				versions: [],
 				length: recording.length,
 				hasVideo: recording.video !== null,
 				releaseDate: DOMPurify.sanitize(recording["first-release-date"] || ""),
 				score: recording.score,
 			};
+
+			recording["artist-credit"].forEach(artist => {
+				console.log(artist);
+				recordingResult.artists.push({name: artist.artist.name, mbid: artist.artist.id});
+			})
 
 			recording.releases.forEach((release: any) => {
 				console.log(release);

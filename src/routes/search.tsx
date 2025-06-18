@@ -9,6 +9,7 @@ import type {
 } from "../stores/searchResults";
 import { Icon } from "../components/icon";
 import { CoverArt } from "../components/coverart";
+import { Link } from "../components/link";
 
 export const ResultItem: Component<
 	{
@@ -57,12 +58,18 @@ export const ResultItem: Component<
 		value: this.firstResult.mbid,
 	});
 
+	console.log("============");
+	console.log(this.song);
+
 	return (
 		<div>
 			<span>
 				<CoverArt src={this.firstResult.coverArt} size={75} />
 				<span class="song-info">
-					<div class="artist">{this.song.artist}</div>
+					<div class="artist">{use(this.song.artists).mapEach((artist) => {
+						// @ts-expect-error
+						return <div><Link href={`/artist/${artist.mbid}`}>{artist.name}</Link>,</div>;
+					})}</div>
 					<div class="title"><b>{this.song.title}</b> ({this.song.releaseDate})</div>
 				</span>
 			</span>

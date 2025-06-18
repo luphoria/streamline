@@ -4,7 +4,7 @@ import { atom } from "nanostores";
 export interface SongVersion {
 	mbid: string;
 	title: string;
-	artist: string;
+	artists: [{ name: string; mbid: string }];
 	versions: Release[];
 	length: number | null;
 	hasVideo: boolean;
@@ -26,7 +26,7 @@ export interface Release {
 }
 
 export interface RecordingGroup {
-	artist: string;
+	artists: [{ name: string; mbid: string }];
 	title: string;
 	versions: Release[];
 	hasVideo: boolean;
