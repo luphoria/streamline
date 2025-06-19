@@ -110,14 +110,23 @@ export default async function soundcloudDownloadBySearch(
 
 	console.log(results[0]);
 
-	const filePath = (await exec(`${soundcloud.ytdlpBinary} ${results[0].url} -P ${soundcloud.path} --no-warnings --restrict-filenames --print "after_move:filepath"`)).stdout.split("\n")[0];
+	// Most soundcloud results are garbage -- only pick
+	if (results[0].score >= 25) {
+		let filePath = (
+			(await execPromise(
+				`${soundcloud.ytdlpBinary} ${results[0].url} -P ${soundcloud.path} --no-warnings --restrict-filenames --print "after_move:filepath"`
+			)) as string
+		).split("\n")[0];
 
-	console.log("===")
-	console.log(filePath);
+		console.log("===");
+		console.log(filePath);
 
-	// TODO: Create a cache db associating mbid to filepath
-	AddRecording(mbid, filePath, "soundcloud");
-	const readStream = fs.createReadStream(filePath);
+		// TODO: Create a cache db associating mbid to filepath
+		AddRecording(mbid, filePath, "soundcloud");
+		const readStream = fs.createReadStream(filePath);
 
-	return readStream;
+		return readStream;
+	}
+
+	throw new Response("No songs found.", { status: 404 });
 }
