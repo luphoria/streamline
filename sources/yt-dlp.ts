@@ -1,26 +1,12 @@
-import { exec } from "child_process";
+import { exec as nodeExec } from "node:child_process";
+import fs from "node:fs";
+import util from "node:util";
+
+// import { t } from "try";
 import quote from "shell-quote/quote";
-import fs from "fs";
 import { ytdlp } from "../.env";
 import { AddRecording } from "../server/db/db";
-
-const execPromise = (input) => {
-	return new Promise((resolve, reject) => {
-		exec(input, (error, stdout, stderr) => {
-			if (error) {
-				reject(`error: ${error.message}`);
-
-				return;
-			}
-
-			if (stderr) {
-				resolve(stderr);
-			} else {
-				resolve(stdout);
-			}
-		});
-	});
-};
+const exec = util.promisify(nodeExec);
 
 export default async function ytdlpDownloadBySearch(
 	artist,
@@ -30,40 +16,32 @@ export default async function ytdlpDownloadBySearch(
 ) {
 	console.log(`MBID ${mbid}`);
 	// Search
-	let results: { channel: string; title: string; id: string; score: number }[] =
-		[];
-	try {
-		if (!keywords) keywords = "";
-		else keywords = keywords.replaceAll(/[()[\].!?/]/g, "");
+	let results: { channel: string; title: string; id: string; score: number }[] = [];
+	if (!keywords) keywords = "";
+	else keywords = keywords.replaceAll(/[()[\].!?/]/g, "");
+	console.log(
+		`Searching YouTube for "${artist} - ${title} ${keywords} song"...`
+	);
+	const resultsRaw = await exec(`${ytdlp.binary} --default-search ytsearch ytsearch10:${quote([`${artist} - ${title} ${keywords} song`])} --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`)
+	const resultsParsed = JSON.parse(resultsRaw.stdout).entries;
+	for (const result in resultsParsed) {
 		console.log(
-			`Searching YouTube for "${artist} - "${title}" ${keywords}"...`
+			`${resultsParsed[result].channel} - ${resultsParsed[result].title} (${resultsParsed[result].id})`
 		);
-		let resultsRaw = JSON.parse(
-			(await execPromise(
-				`${ytdlp.binary} --default-search ytsearch ytsearch10:'${quote([`${artist} - "${title}" ${keywords}`])} song' --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
-			)) as string
-		).entries;
-		for (let result in resultsRaw) {
-			console.log(
-				`${resultsRaw[result].channel} - ${resultsRaw[result].title} (${resultsRaw[result].id})`
-			);
-			results.push({
-				channel: resultsRaw[result].channel,
-				title: resultsRaw[result].title,
-				id: resultsRaw[result].id,
-				score: 0, // TODO: Favor the results that YT shows first.
-			});
-		}
-	} catch (err) {
-		console.error(err);
+		results.push({
+			channel: resultsParsed[result].channel,
+			title: resultsParsed[result].title,
+			id: resultsParsed[result].id,
+			score: 0, // TODO: Favor the results that YT shows first.
+		});
 	}
 	console.log(`${results.length} results before filtering`);
 
 	// Filter results
 	artist = artist.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
-	let songTitle = title.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
+	const songTitle = title.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
 
-	for (let res in results)
+	for (const res in results)
 		results[res].title = results[res].title
 			.toLowerCase()
 			.replaceAll(/[()[\].!?/]/g, "");
@@ -101,7 +79,7 @@ export default async function ytdlpDownloadBySearch(
 	console.log(`${results.length} results after filtering`);
 
 	// Score-based attribution per search result
-	for (let res in results) {
+	for (const res in results) {
 		if (
 			(results[res].title.includes("explicit") ||
 				results[res].title.includes("dirty")) &&
@@ -135,13 +113,7 @@ export default async function ytdlpDownloadBySearch(
 
 	console.log(results[0]);
 
-	let filePath = (
-		(await execPromise(
-			// We don't use -x because the file path doesn't properly print the new extension. Instead, let's just make sure it's the smallest/worst video file.
-			`${ytdlp.binary} "${quote([results[0].id])}" -f wv+ba -P ${ytdlp.path} --no-warnings --restrict-filenames --print "after_move:filepath" --sponsorblock-remove all`
-		)) as string
-	).split("\n")[0];
-
+	const filePath = (await exec(`${ytdlp.binary} ${quote([results[0].id])} -f wv+ba -P ${ytdlp.path} --no-warnings --restrict-filenames --print "after_move:filepath" --sponsorblock-remove all`)).stdout.split("\n")[0]
 	console.log(filePath);
 
 	// TODO: Create a cache db associating mbid to filepath

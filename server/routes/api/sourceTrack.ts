@@ -1,8 +1,9 @@
-import type { Handler } from "express";
+import fs from "node:fs";
 import { pipeline } from "node:stream/promises";
+
+import type { Handler } from "express";
 import { t } from "try";
 import { GetRecording } from "../../db/db";
-import * as fs from "fs";
 import { MusicBrainz } from "../../../src/utils/MusicBrainz"
 import { MB_URL, sources } from "../../../.env.js"
 
@@ -42,7 +43,7 @@ export const get: Handler = async (req, res, next) => {
 		console.log(`File already in cache: ${DBReq.filepath}`);
 		// TODO: download anyway if flag is fixed to try specific source that isn't cached or if some kind of force flag sent
 
-		stream = await t(fs.createReadStream(DBReq.filepath));
+		stream = await t(() => fs.createReadStream(DBReq.filepath));
 		usedSource = "cache";
 	} else {
 		// Fetch all sourcing modules (from .env.js)

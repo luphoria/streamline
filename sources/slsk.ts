@@ -1,6 +1,6 @@
 // Download a file from soulseek and then send it to the client.
 
-import * as fs from "fs";
+import fs from "node:fs";
 import { slskd } from "../.env.js";
 import search from "./slsk_search";
 import { AddRecording } from "../server/db/db.ts";
@@ -58,7 +58,7 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	const fileId = file[0].id;
 	console.log(fileId);
 
-	let startTime = Date.now();
+	const startTime = Date.now();
 
 	// Repeatedly check to see if the file is at 100% yet
 	while (true) {
@@ -103,7 +103,7 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	};
 };
 
-export default async function slskDownloadBySearch(artist, title, mbid, keywords?) {
+export default async function slskDownloadBySearch(artist, title, mbid, _keywords?) {
 	// Downloader
 	let downloadResult;
 	let filePath;

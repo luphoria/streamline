@@ -1,26 +1,11 @@
-import { exec } from "child_process";
+import { exec as nodeExec } from "node:child_process";
+import fs from "node:fs";
+import util from "node:util";
+
 import quote from "shell-quote/quote";
-import fs from "fs";
 import { soundcloud } from "../.env";
 import { AddRecording } from "../server/db/db";
-
-const execPromise = (input) => {
-	return new Promise((resolve, reject) => {
-		exec(input, (error, stdout, stderr) => {
-			if (error) {
-				reject(`error: ${error.message}`);
-
-				return;
-			}
-
-			if (stderr) {
-				resolve(stderr);
-			} else {
-				resolve(stdout);
-			}
-		});
-	});
-};
+const exec = util.promisify(nodeExec);
 
 export default async function soundcloudDownloadBySearch(
 	artist,
@@ -30,43 +15,33 @@ export default async function soundcloudDownloadBySearch(
 ) {
 	console.log(`MBID ${mbid}`);
 	// Search
-	let results: { uploader: string; title: string; description: string; url: string; score: number, duration: number }[] =
-		[];
-	try {
-		if (!keywords) keywords = "";
-		else keywords = keywords.replaceAll(/[()[\].!?/]/g, "");
-		console.log(
-			`Searching SoundCloud for "${artist} - "${title}" ${keywords}"...`
-		);
-		let resultsRaw =
-				(await execPromise(
-					`${soundcloud.ytdlpBinary} --default-search scsearch scsearch10:"${quote([`${artist} - ${title}`])}" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
-				) as string).split("\n");
-		
-		resultsRaw = JSON.parse(`[${resultsRaw.join(",")}]`.replace(",]","]"))[0]["entries"];
-		console.log(resultsRaw);
-		for (let result in resultsRaw) {
-			console.log(resultsRaw[result]);
-			results.push({
-				uploader: resultsRaw[result]["uploader"],
-				title: resultsRaw[result]["title"], // There is also "track?"
-				description: resultsRaw[result]["description"],
-				url: resultsRaw[result]["url"],
-				score: 0, // Maybe also viewcount? 
-				duration: resultsRaw[result]["duration"]
-			});
-		}
-	} catch (err) {
-		console.error(err);
+	let results: { uploader: string; title: string; description: string; url: string; score: number, duration: number }[] = [];
+	if (!keywords) keywords = "";
+	else keywords = keywords.replaceAll(/[()[\].!?/]/g, "");
+	console.log(
+		`Searching SoundCloud for "${artist} - ${title} ${keywords}"...`
+	);
+	const resultsRaw = await exec(`${soundcloud.ytdlpBinary} --default-search scsearch scsearch10:${quote([`${artist} - ${title}`])} --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`)
+	const resultsParsed = JSON.parse(`[${resultsRaw.stdout.split("\n").join(",")}]`.replace(",]","]"))[0]["entries"];
+	for (const result in resultsParsed) {
+		console.log(resultsParsed[result]);
+		results.push({
+			uploader: resultsParsed[result]["uploader"],
+			title: resultsParsed[result]["title"], // There is also "track?"
+			description: resultsParsed[result]["description"],
+			url: resultsParsed[result]["url"],
+			score: 0, // Maybe also viewcount? 
+			duration: resultsParsed[result]["duration"]
+		});
 	}
 
 	console.log(`${results.length} results before filtering`);
 
 	// Filter results
 	artist = artist.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
-	let songTitle = title.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
+	const songTitle = title.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
 
-	for (let res in results) {
+	for (const res in results) {
 		results[res].title = results[res].title
 			.toLowerCase()
 			.replaceAll(/[()[\].!?/]/g, "");
@@ -107,7 +82,7 @@ export default async function soundcloudDownloadBySearch(
 	console.log(`${results.length} results after filtering`);
 
 	// Score-based attribution per search result
-	for (let res in results) {
+	for (const res in results) {
 		if (
 			(results[res].title.includes("explicit") ||
 				results[res].title.includes("dirty")) &&
@@ -135,11 +110,7 @@ export default async function soundcloudDownloadBySearch(
 
 	console.log(results[0]);
 
-	let filePath = (
-		(await execPromise(
-			`${soundcloud.ytdlpBinary} ${results[0].url} -P ${soundcloud.path} --no-warnings --restrict-filenames --print "after_move:filepath"`
-		)) as string
-	).split("\n")[0];
+	const filePath = (await exec(`${soundcloud.ytdlpBinary} ${results[0].url} -P ${soundcloud.path} --no-warnings --restrict-filenames --print "after_move:filepath"`)).stdout.split("\n")[0];
 
 	console.log("===")
 	console.log(filePath);
