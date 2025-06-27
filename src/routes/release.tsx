@@ -47,25 +47,25 @@ const Release: Component<
       border-bottom: 1px solid #999;
       font-size: .95rem;
     }
-	`
+	`;
 
 	return (
 		<div>
-  		<div class="release-header">
-        <CoverArt src={this.coverArt} size={250} />
-  			<h3 id="release-title">{this.release.title}</h3>
-  			<h4 id="release-artist">
-  				{use(this.release.artists).mapEach((artist) => {
-            // @ts-expect-error
-  					return <Link href={`/artist/${artist.mbid}`}>{artist.name}</Link>;
-  				})}
-  			</h4>
-  		</div>
+			<div class="release-header">
+				<CoverArt src={this.coverArt} size={250} />
+				<h3 id="release-title">{this.release.title}</h3>
+				<h4 id="release-artist">
+					{use(this.release.artists).mapEach((artist) => {
+						// @ts-expect-error
+						return <Link href={`/artist/${artist.mbid}`}>{artist.name}</Link>;
+					})}
+				</h4>
+			</div>
 			<ol id="release-tracklist">
 				{use(this.release.trackList).mapEach((track) => (
-						<li>
-							<Link href={`/play/${track.mbid}`}>{track.title}</Link>
-						</li>
+					<li>
+						<Link href={`/play/${track.mbid}`}>{track.title}</Link>
+					</li>
 				))}
 			</ol>
 		</div>
@@ -81,8 +81,7 @@ export const ReleaseView: Component<
 		mbid: string;
 	}
 > = function (cx) {
-
-  cx.css = `
+	cx.css = `
     :scope {
       display: flex;
       gap: 0.5rem;
@@ -95,43 +94,49 @@ export const ReleaseView: Component<
     .release {
       width: 100%;
     }
-  `
+  `;
 
 	const downloadRelease = async (mbid: string) => {
-		this.downloadStatus = <div>loading...</div>
+		this.downloadStatus = <div>loading...</div>;
 		// @ts-expect-error
-		const response = await t(fetch(`/api/sourceRelease?mbid=${mbid}&source=${store.source}`));
+		const response = await t(
+			fetch(`/api/sourceRelease?mbid=${mbid}&source=${store.source}`)
+		);
 		if (!response.ok) {
 			this.downloadStatus = <div>an error occured: {response.error}</div>;
 			console.error(response.error);
 			return;
 		}
 		this.downloadStatus = <div>{await response.value.text()}</div>;
-	}
+	};
 	const updateReleases = async (mbid: string) => {
-		this.releaseEl = <div class="loader"><Icon name="search_doc" /></div>;
+		this.releaseEl = (
+			<div class="loader">
+				<Icon name="search_doc" />
+			</div>
+		);
 		const release = await window.mb.ReleaseInfo(mbid);
 		const coverArtUrl = await window.mb.HdCoverArtUrl(mbid);
 		this.releaseEl = (
-		    // @ts-expect-error
+			// @ts-expect-error
 			<Release release={release} coverArt={coverArtUrl} />
 		);
 	};
 	use(this.mbid).listen(updateReleases);
 	return (
 		<div class="musicbrainz-search">
-		<div>
-			<input id="releaseMbid" value={use(this.mbid).bind()} type="text" />
-			<button id="releaseButton" on:click={() => updateReleases(this.mbid)}>
-				view release
-			</button>
-			<button on:click={() => downloadRelease(this.mbid)}>download release</button>
+			<div>
+				<input id="releaseMbid" value={use(this.mbid).bind()} type="text" />
+				<button id="releaseButton" on:click={() => updateReleases(this.mbid)}>
+					view release
+				</button>
+				<button on:click={() => downloadRelease(this.mbid)}>
+					download release
+				</button>
 
-			{use(this.downloadStatus)}
-		</div>
-		<div class="release">
-			{use(this.releaseEl)}
-		</div>
+				{use(this.downloadStatus)}
+			</div>
+			<div class="release">{use(this.releaseEl)}</div>
 		</div>
 	);
 };

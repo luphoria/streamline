@@ -34,19 +34,16 @@ export const Player: Component<
 			return;
 		}
 		const recordingInfo = await window.mb.RecordingInfo(mbid);
-		window.webamp.setTracksToPlay(
-			[
-				{
-
-					metaData: {
-						title: recordingInfo.title,
-						artist: recordingInfo.artists[0].name,
-					},
-					blob
+		window.webamp.setTracksToPlay([
+			{
+				metaData: {
+					title: recordingInfo.title,
+					artist: recordingInfo.artists[0].name,
 				},
-			],
-		)
-		this.player = <div>playing in webamp!</div>
+				blob,
+			},
+		]);
+		this.player = <div>playing in webamp!</div>;
 	};
 
 	const deleteCached = async (mbid: string) => {

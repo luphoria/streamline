@@ -83,7 +83,7 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 		if (data.percentComplete == 0 && Date.now() - startTime > 10000) {
 			console.log(`Download for ${username}/${filePath} timed out.`);
 
-			return {isComplete: false};
+			return { isComplete: false };
 		}
 
 		// TODO: Progress report on client side? Maybe/maybe not.
@@ -103,7 +103,12 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	};
 };
 
-export default async function slskDownloadBySearch(artist, title, mbid, _keywords?) {
+export default async function slskDownloadBySearch(
+	artist,
+	title,
+	mbid,
+	_keywords?
+) {
 	// Downloader
 	let downloadResult;
 	let filePath;
@@ -111,8 +116,7 @@ export default async function slskDownloadBySearch(artist, title, mbid, _keyword
 	let tries = 3; // Number of different results to try before giving up
 	if (tries > searchQuery.length) tries = searchQuery.length;
 	for (let i = 0; i < tries; i++) {
-		const chosenRes: { username: string; files: any[] } =
-			searchQuery[i];
+		const chosenRes: { username: string; files: any[] } = searchQuery[i];
 		if (!chosenRes.files)
 			throw new Response("No songs found.", { status: 404 });
 		const chosenFile: { filename: string; size: number } = chosenRes.files[0];
@@ -136,21 +140,26 @@ export default async function slskDownloadBySearch(artist, title, mbid, _keyword
 				chosenFile.filename
 			);
 		}
-		
+
 		if (downloadResult.isComplete) {
 			break;
 		} else {
-			console.log(`Could not download ${chosenRes.username}/${chosenFile.filename}`);
+			console.log(
+				`Could not download ${chosenRes.username}/${chosenFile.filename}`
+			);
 		}
 	}
 
-	if (!downloadResult.isComplete) throw new Response(`Could not download after ${tries} tries`, { status: 404 });
+	if (!downloadResult.isComplete)
+		throw new Response(`Could not download after ${tries} tries`, {
+			status: 404,
+		});
 
 	try {
-		AddRecording(mbid, `${slskd.path}${filePath}`, "slsk");
-		const readStream = fs.createReadStream(`${slskd.path}${filePath}`);
+		const path = `${slskd.path}${filePath}`;
+		AddRecording(mbid, path, "slsk");
 
-		return readStream;
+		return path;
 	} catch (e) {
 		console.log(e);
 	}

@@ -16,11 +16,15 @@ const Artist: Component<{
 				{use(this.artist.releaseGroups).mapEach((group) => {
 					if (group.releases.length > 0) {
 						const number = resNumber;
-						resNumber += 1; // what is the point of this? 
+						resNumber += 1; // what is the point of this?
 						console.log(group);
 						return (
 							<span id={`release${number}`} mbid={group.mbid}>
-								<b><Link href={`/release/${group.releases[0].mbid}`}>{group.title}</Link> </b>
+								<b>
+									<Link href={`/release/${group.releases[0].mbid}`}>
+										{group.title}
+									</Link>{" "}
+								</b>
 								({group.date}) [{group.type}]
 								<br />
 							</span>

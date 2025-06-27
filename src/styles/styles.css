@@ -1,8 +1,8 @@
 :root {
-    --bg-grad: linear-gradient(to top, #6475DE, #83A6EA);
-    --on-grad: #fafaff;
-    --bg-solid: #ece9d8;
-    --on-solid: #222;
+	--bg-grad: linear-gradient(to top, #6475de, #83a6ea);
+	--on-grad: #fafaff;
+	--bg-solid: #ece9d8;
+	--on-solid: #222;
 }
 
 body,
@@ -30,20 +30,22 @@ body {
 	box-sizing: border-box;
 }
 
-
-button, input[type="button"], input[type="submit"] {
-    user-select: none;
+button,
+input[type="button"],
+input[type="submit"] {
+	user-select: none;
 }
 
 #webamp {
-    top: auto!important;
-    left: calc(1.5rem + 20px)!important;
-    bottom: calc(10px + 1.5rem)!important;
-    width: 275px!important;
-    height: 348px!important;
+	top: auto !important;
+	left: calc(1.5rem + 20px) !important;
+	bottom: calc(10px + 1.5rem) !important;
+	width: 275px !important;
+	height: 348px !important;
 }
 
-#webamp > div > div, .window > div {
-    width: 275px!important;
-    height: 348px!important;
+#webamp > div > div,
+.window > div {
+	width: 275px !important;
+	height: 348px !important;
 }

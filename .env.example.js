@@ -26,8 +26,8 @@ export const sources = [
 		name: "ytdlp",
 		path: "C:\\Users\\user\\streamline\\sources\\yt-dlp.ts",
 	},
-		{
+	{
 		name: "soundcloud",
 		path: "C:\\Users\\user\\streamline\\sources\\soundcloud.ts",
-	}
+	},
 ];

@@ -15,14 +15,23 @@ export default async function soundcloudDownloadBySearch(
 ) {
 	console.log(`MBID ${mbid}`);
 	// Search
-	let results: { uploader: string; title: string; description: string; url: string; score: number, duration: number }[] = [];
+	let results: {
+		uploader: string;
+		title: string;
+		description: string;
+		url: string;
+		score: number;
+		duration: number;
+	}[] = [];
 	if (!keywords) keywords = "";
 	else keywords = keywords.replaceAll(/[()[\].!?/]/g, "");
-	console.log(
-		`Searching SoundCloud for "${artist} - ${title} ${keywords}"...`
+	console.log(`Searching SoundCloud for "${artist} - ${title} ${keywords}"...`);
+	const resultsRaw = await exec(
+		`${soundcloud.ytdlpBinary} --default-search scsearch scsearch10:${quote([`${artist} - ${title}`])} --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
 	);
-	const resultsRaw = await exec(`${soundcloud.ytdlpBinary} --default-search scsearch scsearch10:${quote([`${artist} - ${title}`])} --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`)
-	const resultsParsed = JSON.parse(`[${resultsRaw.stdout.split("\n").join(",")}]`.replace(",]","]"))[0]["entries"];
+	const resultsParsed = JSON.parse(
+		`[${resultsRaw.stdout.split("\n").join(",")}]`.replace(",]", "]")
+	)[0]["entries"];
 	for (const result in resultsParsed) {
 		console.log(resultsParsed[result]);
 		results.push({
@@ -30,8 +39,8 @@ export default async function soundcloudDownloadBySearch(
 			title: resultsParsed[result]["title"], // There is also "track?"
 			description: resultsParsed[result]["description"],
 			url: resultsParsed[result]["url"],
-			score: 0, // Maybe also viewcount? 
-			duration: resultsParsed[result]["duration"]
+			score: 0, // Maybe also viewcount?
+			duration: resultsParsed[result]["duration"],
 		});
 	}
 
@@ -45,7 +54,7 @@ export default async function soundcloudDownloadBySearch(
 		results[res].title = results[res].title
 			.toLowerCase()
 			.replaceAll(/[()[\].!?/]/g, "");
-		
+
 		results[res].uploader = results[res].uploader
 			.toLowerCase()
 			.replaceAll(/[()[\].!?/]/g, "");
@@ -67,7 +76,7 @@ export default async function soundcloudDownloadBySearch(
 		"preview",
 	];
 
-	// TODO: Filter results with duration out of range from mb src duration. 
+	// TODO: Filter results with duration out of range from mb src duration.
 	results = results.filter((res) => {
 		return filters.every((term) => {
 			return (
@@ -112,10 +121,12 @@ export default async function soundcloudDownloadBySearch(
 
 	// Most soundcloud results are garbage -- only pick
 	if (results[0].score >= 25) {
-		let filePath = (
-			(await execPromise(
-				`${soundcloud.ytdlpBinary} ${results[0].url} -P ${soundcloud.path} --no-warnings --restrict-filenames --print "after_move:filepath"`
-			)) as string
+		const filePath = (
+			(
+				await exec(
+					`${soundcloud.ytdlpBinary} ${results[0].url} -P ${soundcloud.path} --no-warnings --restrict-filenames --print "after_move:filepath"`
+				)
+			).stdout as string
 		).split("\n")[0];
 
 		console.log("===");
@@ -123,9 +134,8 @@ export default async function soundcloudDownloadBySearch(
 
 		// TODO: Create a cache db associating mbid to filepath
 		AddRecording(mbid, filePath, "soundcloud");
-		const readStream = fs.createReadStream(filePath);
 
-		return readStream;
+		return filePath;
 	}
 
 	throw new Response("No songs found.", { status: 404 });

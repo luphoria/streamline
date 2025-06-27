@@ -1,13 +1,17 @@
-import express from "express";
-import createRouter from "express-file-routing";
-import path from "node:path";
-import { fileURLToPath } from "url";
-const __dirname = fileURLToPath(new URL(".", import.meta.url));
+import { Hono } from "hono";
+import { serve } from "@hono/node-server";
+import { createFolderRoute } from "hono-file-router";
 
-const app = express();
+const app = new Hono();
 
-await createRouter(app, {
-	directory: path.join(__dirname, "routes"),
-});
+app.route("/", await createFolderRoute({ path: "./server/routes/" }));
 
-app.listen(4322);
+serve(
+	{
+		fetch: app.fetch,
+		port: 4322,
+	},
+	(info) => {
+		console.log(`Server is running on http://localhost:${info.port}`);
+	}
+);

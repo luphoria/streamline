@@ -38,16 +38,16 @@ export const Settings: Component<
 	`;
 
 	const updateURL = async (url: string) => {
-	  console.log(url)
-    window.mb?.SetApiUrl(url);
-    store.MB_URL = url;
-  }
+		console.log(url);
+		window.mb?.SetApiUrl(url);
+		store.MB_URL = url;
+	};
 
-	use(this.apiUrl).listen(updateURL)
+	use(this.apiUrl).listen(updateURL);
 
 	return (
 		<div>
-		  <h2>Settings</h2>
+			<h2>Settings</h2>
 			<div class="settings-row">
 				<span class="title">MusicBrainz API URL</span>
 				<div class="h-group">

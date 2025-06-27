@@ -1,6 +1,6 @@
 import type { Component } from "dreamland/core";
 export const CoverArt: Component<{
-  src: string | undefined;
+	src: string | undefined;
 	class?: string;
 	size?: number;
 }> = function (cx) {
@@ -13,7 +13,7 @@ export const CoverArt: Component<{
 	this.size = this.size || 32;
 	return (
 		<img
-		  class={`component-coverart ${this.class}`}
+			class={`component-coverart ${this.class}`}
 			height={this.size}
 			width={this.size}
 			src={this.src}

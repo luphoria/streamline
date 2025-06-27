@@ -38,12 +38,13 @@
 }
 
 @media (orientation: portrait) {
-    #app,#app>div {
-        flex-direction: column!important;
-    }
+	#app,
+	#app > div {
+		flex-direction: column !important;
+	}
 
-    header {
-        height: 24em!important;
-        width: 100vw!important;
-    }
+	header {
+		height: 24em !important;
+		width: 100vw !important;
+	}
 }

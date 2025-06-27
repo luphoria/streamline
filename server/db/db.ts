@@ -21,20 +21,22 @@ db.exec(`
 `);
 
 export const AddRecording = (mbid, filepath, source?) => {
-  console.log(`DB: ${mbid} / ${filepath} (${source})`)
-    const insert = db.prepare("INSERT INTO songs (mbid, filepath, source) VALUES (?, ?, ?)");
-    
-    return insert.run(mbid, filepath, source);
-}
+	console.log(`DB: ${mbid} / ${filepath} (${source})`);
+	const insert = db.prepare(
+		"INSERT INTO songs (mbid, filepath, source) VALUES (?, ?, ?)"
+	);
+
+	return insert.run(mbid, filepath, source);
+};
 
 export const GetRecording = (mbid) => {
-    const get = db.prepare("SELECT * FROM songs WHERE mbid = ?");
+	const get = db.prepare("SELECT * FROM songs WHERE mbid = ?");
 
-    return get.get(mbid);
-}
+	return get.get(mbid);
+};
 
 export const DeleteRecording = (mbid) => {
-  const del = db.prepare("DELETE FROM songs WHERE mbid = ?");
+	const del = db.prepare("DELETE FROM songs WHERE mbid = ?");
 
-  return del.run(mbid);
-}
+	return del.run(mbid);
+};

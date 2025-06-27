@@ -16,13 +16,16 @@ export default async function ytdlpDownloadBySearch(
 ) {
 	console.log(`MBID ${mbid}`);
 	// Search
-	let results: { channel: string; title: string; id: string; score: number }[] = [];
+	let results: { channel: string; title: string; id: string; score: number }[] =
+		[];
 	if (!keywords) keywords = "";
 	else keywords = keywords.replaceAll(/[()[\].!?/]/g, "");
 	console.log(
 		`Searching YouTube for "${artist} - ${title} ${keywords} song"...`
 	);
-	const resultsRaw = await exec(`${ytdlp.binary} --default-search ytsearch ytsearch10:${quote([`${artist} - ${title} ${keywords} song`])} --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`)
+	const resultsRaw = await exec(
+		`${ytdlp.binary} --default-search ytsearch ytsearch10:${quote([`${artist} - ${title} ${keywords} song`])} --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
+	);
 	const resultsParsed = JSON.parse(resultsRaw.stdout).entries;
 	for (const result in resultsParsed) {
 		console.log(
@@ -113,12 +116,15 @@ export default async function ytdlpDownloadBySearch(
 
 	console.log(results[0]);
 
-	const filePath = (await exec(`${ytdlp.binary} ${quote([results[0].id])} -f wv+ba -P ${ytdlp.path} --no-warnings --restrict-filenames --print "after_move:filepath" --sponsorblock-remove all`)).stdout.split("\n")[0]
+	const filePath = (
+		await exec(
+			`${ytdlp.binary} ${quote([results[0].id])} -f wv+ba -P ${ytdlp.path} --no-warnings --restrict-filenames --print "after_move:filepath" --sponsorblock-remove all`
+		)
+	).stdout.split("\n")[0];
 	console.log(filePath);
 
 	// TODO: Create a cache db associating mbid to filepath
 	AddRecording(mbid, filePath, "yt-dlp");
-	const readStream = fs.createReadStream(filePath);
 
-	return readStream;
+	return filePath;
 }

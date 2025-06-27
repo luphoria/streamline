@@ -14,10 +14,10 @@ button {
 }
 
 .loader {
-    padding: 0 5vw;
-    width: 100%;
-    height: calc(60vh);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	padding: 0 5vw;
+	width: 100%;
+	height: calc(60vh);
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

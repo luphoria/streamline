@@ -3,7 +3,10 @@ import Navbar from "./Navbar";
 import Webamp from "webamp";
 import isMobile from "is-mobile";
 
-const Layout: Component<{}, { outlet: Element, container: HTMLElement, player: HTMLElement }> = function (cx) {
+const Layout: Component<
+	{},
+	{ outlet: Element; container: HTMLElement; player: HTMLElement }
+> = function (cx) {
 	cx.css = `
     :scope {
       height: 100%;
@@ -19,22 +22,24 @@ const Layout: Component<{}, { outlet: Element, container: HTMLElement, player: H
       padding: 1.5em;
     }
   `;
-  cx.mount = () => {
-    if (!Webamp.browserIsSupported() || isMobile()) {
-      return;
-    }
-    window.webamp = new Webamp({
-				initialSkin: {
-					url: "/skin.wsz",
-				},
+	cx.mount = () => {
+		if (!Webamp.browserIsSupported() || isMobile()) {
+			return;
+		}
+		window.webamp = new Webamp({
+			initialSkin: {
+				url: "/skin.wsz",
+			},
 		});
-    window.webamp.renderWhenReady(this.player);
-  }
+		window.webamp.renderWhenReady(this.player);
+	};
 	return (
 		<div>
 			<Navbar />
-			<main this={use(this.container).bind()}><fieldset>{use(this.outlet)}</fieldset></main>
-      <div id="player" this={use(this.player).bind()}></div>
+			<main this={use(this.container).bind()}>
+				<fieldset>{use(this.outlet)}</fieldset>
+			</main>
+			<div id="player" this={use(this.player).bind()}></div>
 		</div>
 	);
 };

@@ -77,39 +77,44 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
 	return (
 		<header>
 			<div class="title">
-				<Link
-					href="/"
-				>
-                    <img src="/streamline-temp-logo.png" alt="Streamline Logo" id="logo" />
+				<Link href="/">
+					<img
+						src="/streamline-temp-logo.png"
+						alt="Streamline Logo"
+						id="logo"
+					/>
 				</Link>
 			</div>
 			<div id="searchbar">
-				<form on:submit={(e: any) => {
-				  e.preventDefault();
-          router.navigate(`/search/${encodeURIComponent(this.songQuery)}`);
-				}}>
+				<form
+					on:submit={(e: any) => {
+						e.preventDefault();
+						router.navigate(`/search/${encodeURIComponent(this.songQuery)}`);
+					}}
+				>
 					<input
 						type="text"
 						id="songSearchValue"
 						placeholder="ARTIST - SONG or search..."
 						value={use(this.songQuery).bind()}
 					/>
-					<button
-						id="songSearchBtn"
-						type="submit"
-					>
+					<button id="songSearchBtn" type="submit">
 						Search!
 					</button>
 				</form>
 			</div>
 
 			<ul class="tree-view">
-  			<li>
-     			<ul>
-     			  <li><Link href="/">Home</Link></li>
-     			  <li><Link href="/settings">Settings</Link></li>
-     			</ul>
-  			</li>
+				<li>
+					<ul>
+						<li>
+							<Link href="/">Home</Link>
+						</li>
+						<li>
+							<Link href="/settings">Settings</Link>
+						</li>
+					</ul>
+				</li>
 			</ul>
 		</header>
 	);
