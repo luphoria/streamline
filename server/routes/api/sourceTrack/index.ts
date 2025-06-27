@@ -78,7 +78,9 @@ export const GET = createHandler(async (c) => {
 	}
 
 	if (!filePath.ok) {
-		return filePath.error;
+		return new Response("No sources were able to handle your request :(", {
+			status: 404,
+		});
 	}
 
 	return stream(c, async (stream) => {
