@@ -33,7 +33,6 @@ export default async function soundcloudDownloadBySearch(
 		`[${resultsRaw.stdout.split("\n").join(",")}]`.replace(",]", "]")
 	)[0]["entries"];
 	for (const result in resultsParsed) {
-		console.log(resultsParsed[result]);
 		results.push({
 			uploader: resultsParsed[result]["uploader"],
 			title: resultsParsed[result]["title"], // There is also "track?"
@@ -114,8 +113,6 @@ export default async function soundcloudDownloadBySearch(
 	results.sort((a, b) => {
 		return b.score - a.score;
 	});
-
-	console.log(results);
 
 	console.log(results[0]);
 

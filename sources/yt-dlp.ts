@@ -16,38 +16,39 @@ export default async function ytdlpDownloadBySearch(
 ) {
 	console.log(`MBID ${mbid}`);
 	// Search
-	let results: { channel: string; title: string; id: string; score: number }[] =
+	let results: { title: string; id: string; score: number }[] =
 		[];
 	if (!keywords) keywords = "";
 	else keywords = keywords.replaceAll(/[()[\].!?/]/g, "");
 	console.log(
-		`Searching YouTube for "${artist} - ${title} ${keywords} song"...`
+		`Searching YouTube for "${artist} - ${title} ${keywords}"...`
 	);
 	const resultsRaw = await exec(
-		`${ytdlp.binary} --default-search ytsearch ytsearch10:${quote([`${artist} - ${title} ${keywords} song`])} --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
+		`${ytdlp.binary} "https://music.youtube.com/search?q=${quote([`${artist} - ${title} ${keywords}`.replaceAll(" ","+")])}" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
 	);
 	const resultsParsed = JSON.parse(resultsRaw.stdout).entries;
 	for (const result in resultsParsed) {
 		console.log(
-			`${resultsParsed[result].channel} - ${resultsParsed[result].title} (${resultsParsed[result].id})`
+			`${resultsParsed[result].title} (${resultsParsed[result].id})`
 		);
 		results.push({
-			channel: resultsParsed[result].channel,
 			title: resultsParsed[result].title,
 			id: resultsParsed[result].id,
 			score: 0, // TODO: Favor the results that YT shows first.
 		});
 	}
+
 	console.log(`${results.length} results before filtering`);
 
 	// Filter results
-	artist = artist.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
 	const songTitle = title.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
 
-	for (const res in results)
-		results[res].title = results[res].title
+	for (const res in results) {
+		if (results[res].title) results[res].title = results[res].title
 			.toLowerCase()
 			.replaceAll(/[()[\].!?/]/g, "");
+		else delete results[res];
+		}
 
 	// Put this in .env.js?
 	const filters = [
@@ -88,7 +89,7 @@ export default async function ytdlpDownloadBySearch(
 				results[res].title.includes("dirty")) &&
 			!songTitle.includes("clean")
 		) {
-			results[res].score += 5;
+			results[res].score += 15;
 		}
 		if (results[res].title.includes("lyrics")) {
 			results[res].score += 10;
@@ -96,15 +97,18 @@ export default async function ytdlpDownloadBySearch(
 		if (results[res].title.includes("audio")) {
 			results[res].score += 10;
 		}
-		if (results[res].title.includes(keywords)) {
+		if (results[res].title.includes(keywords.toLowerCase())) {
 			results[res].score += 10;
 		}
-		if (results[res].channel.endsWith(" - Topic")) {
-			results[res].score += 10;
+		if (results[res].title.includes(artist.toLowerCase())) {
+			results[res].score += 5;
 		}
-		if (results[res].channel.includes(artist)) {
-			results[res].score += 10;
-		}
+		// if (results[res].channel.endsWith(" - Topic")) {
+		// 	results[res].score += 10;
+		// }
+		// if (results[res].channel.includes(artist)) {
+		// 	results[res].score += 10;
+		// }
 	}
 
 	// Sort by score
