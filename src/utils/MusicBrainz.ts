@@ -56,9 +56,6 @@ export class MusicBrainz {
 			`recording/${mbid}?inc=artists+releases&fmt=json`
 		);
 
-		console.info("RecordingInfo: recordingFetch:");
-		console.info(recordingFetch);
-
 		const res: {
 			title: string;
 			artists: { name: string; mbid: string }[];
@@ -81,7 +78,6 @@ export class MusicBrainz {
 		}
 
 		for (const release in recordingFetch.releases) {
-			console.log(release);
 			res.releases.push({
 				title: recordingFetch.releases[release]["title"],
 				disambiguation: recordingFetch.releases[release]["disambiguation"]
@@ -212,11 +208,9 @@ export class MusicBrainz {
 		}
 
 		for (const release in artistReleases["releases"]) {
-			console.log(artistReleases["releases"][release]);
 			if (artistReleases["releases"][release]["release-group"]) {
 				const releaseGroupId =
 					artistReleases["releases"][release]["release-group"]["id"];
-				console.log(`${releaseGroupId}?`);
 				if (Object.keys(releaseGroups).includes(releaseGroupId)) {
 					releaseGroups[releaseGroupId].releases.push({
 						title: artistReleases["releases"][release]["title"],
@@ -256,7 +250,6 @@ export class MusicBrainz {
 				return;
 			}
 
-			console.log(recording);
 			const title = recording.title;
 
 			const recordingResult: SongVersion = {
@@ -271,7 +264,6 @@ export class MusicBrainz {
 			};
 
 			recording["artist-credit"].forEach((artist) => {
-				console.log(artist);
 				recordingResult.artists.push({
 					name: artist.artist.name,
 					mbid: artist.artist.id,
@@ -279,7 +271,6 @@ export class MusicBrainz {
 			});
 
 			recording.releases.forEach((release: any) => {
-				console.log(release);
 				recordingResult.versions.push({
 					mbid: release.id,
 					title: release.title,

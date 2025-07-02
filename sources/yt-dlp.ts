@@ -42,6 +42,7 @@ export default async function ytdlpDownloadBySearch(
 
 	// Filter results
 	const songTitle = title.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
+	artist = artist.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
 
 	for (const res in results) {
 		if (results[res].title) results[res].title = results[res].title
@@ -100,7 +101,7 @@ export default async function ytdlpDownloadBySearch(
 		if (results[res].title.includes(keywords.toLowerCase())) {
 			results[res].score += 10;
 		}
-		if (results[res].title.includes(artist.toLowerCase())) {
+		if (results[res].title.includes(artist)) {
 			results[res].score += 5;
 		}
 		// if (results[res].channel.endsWith(" - Topic")) {

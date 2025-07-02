@@ -16,7 +16,6 @@ export const GET = createHandler(async (c) => {
 	// Get release info by MBID
 	const mb = new MusicBrainz(MB_URL);
 	const releaseInfo = await mb.ReleaseInfo(mbid);
-	console.log(releaseInfo);
 	const source = c.req.query("source") || "";
 
 	const tracks = {};

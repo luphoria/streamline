@@ -22,7 +22,6 @@ export const GET = createHandler(async (c) => {
 	// TODO: sort related releases, pass selected release to scraper (for sorting responses), pass other listed artist credits (for filtering and sorting)
 	const artist = recordingInfo.artists[0].name;
 	const songTitle = recordingInfo.title;
-	console.log(recordingInfo);
 	const keywords = recordingInfo.releases[0]
 		? recordingInfo.releases[0].title
 		: "";
