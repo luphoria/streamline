@@ -124,7 +124,7 @@ export default async function soundcloudDownloadBySearch(
 		const filePath = (
 			(
 				await exec(
-					`${soundcloud.ytdlpBinary} "${quote(results[0].url)}" -P ${soundcloud.path} --no-warnings --restrict-filenames --print "after_move:filepath"`
+					`${soundcloud.ytdlpBinary} "${results[0].url}" -P ${soundcloud.path} --no-warnings --restrict-filenames --print "after_move:filepath"`
 				)
 			).stdout as string
 		).split("\n")[0];
