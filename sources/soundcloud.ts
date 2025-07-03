@@ -85,7 +85,10 @@ export default async function soundcloudDownloadBySearch(
 		});
 	});
 
-	if (results.length == 0) return { status: 404, msg: "sorry bro" };
+	if (results.length === 0)
+		throw new Response("no results found", {
+			status: 404,
+		});
 
 	console.log(`${results.length} results after filtering`);
 
@@ -121,7 +124,7 @@ export default async function soundcloudDownloadBySearch(
 		const filePath = (
 			(
 				await exec(
-					`${soundcloud.ytdlpBinary} ${results[0].url} -P ${soundcloud.path} --no-warnings --restrict-filenames --print "after_move:filepath"`
+					`${soundcloud.ytdlpBinary} "${quote(results[0].url)}" -P ${soundcloud.path} --no-warnings --restrict-filenames --print "after_move:filepath"`
 				)
 			).stdout as string
 		).split("\n")[0];

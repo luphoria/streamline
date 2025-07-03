@@ -62,6 +62,7 @@ export const GET = createHandler(async (c) => {
 			sourceModules[source](artist, songTitle, mbid, keywords)
 		);
 		if (!filePath.ok) delete sourceModules[source];
+		console.log(filePath.error)
 	}
 
 	if (!filePath || !filePath.ok) {

@@ -27,7 +27,7 @@ const Layout: Component<
 			return;
 		}
 		window.webamp = new Webamp({
-			//@ts-expect-error this will be added in webamp 2.1.3 
+			//@ts-expect-error this will be added in webamp 2.1.3
 			enableMediaSession: true,
 			initialSkin: {
 				url: "/skin.wsz",

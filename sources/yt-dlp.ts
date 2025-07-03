@@ -16,21 +16,16 @@ export default async function ytdlpDownloadBySearch(
 ) {
 	console.log(`MBID ${mbid}`);
 	// Search
-	let results: { title: string; id: string; score: number }[] =
-		[];
+	let results: { title: string; id: string; score: number }[] = [];
 	if (!keywords) keywords = "";
 	else keywords = keywords.replaceAll(/[()[\].!?/]/g, "");
-	console.log(
-		`Searching YouTube for "${artist} - ${title} ${keywords}"...`
-	);
+	console.log(`Searching YouTube for "${artist} - ${title} ${keywords}"...`);
 	const resultsRaw = await exec(
-		`${ytdlp.binary} "https://music.youtube.com/search?q=${quote([`${artist} - ${title} ${keywords}`.replaceAll(" ","+")])}" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
+		`${ytdlp.binary} "https://music.youtube.com/search?q=${quote([`${artist} - ${title} ${keywords}`.replaceAll(" ", "+")])}" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
 	);
 	const resultsParsed = JSON.parse(resultsRaw.stdout).entries;
 	for (const result in resultsParsed) {
-		console.log(
-			`${resultsParsed[result].title} (${resultsParsed[result].id})`
-		);
+		console.log(`${resultsParsed[result].title} (${resultsParsed[result].id})`);
 		results.push({
 			title: resultsParsed[result].title,
 			id: resultsParsed[result].id,
@@ -45,11 +40,14 @@ export default async function ytdlpDownloadBySearch(
 	artist = artist.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
 
 	for (const res in results) {
-		if (results[res].title) results[res].title = results[res].title
+		if (!results[res].title) {
+			delete results[res];
+			continue;
+		}
+		results[res].title = results[res].title
 			.toLowerCase()
 			.replaceAll(/[()[\].!?/]/g, "");
-		else delete results[res];
-		}
+	}
 
 	// Put this in .env.js?
 	const filters = [
@@ -79,7 +77,10 @@ export default async function ytdlpDownloadBySearch(
 		});
 	});
 
-	if (results.length == 0) return { status: 404, msg: "sorry bro" };
+	if (results.length === 0)
+		throw new Response("no results found", {
+			status: 404,
+		});
 
 	console.log(`${results.length} results after filtering`);
 
@@ -123,7 +124,7 @@ export default async function ytdlpDownloadBySearch(
 
 	const filePath = (
 		await exec(
-			`${ytdlp.binary} ${quote([results[0].id])} -f wv+ba -P ${ytdlp.path} --no-warnings --restrict-filenames --print "after_move:filepath" --sponsorblock-remove all`
+			`${ytdlp.binary} "https://www.youtube.com/watch?v=${quote([results[0].id])}" -f wv+ba -P ${ytdlp.path} --no-warnings --restrict-filenames --print "after_move:filepath" --sponsorblock-remove all`
 		)
 	).stdout.split("\n")[0];
 	console.log(filePath);
