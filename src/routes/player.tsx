@@ -1,7 +1,6 @@
 import type { Component } from "dreamland/core";
 import { t } from "try";
 import store from "../store";
-import Webamp from "webamp";
 
 export const Player: Component<
 	{},
@@ -11,8 +10,6 @@ export const Player: Component<
 		mbid: string;
 	}
 > = function (cx) {
-	cx.css = ``;
-
 	const playSong = async (mbid: string) => {
 		this.player = <div>Loading...</div>;
 		console.log(store.source);

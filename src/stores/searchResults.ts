@@ -1,6 +1,3 @@
-// @ts-expect-error
-import { atom } from "nanostores";
-
 export interface SongVersion {
 	mbid: string;
 	title: string;
@@ -42,16 +39,3 @@ interface Song {
 }
 
 type SongArray = Song[];
-
-// This creates an atom to store an array of SongArray
-export const $results = atom<SongArray[]>([]);
-
-// Function to add a new SongArray to the results
-export function addResult(songs: SongArray) {
-	$results.set([...$results.get(), songs]);
-}
-
-// Function to clear all results
-export function removeAllResults() {
-	$results.set([]);
-}

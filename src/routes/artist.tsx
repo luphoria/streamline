@@ -55,22 +55,6 @@ export const ArtistView: Component<
 		this.artistEl = <Artist artist={artist} />;
 	};
 	use(this.mbid).listen(updateArtist);
-
-	cx.css = `
-    :scope {
-      display: flex;
-      gap: 0.5rem;
-      align-items: flex-start;
-      justify-content: center;
-      flex-direction: column;
-      padding: 0.5rem;
-    }
-
-    .artist {
-      width: 100%;
-    }
-  `;
-
 	return (
 		<div>
 			<div>
@@ -89,3 +73,18 @@ export const ArtistView: Component<
 		</div>
 	);
 };
+
+ArtistView.css = `
+	:scope {
+		display: flex;
+		gap: 0.5rem;
+		align-items: flex-start;
+		justify-content: center;
+		flex-direction: column;
+		padding: 0.5rem;
+	}
+
+	.artist {
+		width: 100%;
+	}
+`

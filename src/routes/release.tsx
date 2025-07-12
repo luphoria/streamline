@@ -17,38 +17,6 @@ const Release: Component<
 	}
 > = function (cx) {
 	this.trackCount = 0;
-
-	cx.css = `
-	  :scope {
-			display: flex;
-			gap: 1.5em;
-		}
-
-		.release-header {
-		  display: flex;
-			flex-direction: column;
-			align-items: flex-start;
-			gap: 0.5rem;
-		}
-
-		.release-header * {
-      margin: 0;
-    }
-
-    ol {
-      padding: 0;
-      margin-left: 1em;
-      width: 100%;
-    }
-
-    li {
-      width: 100%;
-      padding: 0.5rem;
-      border-bottom: 1px solid #999;
-      font-size: .95rem;
-    }
-	`;
-
 	return (
 		<div>
 			<div class="release-header">
@@ -72,6 +40,37 @@ const Release: Component<
 	);
 };
 
+Release.css = `
+	:scope {
+		display: flex;
+		gap: 1.5em;
+	}
+
+	.release-header {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.5rem;
+	}
+
+	.release-header * {
+		margin: 0;
+	}
+
+    ol {
+		padding: 0;
+		margin-left: 1em;
+		width: 100%;
+    }
+
+	li {
+		width: 100%;
+		padding: 0.5rem;
+		border-bottom: 1px solid #999;
+		font-size: .95rem;
+	}
+`;
+
 export const ReleaseView: Component<
 	{},
 	{
@@ -81,24 +80,8 @@ export const ReleaseView: Component<
 		mbid: string;
 	}
 > = function (cx) {
-	cx.css = `
-    :scope {
-      display: flex;
-      gap: 0.5rem;
-      align-items: flex-start;
-      justify-content: center;
-      flex-direction: column;
-      padding: 0.5rem;
-    }
-
-    .release {
-      width: 100%;
-    }
-  `;
-
 	const downloadRelease = async (mbid: string) => {
 		this.downloadStatus = <div>loading...</div>;
-		// @ts-expect-error
 		const response = await t(
 			fetch(`/api/sourceRelease?mbid=${mbid}&source=${store.source}`)
 		);
@@ -140,3 +123,18 @@ export const ReleaseView: Component<
 		</div>
 	);
 };
+
+ReleaseView.css = `
+	:scope {
+		display: flex;
+		gap: 0.5rem;
+		align-items: flex-start;
+		justify-content: center;
+		flex-direction: column;
+		padding: 0.5rem;
+	}
+
+	.release {
+		width: 100%;
+	}
+`;

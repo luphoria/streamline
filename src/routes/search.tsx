@@ -14,38 +14,6 @@ export const ResultItem: Component<
 		firstResult: any;
 	}
 > = function (cx) {
-	cx.css = `
-				:scope {
-						display: flex;
-						flex-direction: row;
-						align-items: center;
-						gap: 0.75rem;
-						padding: 0.5rem;
-				}
-
-				.spacer {
-						flex-grow: 1;
-				}
-
-				.song-info {
-						font-size: 0.8rem;
-						flex-direction: column;
-						align-items: flex-start;
-						gap: 0.2em;
-				}
-
-				select {
-						width: 30em;
-				}
-
-				span {
-						display: flex;
-						flex-direction: row;
-						align-items: center;
-						gap: 0.75rem;
-				}
-		`;
-
 	this.firstResult = this.song.versions[0];
 	console.log(this.firstResult);
 	this.selectedMbid = createState({
@@ -59,7 +27,6 @@ export const ResultItem: Component<
 				<span class="song-info">
 					<div class="artist">
 						{use(this.song.artists).mapEach((artist) => {
-							// @ts-expect-error
 							return (
 								<div>
 									<Link href={`/artist/${artist.mbid}`}>{artist.name}</Link>,
@@ -103,6 +70,38 @@ export const ResultItem: Component<
 		</div>
 	);
 };
+
+ResultItem.css = `
+	:scope {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.5rem;
+	}
+
+	.spacer {
+		flex-grow: 1;
+	}
+
+	.song-info {
+		font-size: 0.8rem;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.2em;
+	}
+
+	select {
+		width: 30em;
+	}
+
+	span {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.75rem;
+	}
+`;
 
 export const SearchResults: Component<{
 	results: RecordingGroup[];

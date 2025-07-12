@@ -12,31 +12,6 @@ export const Settings: Component<
 		this.apiUrl = store.MB_URL;
 	};
 
-	cx.css = `
-	  :scope {
-			width: 100%;
-		}
-
-		.settings-row {
-		  display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-		}
-
-		input[type="text"] {
-		  min-width: 15em;
-		}
-
-	 .h-group {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 0.5rem;
-    }
-	`;
-
 	const updateURL = async (url: string) => {
 		console.log(url);
 		window.mb?.SetApiUrl(url);
@@ -69,3 +44,27 @@ export const Settings: Component<
 		</div>
 	);
 };
+Settings.css = `
+	:scope {
+		width: 100%;
+	}
+
+	.settings-row {
+	  display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+	}
+
+	input[type="text"] {
+		min-width: 15em;
+	}
+
+	.h-group {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+    }	
+`;
