@@ -4,6 +4,7 @@ import { Link } from "../components/link";
 import { t } from "try";
 import { Icon } from "../components/icon";
 import { CoverArt } from "../components/coverart";
+import store from "../store";
 
 const Release: Component<
 	{
@@ -15,7 +16,7 @@ const Release: Component<
 	{
 		trackCount: number;
 	}
-> = function (cx) {
+> = function () {
 	this.trackCount = 0;
 	return (
 		<div>
@@ -24,7 +25,6 @@ const Release: Component<
 				<h3 id="release-title">{this.release.title}</h3>
 				<h4 id="release-artist">
 					{use(this.release.artists).mapEach((artist) => {
-						// @ts-expect-error
 						return <Link href={`/artist/${artist.mbid}`}>{artist.name}</Link>;
 					})}
 				</h4>
@@ -79,7 +79,7 @@ export const ReleaseView: Component<
 		downloadStatus: HTMLElement;
 		mbid: string;
 	}
-> = function (cx) {
+> = function () {
 	const downloadRelease = async (mbid: string) => {
 		this.downloadStatus = <div>loading...</div>;
 		const response = await t(

@@ -1,4 +1,4 @@
-import type { SongVersion } from "../stores/searchResults";
+import type { ReleaseGroupList, SongVersion } from "../stores/searchResults";
 import DOMPurify from "dompurify";
 
 export class MusicBrainz {
@@ -188,7 +188,8 @@ export class MusicBrainz {
 			releaseGroups: [],
 		};
 
-		let releaseGroups = {};
+		// TODO: We can type this more deliberately. 
+		const releaseGroups: ReleaseGroupList = {};
 
 		for (const releaseGroup in artistFetch["release-groups"]) {
 			const resReleaseGroup = {
@@ -234,9 +235,7 @@ export class MusicBrainz {
 
 	// Search recordings
 	async SearchSongs(query: string) {
-		// @ts-ignore
-		// eslint-disable-next-line
-		query = '"' + query.replaceAll(/ /g, '" "') + '"';
+		query = "\"" + query.replaceAll(/ /g, "\" \"") + "\"";
 		const data = await this.queryApi(
 			`recording/?query=${encodeURIComponent(query)}&limit=100&fmt=json`
 		);
@@ -263,7 +262,7 @@ export class MusicBrainz {
 				score: recording.score,
 			};
 
-			recording["artist-credit"].forEach((artist) => {
+			recording["artist-credit"].forEach((artist: { artist: { name: any; id: any; }; }) => {
 				recordingResult.artists.push({
 					name: artist.artist.name,
 					mbid: artist.artist.id,
@@ -274,7 +273,7 @@ export class MusicBrainz {
 				recordingResult.versions.push({
 					mbid: release.id,
 					title: release.title,
-					artist: recordingResult.artist,
+					artist: recordingResult.artists[0].name, // TODO: use all the artists
 					releaseDate: release["date"],
 					coverArt: `https://archive.org/download/mbid-${release.id}/__ia_thumb.jpg`,
 					disambiguation: release["disambiguation"]
@@ -294,9 +293,9 @@ export class MusicBrainz {
 				return version.releaseDate;
 			});
 
-			for (let release in recordingResult.versions) {
+			for (const release in recordingResult.versions) {
 				// Sort by oldest
-				let releaseVer = recordingResult.versions[release];
+				const releaseVer = recordingResult.versions[release];
 				if (releaseVer.country == "XW" || releaseVer.country == "XE")
 					recordingResult.versions[release].score += 10;
 				else if (releaseVer.country == "US" || releaseVer.country == "GB")

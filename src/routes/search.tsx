@@ -13,7 +13,7 @@ export const ResultItem: Component<
 		selectedMbid: Stateful<{ value: string }>;
 		firstResult: any;
 	}
-> = function (cx) {
+> = function () {
 	this.firstResult = this.song.versions[0];
 	console.log(this.firstResult);
 	this.selectedMbid = createState({

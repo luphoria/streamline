@@ -2,6 +2,7 @@ import type { Component } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
 import { Icon } from "../components/icon";
 import { Link } from "../components/link";
+import type { ReleaseGroupList } from "../stores/searchResults";
 
 const Artist: Component<{
 	artist: Awaited<ReturnType<MusicBrainz["ArtistInfo"]>>;
@@ -13,7 +14,7 @@ const Artist: Component<{
 			<h3 id="artist-name">{this.artist.name}</h3>
 			<h4 id="artist-disambiguation">{this.artist.disambiguation}</h4>
 			<p>
-				{use(this.artist.releaseGroups).mapEach((group) => {
+				{use(this.artist.releaseGroups).mapEach((group: ReleaseGroupList) => {
 					if (group.releases.length > 0) {
 						const number = resNumber;
 						resNumber += 1; // what is the point of this?
@@ -43,7 +44,7 @@ export const ArtistView: Component<
 		artistEl: HTMLElement;
 		mbid: string;
 	}
-> = function (cx) {
+> = function () {
 	const updateArtist = async (mbid: string) => {
 		if (!mbid) return;
 		this.artistEl = (

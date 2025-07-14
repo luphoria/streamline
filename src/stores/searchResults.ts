@@ -1,7 +1,7 @@
 export interface SongVersion {
 	mbid: string;
 	title: string;
-	artists: [{ name: string; mbid: string }];
+	artists: { name: string; mbid: string }[];
 	versions: Release[];
 	length: number | null;
 	hasVideo: boolean;
@@ -32,10 +32,15 @@ export interface RecordingGroup {
 	mbid: string;
 }
 
-interface Song {
-	title: string;
-	versions: SongVersion[];
-	score: number;
+// TODO: We can type this more. 
+export interface ReleaseGroupList { 
+	[key: string]: any 
 }
 
-type SongArray = Song[];
+// interface Song {
+// 	title: string;
+// 	versions: SongVersion[];
+// 	score: number;
+// }
+
+// type SongArray = Song[];

@@ -50,6 +50,7 @@ export default [
 			"no-empty": "off",
 			"no-debugger": "off",
 			"no-shadow": "off",
+			"no-expecetd-multiline": "off",
 			"no-await-in-loop": "off",
 			"@typescript-eslint/no-explicit-any": "off",
 			"@typescript-eslint/ban-ts-comment": "off",
