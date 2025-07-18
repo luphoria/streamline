@@ -8,14 +8,7 @@ import { ytdlp } from "../.env";
 import { AddRecording } from "../server/db/db";
 const exec = util.promisify(nodeExec);
 
-export default async function ytdlpDownloadBySearch(
-	artist,
-	title,
-	mbid,
-	keywords?
-) {
-	console.log(`MBID ${mbid}`);
-	// Search
+export async function Search (artist, title, keywords?) {
 	let results: { title: string; id: string; score: number }[] = [];
 	if (!keywords) keywords = "";
 	else keywords = keywords.replaceAll(/[()[\].!?/]/g, "");
@@ -120,11 +113,13 @@ export default async function ytdlpDownloadBySearch(
 
 	console.log(results);
 
-	console.log(results[0]);
+	return results;
+}
 
+export async function Download (searchResult, mbid) {
 	const filePath = (
 		await exec(
-			`${ytdlp.binary} "https://www.youtube.com/watch?v=${quote([results[0].id])}" -f wv+ba -P ${ytdlp.path} --no-warnings --restrict-filenames --print "after_move:filepath" --sponsorblock-remove all`
+			`${ytdlp.binary} "https://www.youtube.com/watch?v=${quote([searchResult.id])}" -f wv+ba -P ${ytdlp.path} --no-warnings --restrict-filenames --print "after_move:filepath" --sponsorblock-remove all`
 		)
 	).stdout.split("\n")[0];
 	console.log(filePath);
