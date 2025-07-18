@@ -17,7 +17,7 @@ export async function Search (artist, title, keywords?) {
 		duration: number;
 	}[] = [];
 	if (!keywords) keywords = "";
-	else keywords = keywords.replaceAll(/[()[\].!?/]/g, "");
+	else keywords = keywords.replaceAll(/[()[\].!?/’'"]/g, "");
 	console.log(`Searching SoundCloud for "${artist} - ${title} ${keywords}"...`);
 	const resultsRaw = await exec(
 		`${soundcloud.ytdlpBinary} --default-search scsearch scsearch10:${quote([`${artist} - ${title}`])} --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
@@ -39,17 +39,17 @@ export async function Search (artist, title, keywords?) {
 	console.log(`${results.length} results before filtering`);
 
 	// Filter results
-	artist = artist.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
-	const songTitle = title.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
+	artist = artist.toLowerCase().replaceAll(/[()[\].!?/’'"]/g, "");
+	const songTitle = title.toLowerCase().replaceAll(/[()[\].!?/’'"]/g, "");
 
 	for (const res in results) {
 		results[res].title = results[res].title
 			.toLowerCase()
-			.replaceAll(/[()[\].!?/]/g, "");
+			.replaceAll(/[()[\].!?/’'"]/g, "");
 
 		results[res].uploader = results[res].uploader
 			.toLowerCase()
-			.replaceAll(/[()[\].!?/]/g, "");
+			.replaceAll(/[()[\].!?/’'"]/g, "");
 	}
 
 	// Put this in .env.js?

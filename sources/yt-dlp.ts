@@ -11,7 +11,7 @@ const exec = util.promisify(nodeExec);
 export async function Search (artist, title, keywords?) {
 	let results: { title: string; id: string; score: number }[] = [];
 	if (!keywords) keywords = "";
-	else keywords = keywords.replaceAll(/[()[\].!?/]/g, "");
+	else keywords = keywords.replaceAll(/[()[\].!?/’'"]/g, "");
 	console.log(`Searching YouTube for "${artist} - ${title} ${keywords}"...`);
 	const resultsRaw = await exec(
 		`${ytdlp.binary} "https://music.youtube.com/search?q=${quote([`${artist} - ${title} ${keywords}`.replaceAll(" ", "+")])}" --no-playlist --no-check-certificate --flat-playlist --skip-download -f bestaudio --dump-single-json`
@@ -29,8 +29,8 @@ export async function Search (artist, title, keywords?) {
 	console.log(`${results.length} results before filtering`);
 
 	// Filter results
-	const songTitle = title.toLowerCase().replaceAll(/[()[\].!?/]/g, "").replaceAll(/&/g, "and");
-	artist = artist.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
+	const songTitle = title.toLowerCase().replaceAll(/[()[\].!?/’'"]/g, "").replaceAll(/&/g, "and");
+	artist = artist.toLowerCase().replaceAll(/[()[\].!?/’'"]/g, "");
 
 	for (const res in results) {
 		if (!results[res].title) {
@@ -39,7 +39,7 @@ export async function Search (artist, title, keywords?) {
 		}
 		results[res].title = results[res].title
 			.toLowerCase()
-			.replaceAll(/[()[\].!?/]/g, "")
+			.replaceAll(/[()[\].!?/’'"]/g, "")
 			.replaceAll(/&/g, "and");
 	}
 
@@ -118,6 +118,7 @@ export async function Search (artist, title, keywords?) {
 }
 
 export async function Download (searchResult, mbid) {
+	console.log(searchResult);
 	const filePath = (
 		await exec(
 			`${ytdlp.binary} "https://www.youtube.com/watch?v=${quote([searchResult.id])}" -f wv+ba -P ${ytdlp.path} --no-warnings --restrict-filenames --print "after_move:filepath" --sponsorblock-remove all`
