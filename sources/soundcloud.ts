@@ -7,14 +7,7 @@ import { soundcloud } from "../.env";
 import { AddRecording } from "../server/db/db";
 const exec = util.promisify(nodeExec);
 
-export default async function soundcloudDownloadBySearch(
-	artist,
-	title,
-	mbid,
-	keywords?
-) {
-	console.log(`MBID ${mbid}`);
-	// Search
+export async function Search (artist, title, keywords?) {
 	let results: {
 		uploader: string;
 		title: string;
@@ -117,26 +110,32 @@ export default async function soundcloudDownloadBySearch(
 		return b.score - a.score;
 	});
 
-	console.log(results[0]);
+	results = results.filter (res => {
+		return res.score >= 25;
+	})
 
-	// Most soundcloud results are garbage -- only pick
-	if (results[0].score >= 25) {
-		const filePath = (
-			(
-				await exec(
-					`${soundcloud.ytdlpBinary} "${results[0].url}" -P ${soundcloud.path} --no-warnings --restrict-filenames --print "after_move:filepath"`
-				)
-			).stdout as string
-		).split("\n")[0];
+	if (results.length === 0)
+		throw new Response("no good results found after scoring", {
+			status: 404,
+		});
 
-		console.log("===");
-		console.log(filePath);
+	return results;
+}
 
-		// TODO: Create a cache db associating mbid to filepath
-		AddRecording(mbid, filePath, "soundcloud");
+export async function Download (searchResult, mbid) {
+	const filePath = (
+		(
+			await exec(
+				`${soundcloud.ytdlpBinary} "${searchResult.url}" -P ${soundcloud.path} --no-warnings --restrict-filenames --print "after_move:filepath"`
+			)
+		).stdout as string
+	).split("\n")[0];
 
-		return filePath;
-	}
+	console.log("===");
+	console.log(filePath);
 
-	throw new Response("No songs found.", { status: 404 });
+	// TODO: Create a cache db associating mbid to filepath
+	AddRecording(mbid, filePath, "soundcloud");
+
+	return filePath;
 }
