@@ -73,8 +73,12 @@ export const GET = createHandler(async (c) => {
 		console.log("Source not yet OK");
 		// Go by order
 		for (const source in sourceModules) {
+			let searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
+
+			// sort results...
+	
 			filePath = await t(
-				sourceModules[source](artist, songTitle, mbid, keywords)
+				sourceModules[source].Download(searchResults[0], mbid)
 			);
 			if (filePath.ok) break;
 			console.log("Trying another source . . . ");
