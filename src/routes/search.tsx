@@ -1,6 +1,6 @@
 import { createState, type Component, type Stateful } from "dreamland/core";
 import router from "../router";
-import type { RecordingGroup } from "../stores/searchResults";
+import type { RecordingGroup } from "../stores/MusicBrainzType";
 import { Icon } from "../components/icon";
 import { CoverArt } from "../components/coverart";
 import { Link } from "../components/link";

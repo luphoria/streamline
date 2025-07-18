@@ -2,7 +2,7 @@ import type { Component } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
 import { Icon } from "../components/icon";
 import { Link } from "../components/link";
-import type { ReleaseGroupList } from "../stores/searchResults";
+import type { ReleaseGroupList } from "../stores/MusicBrainzType";
 
 const Artist: Component<{
 	artist: Awaited<ReturnType<MusicBrainz["ArtistInfo"]>>;
