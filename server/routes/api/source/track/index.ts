@@ -76,6 +76,7 @@ export const GET = createHandler(async (c) => {
 			let searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
 
 			// sort results...
+			console.log(searchResults);
 	
 			filePath = await t(
 				sourceModules[source].Download(searchResults[0], mbid)

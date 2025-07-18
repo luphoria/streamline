@@ -29,7 +29,7 @@ export async function Search (artist, title, keywords?) {
 	console.log(`${results.length} results before filtering`);
 
 	// Filter results
-	const songTitle = title.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
+	const songTitle = title.toLowerCase().replaceAll(/[()[\].!?/]/g, "").replaceAll(/&/g, "and");
 	artist = artist.toLowerCase().replaceAll(/[()[\].!?/]/g, "");
 
 	for (const res in results) {
@@ -39,7 +39,8 @@ export async function Search (artist, title, keywords?) {
 		}
 		results[res].title = results[res].title
 			.toLowerCase()
-			.replaceAll(/[()[\].!?/]/g, "");
+			.replaceAll(/[()[\].!?/]/g, "")
+			.replaceAll(/&/g, "and");
 	}
 
 	// Put this in .env.js?
