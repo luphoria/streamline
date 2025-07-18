@@ -80,6 +80,7 @@ export const Player: Component<
 				type="text"
 			/>
 			<button on:click={() => playSong(this.mbid)}>fetch song</button>
+			<button on:click={()=> window.open(`/api/source/track?mbid=${this.mbid}&source=${store.source}`)}>download song</button>
 			<button on:click={() => deleteCached(this.mbid)}>
 				delete from cache
 			</button>

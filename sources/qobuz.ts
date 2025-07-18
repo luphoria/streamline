@@ -117,7 +117,7 @@ export async function Download(searchResult, mbid) {
 		await Buffer.from(stream)
 	);
 
-    AddRecording(mbid, filePath, "soundcloud");
+    AddRecording(mbid, filePath, "qobuz");
 
 	return filePath;
 }
