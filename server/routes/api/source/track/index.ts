@@ -3,9 +3,9 @@ import { Readable } from "node:stream";
 import { createHandler } from "hono-file-router";
 import { stream } from "hono/streaming";
 import { t } from "try";
-import { GetRecording } from "../../../db/db";
-import { MusicBrainz } from "../../../../src/utils/MusicBrainz.js";
-import { MB_URL, sources } from "../../../../.env.js";
+import { GetRecording } from "../../../../db/db.js";
+import { MusicBrainz } from "../../../../../src/utils/MusicBrainz.js";
+import { MB_URL, sources } from "../../../../../.env.js";
 
 export const GET = createHandler(async (c) => {
 	const mbid = c.req.query("mbid");
@@ -53,13 +53,17 @@ export const GET = createHandler(async (c) => {
 		// Dynamically import each module by its path. (Does the file:/// uri work x-platform?)
 		sourceModules[sources[source].name] = (
 			await import(`file:///${sources[source].path}`)
-		).default;
+		);
 	}
 
 	// Prioritize client-specified src
 	if (sourceModules[source]) {
+		let searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
+
+		// sort results...
+
 		filePath = await t(
-			sourceModules[source](artist, songTitle, mbid, keywords)
+			sourceModules[source].Download(searchResults[0], mbid)
 		);
 		if (!filePath.ok) delete sourceModules[source];
 		console.log(filePath.error)

@@ -9,12 +9,12 @@ export const Player: Component<
 		player: HTMLElement;
 		mbid: string;
 	}
-> = function (cx) {
+> = function () {
 	const playSong = async (mbid: string) => {
 		this.player = <div>Loading...</div>;
 		console.log(store.source);
 		const response = await t(
-			fetch(`/api/sourceTrack?mbid=${mbid}&source=${store.source}`)
+			fetch(`/api/source/track?mbid=${mbid}&source=${store.source}`)
 		);
 		if (!response.ok) {
 			this.player = <div>an error occured: {response.error}</div>;

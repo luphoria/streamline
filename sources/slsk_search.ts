@@ -124,15 +124,13 @@ export default async function (query) {
 			searchRes[response].files = searchRes[response].files.filter((file) => {
 				// We are explicitly returning the filename rather than the path -- many live albums do not have "live" in the name, but the user may have sorted them as such.
 				return !file.filename
-					.split("\\")
-					[file.filename.split("\\").length - 1].toLowerCase()
+					.split("\\")[file.filename.split("\\").length - 1].toLowerCase()
 					.includes("live");
 			});
 		// If the filename itself (not including the path) doesn't include the song title, we don't want it.
 		searchRes[response].files = searchRes[response].files.filter((file) => {
 			return file.filename
-				.split("\\")
-				[file.filename.split("\\").length - 1].toLowerCase()
+				.split("\\")[file.filename.split("\\").length - 1].toLowerCase()
 				.replace(/[^0-9a-z]/gi, "") // TODO: This works for them, but we need some way to differentiate non-alphanumeric titles.
 				.includes(cleanQuerySongTitle);
 		});
@@ -163,6 +161,5 @@ export default async function (query) {
 	// console.log(searchRes);
 	console.log(`${searchRes.length} responses after filtering :-)`);
 
-	// For now let's assume the first one will do
 	return searchRes;
 }
