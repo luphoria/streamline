@@ -63,7 +63,7 @@ export const GET = createHandler(async (c) => {
 		// sort results
 
 		stream = await t(
-			sourceModules[source].Download(searchResults[0], mbid)
+			sourceModules[source].Download(searchResults[0], releaseInfo.trackList[track].mbid)
 		);
 
 		if (!stream.ok) {
