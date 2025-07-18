@@ -32,6 +32,7 @@ music/
 tests/slsk-downloads/*
 tests/yt-dlp/*
 tests/soundcloud/*
+tests/qobuz/*
 
 # slskd app directory
 slskd/
