@@ -61,6 +61,7 @@ export const GET = createHandler(async (c) => {
 		let searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
 
 		// sort results...
+		// TODO: have a number of different tries for results in .env and retry them here 
 
 		filePath = await t(
 			sourceModules[source].Download(searchResults[0], mbid)
