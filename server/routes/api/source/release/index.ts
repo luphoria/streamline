@@ -51,34 +51,34 @@ export const GET = createHandler(async (c) => {
 			// Dynamically import each module by its path. (Does the file:/// uri work x-platform?)
 			sourceModules[sources[source].name] = (
 				await import(`file:///${sources[source].path}`)
-			).default;
+			);
 		}
 
 		let stream;
 		// Prioritize client-specified src
 		usedSource = source;
-		// TODO: Make a function that fetches the song but doesn't return a stream
+
+		let searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
+
+		// sort results
+
 		stream = await t(
-			sourceModules[source](
-				artist,
-				songTitle,
-				releaseInfo.trackList[track].mbid,
-				keywords
-			)
+			sourceModules[source].Download(searchResults[0], mbid)
 		);
+
 		if (!stream.ok) {
 			delete sourceModules[source];
 			console.log("Stream not yet OK");
 			// Go by order
 			for (const source in sourceModules) {
 				usedSource = source;
+				console.log(`Trying source ${usedSource} . . . `)
+				let searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
+
+				// sort results
+		
 				stream = await t(
-					sourceModules[source](
-						artist,
-						songTitle,
-						releaseInfo.trackList[track].mbid,
-						keywords
-					)
+					sourceModules[source].Download(searchResults[0], releaseInfo.trackList[track].mbid)
 				);
 				if (stream.ok) {
 					break;
