@@ -17,7 +17,16 @@ export const soundcloud = {
 	path: "/path/to/set/sc/downloads/",
 };
 
+export const qobuz = {
+	qobuzDlUrl: "https://eu.qobuz.squid.wtf",
+	path: "C:\\Users\\user\\streamline\\tests\\qobuz\\",
+};
+
 export const sources = [
+		{
+		name: "qobuz",
+		path: "C:\\Users\\user\\streamline\\sources\\qobuz.ts",
+	},
 	{
 		name: "slsk",
 		path: "C:\\Users\\user\\streamline\\sources\\slsk.ts",

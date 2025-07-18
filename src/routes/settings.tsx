@@ -39,6 +39,7 @@ export const Settings: Component<
 					<option value="ytdlp">YouTube</option>
 					<option value="slsk">Soulseek</option>
 					<option value="soundcloud">SoundCloud</option>
+					<option value="qobuz">Qobuz</option>
 				</select>
 			</div>
 		</div>
