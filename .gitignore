@@ -17,7 +17,6 @@ pnpm-debug.log*
 .env
 .env.production
 .env.js
-pnpm-workspace.yaml
 
 # macOS-specific files
 .DS_Store
