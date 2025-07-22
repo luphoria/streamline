@@ -1,10 +1,10 @@
 {
 	"short_name": "Streamline",
 	"name": "Streamline",
-	"description": "A click and goon environment powered without v86",
+	"description": "A music \"streaming\" service",
 	"icons": [
 		{
-			"src": "s-temp.png",
+			"src": "streamline-logo-small.png",
 			"sizes": "16x16 32x32 48x48 72x72 96x96 128x128 256x256 512x512 1024x1024 2048x2048",
 			"type": "image/png",
 			"purpose": "any maskable"
