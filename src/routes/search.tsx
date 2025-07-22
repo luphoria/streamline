@@ -1,29 +1,26 @@
-import { createState, type Component, type Stateful } from "dreamland/core";
+import { css, type Component } from "dreamland/core";
 import router from "../router";
-import type { RecordingGroup } from "../stores/MusicBrainzType";
-import { Icon } from "../components/icon";
-import { CoverArt } from "../components/coverart";
-import { Link } from "../components/link";
+import type { RecordingGroup } from "../types/MusicBrainzType";
+import Icon from "../components/icon";
+import CoverArt from "../components/coverart";
+import Link  from "../components/link";
 
 export const ResultItem: Component<
 	{
 		song: RecordingGroup;
 	},
 	{
-		selectedMbid: Stateful<{ value: string }>;
-		firstResult: any;
+		mbid: string;
+		result: any;
 	}
 > = function () {
-	this.firstResult = this.song.versions[0];
-	console.log(this.firstResult);
-	this.selectedMbid = createState({
-		value: this.firstResult.mbid,
-	});
-
+	this.result = this.song.versions[0];
+	this.mbid = this.result.mbid
+	
 	return (
 		<div>
 			<span>
-				<CoverArt src={this.firstResult.coverArt} size={75} />
+				<CoverArt src={this.result.coverArt} size={75} />
 				<span class="song-info">
 					<div class="artist">
 						{use(this.song.artists).mapEach((artist) => {
@@ -40,7 +37,7 @@ export const ResultItem: Component<
 				</span>
 			</span>
 			<span class="spacer"></span>
-			<select bind:value={use(this.selectedMbid).bind()} name="versions">
+			<select value={use(this.mbid).bind()} name="versions">
 				{this.song.versions.map((release) => {
 					return (
 						<option value={release.mbid}>
@@ -61,7 +58,7 @@ export const ResultItem: Component<
 				</button>
 				<button
 					on:click={() =>
-						router.navigate(`/release/${this.selectedMbid.value}`)
+						router.navigate(`/release/${this.mbid}`)
 					}
 				>
 					Open Release
@@ -71,7 +68,7 @@ export const ResultItem: Component<
 	);
 };
 
-ResultItem.css = `
+ResultItem.style = css`
 	:scope {
 		display: flex;
 		flex-direction: row;

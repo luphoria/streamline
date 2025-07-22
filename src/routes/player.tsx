@@ -1,18 +1,25 @@
 import type { Component } from "dreamland/core";
 import { t } from "try";
 import store from "../store";
+import Icon from "../components/icon";
 
 export const Player: Component<
 	{},
 	{},
 	{
 		player: HTMLElement;
+		link: string | undefined;
 		mbid: string;
 	}
 > = function () {
 	const playSong = async (mbid: string) => {
-		this.player = <div>Loading...</div>;
-		console.log(store.source);
+		if (this.link) URL.revokeObjectURL(this.link);
+		this.link = undefined;
+		this.player = (
+			<div class="loader">
+				<Icon name="search_doc" />
+			</div>
+		);
 		const response = await t(
 			fetch(`/api/source/track?mbid=${mbid}&source=${store.source}`)
 		);
@@ -21,10 +28,26 @@ export const Player: Component<
 			console.error(response.error);
 			return;
 		}
+		switch (response.value.status) {
+			case 200:
+				this.player = <div>playing in webamp!</div>;
+				break;
+			case 404:
+				this.player = <div>file not in cache</div>;
+				return;
+			case 500:
+				this.player = <div>error: {response.error}</div>;
+				return;
+			default:
+				this.player = <div>unknown error or lack of response</div>;
+				return;
+		}
 		const blob = await response.value.blob();
+		const link = URL.createObjectURL(blob);
+		this.link = link;
+
 		if (!window.webamp) {
-			const url = URL.createObjectURL(blob);
-			const player = new Audio(url);
+			const player = new Audio(link);
 			player.controls = true;
 			player.play();
 			this.player = player;
@@ -40,7 +63,6 @@ export const Player: Component<
 				blob,
 			},
 		]);
-		this.player = <div>playing in webamp!</div>;
 	};
 
 	const deleteCached = async (mbid: string) => {
@@ -68,7 +90,6 @@ export const Player: Component<
 		}
 	};
 
-	// TODO : use mbid
 	use(this.mbid).listen(playSong);
 	return (
 		<div class="input-row">
@@ -80,10 +101,10 @@ export const Player: Component<
 				type="text"
 			/>
 			<button on:click={() => playSong(this.mbid)}>fetch song</button>
-			<button on:click={()=> window.open(`/api/source/track?mbid=${this.mbid}&source=${store.source}`)}>download song</button>
 			<button on:click={() => deleteCached(this.mbid)}>
 				delete from cache
 			</button>
+			{use(this.link).andThen(<button on:click={()=> window.open(this.link)}>download song</button>)}
 			<br />
 			{use(this.player)}
 		</div>

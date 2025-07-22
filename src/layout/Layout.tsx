@@ -1,4 +1,4 @@
-import type { Component } from "dreamland/core";
+import { css, type Component } from "dreamland/core";
 import Navbar from "./Navbar";
 import Webamp from "webamp";
 import isMobile from "is-mobile";
@@ -12,7 +12,6 @@ const Layout: Component<
 			return;
 		}
 		window.webamp = new Webamp({
-			//@ts-expect-error this will be added in webamp 2.1.3
 			enableMediaSession: true,
 			initialSkin: {
 				url: "/skin.wsz",
@@ -31,7 +30,7 @@ const Layout: Component<
 	);
 };
 
-Layout.css = `
+Layout.style = css`
     :scope {
 		height: 100%;
 		width: calc(100%);

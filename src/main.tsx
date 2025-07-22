@@ -1,4 +1,4 @@
-import type { Component } from "dreamland/core";
+import { css, type Component } from "dreamland/core";
 import { MusicBrainz } from "./utils/MusicBrainz";
 import Router from "./router";
 import store from "./store";
@@ -14,7 +14,7 @@ const App: Component = function (cx) {
 	return <div id="app" />;
 };
 
-App.css = `
+App.style = css`
 		display: flex;
 		flex-direction: row;
 		gap: 1rem;

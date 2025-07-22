@@ -1,4 +1,4 @@
-import type { ReleaseGroupList, SongVersion } from "../stores/MusicBrainzType";
+import type { ReleaseGroupList, SongVersion } from "../types/MusicBrainzType";
 import DOMPurify from "dompurify";
 
 export class MusicBrainz {

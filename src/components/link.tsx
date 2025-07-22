@@ -1,7 +1,8 @@
 import type { Component } from "dreamland/core";
-export const Link: Component<{
+const Link: Component<{
 	href: string;
 	class?: string;
+	children: any;
 }> = function (cx) {
 	this.class ??= "";
 	return (
@@ -20,3 +21,5 @@ export const Link: Component<{
 		</a>
 	);
 };
+
+export default Link;

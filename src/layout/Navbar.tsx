@@ -1,9 +1,11 @@
-// @ts-nocheck
-import type { Component } from "dreamland/core";
+import { css, type Component } from "dreamland/core";
 import router from "../router";
-import { Link } from "../components/link";
-const Navbar: Component<{}, {}, {}> = function (cx) {
-	this.songQuery = "";
+import Link from "../components/link";
+
+const Navbar: Component<{}, {}, {
+    query: string;
+}> = function () {
+	this.query = "";
 	return (
 		<header>
 			<div class="title">
@@ -19,14 +21,14 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
 				<form
 					on:submit={(e: any) => {
 						e.preventDefault();
-						router.navigate(`/search/${encodeURIComponent(this.songQuery)}`);
+						router.navigate(`/search/${encodeURIComponent(this.query)}`);
 					}}
 				>
 					<input
 						type="text"
 						id="songSearchValue"
 						placeholder="ARTIST - SONG or search..."
-						value={use(this.songQuery).bind()}
+						value={use(this.query).bind()}
 					/>
 					<button id="songSearchBtn" type="submit">
 						Search!
@@ -49,7 +51,8 @@ const Navbar: Component<{}, {}, {}> = function (cx) {
 		</header>
 	);
 };
-Navbar.css = `
+
+Navbar.style = css`
     :scope {
         display: flex;
         flex-direction: column;

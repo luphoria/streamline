@@ -1,4 +1,4 @@
-import type { Component } from "dreamland/core";
+import { css, type Component } from "dreamland/core";
 import store from "../store";
 export const Settings: Component<
 	{},
@@ -45,7 +45,7 @@ export const Settings: Component<
 		</div>
 	);
 };
-Settings.css = `
+Settings.style = css`
 	:scope {
 		width: 100%;
 	}

@@ -1,8 +1,8 @@
-import type { Component } from "dreamland/core";
+import { css, type Component } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
-import { Icon } from "../components/icon";
-import { Link } from "../components/link";
-import type { ReleaseGroupList } from "../stores/MusicBrainzType";
+import Icon from "../components/icon";
+import Link from "../components/link";
+import type { ReleaseGroupList } from "../types/MusicBrainzType";
 
 const Artist: Component<{
 	artist: Awaited<ReturnType<MusicBrainz["ArtistInfo"]>>;
@@ -75,7 +75,7 @@ export const ArtistView: Component<
 	);
 };
 
-ArtistView.css = `
+ArtistView.style = css`
 	:scope {
 		display: flex;
 		gap: 0.5rem;

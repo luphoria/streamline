@@ -1,9 +1,9 @@
-import type { Component } from "dreamland/core";
+import { css, type Component } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
-import { Link } from "../components/link";
+import Link from "../components/link";
 import { t } from "try";
-import { Icon } from "../components/icon";
-import { CoverArt } from "../components/coverart";
+import Icon from "../components/icon";
+import CoverArt from "../components/coverart";
 import store from "../store";
 
 const Release: Component<
@@ -40,7 +40,7 @@ const Release: Component<
 	);
 };
 
-Release.css = `
+Release.style = css`
 	:scope {
 		display: flex;
 		gap: 1.5em;
@@ -124,7 +124,7 @@ export const ReleaseView: Component<
 	);
 };
 
-ReleaseView.css = `
+ReleaseView.style = css`
 	:scope {
 		display: flex;
 		gap: 0.5rem;

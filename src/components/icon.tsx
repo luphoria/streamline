@@ -1,15 +1,9 @@
-import type { Component } from "dreamland/core";
-export const Icon: Component<{
+import { css, type Component } from "dreamland/core";
+const Icon: Component<{
 	name: string;
 	class?: string;
 	size?: number;
-}> = function (cx) {
-	cx.css = `
-    :scope {
-      image-rendering: pixelated;
-      width: auto;
-    }
-  `;
+}> = function () {
 	this.size = this.size || 32;
 	return (
 		<img
@@ -24,3 +18,11 @@ export const Icon: Component<{
 		/>
 	);
 };
+
+Icon.style = css`
+	:scope {
+      image-rendering: pixelated;
+      width: auto;
+    }
+`
+export default Icon;
