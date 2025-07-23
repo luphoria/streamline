@@ -11,7 +11,7 @@ const Navbar: Component<{}, {}, {
 			<div class="title">
 				<Link href="/">
 					<img
-						src="/streamline-temp-logo.png"
+						src="/streamline-logo-big.png"
 						alt="Streamline Logo"
 						id="logo"
 					/>
