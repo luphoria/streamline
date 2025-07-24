@@ -1,9 +1,9 @@
 import { createHandler } from "hono-file-router";
 import { t } from "try";
-import { AddRecording, GetRecording } from "../../../../db/db.js";
-import { MusicBrainz } from "../../../../../../src/utils/MusicBrainz.js";
-import { MB_URL, sources } from "../../../../../../.env.js";
-import { sourceModules } from "../../../../index.js";
+import { AddRecording, GetRecording } from "../../../../db/db";
+import { MusicBrainz } from "../../../../../../src/utils/MusicBrainz";
+import { MB_URL, sources } from "../../../../../.env";
+import { sourceModules } from "../../../../index";
 
 export const GET = createHandler(async (c) => {
 	const mbid = c.req.query("mbid");

@@ -2,7 +2,7 @@ import { exec as nodeExec } from "node:child_process";
 const exec = util.promisify(nodeExec);
 import util from "node:util";
 import quote from "shell-quote/quote";
-import { soundcloud } from "../../.env";
+import { soundcloud } from "../.env";
 
 export const Name = "soundcloud";
 export const friendlyName = "Soundcloud";
@@ -122,7 +122,7 @@ export async function Search (artist, title, keywords?) {
 	return results;
 }
 
-export async function Download (searchResult) {
+export async function Download(searchResult) {
 	const filePath = (
 		(
 			await exec(

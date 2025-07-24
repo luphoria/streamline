@@ -3,10 +3,10 @@ import { Readable } from "node:stream";
 import { createHandler } from "hono-file-router";
 import { stream } from "hono/streaming";
 import { Result, t } from "try";
-import { AddRecording, GetRecording } from "../../../../db/db.js";
-import { sourceModules } from "../../../../index.js"
-import { MusicBrainz } from "../../../../../../src/utils/MusicBrainz.js";
-import { MB_URL, sources } from "../../../../../../.env.js";
+import { AddRecording, GetRecording } from "../../../../db/db";
+import { sourceModules } from "../../../../index"
+import { MusicBrainz } from "../../../../../../src/utils/MusicBrainz";
+import { MB_URL, sources } from "../../../../../.env";
 
 export const GET = createHandler(async (c) => {
 	const mbid = c.req.query("mbid");

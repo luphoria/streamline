@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { qobuz } from "../../.env.js";
+import { qobuz } from "../.env";
 
 export const Name = "qobuz";
 export const friendlyName = "Qobuz";

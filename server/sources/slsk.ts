@@ -1,7 +1,7 @@
 // Download a file from soulseek and then send it to the client.
 
 import fs from "node:fs";
-import { slskd } from "../../.env.js";
+import { slskd } from "../.env";
 
 // Create a search in slskd
 const CreateSearch = async (query) => {
@@ -184,7 +184,7 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	};
 };
 
-export const Name = "slskd";
+export const Name = "slsk";
 export const friendlyName = "Soulseek";
 
 export async function Search(artist, title) {

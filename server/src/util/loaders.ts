@@ -3,7 +3,7 @@ import { URL } from "node:url";
 import {
 	predicate as sourcePredicate,
 	type Source,
-} from "../sources/index.ts";
+} from "../sources/index";
 import type { PathLike } from "node:fs";
 
 export type StructurePredicate<T> = (structure: Partial<T>) => boolean;
