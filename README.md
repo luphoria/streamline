@@ -1,7 +1,9 @@
 # streamline
-project dedicated to bring the music to metadata - NOT the other way around. Streamline works as an interface to the entire library catalog of MusicBrainz, and per user request, finding audio for the song or release requested by the user!
+Streamline is a project dedicated to bring the music to metadata - NOT the other way around. 
 
 # Put a screenshot here, or something, probably
+
+Streamline works as an interface to the entire library catalog of MusicBrainz, and per user request, finding audio for the song or release requested by the user!
 
 ## Install
 
