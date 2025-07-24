@@ -4,7 +4,7 @@ import { t } from "try";
 export const store = createStore(
 	// TODO: Pull store defaults from .env.js (but how?)
 	{
-		source: "slsk",
+		source: "qobuz",
 		MB_URL: "https://musicbrainz.org/ws/2/",
 	},
 	{ ident: "settings", backing: "localstorage", autosave: "auto" }
