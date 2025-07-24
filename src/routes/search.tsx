@@ -3,7 +3,7 @@ import router from "../router";
 import type { RecordingGroup } from "../types/MusicBrainzType";
 import Icon from "../components/icon";
 import CoverArt from "../components/coverart";
-import Link  from "../components/link";
+import { Link } from "dreamland/router";
 
 export const ResultItem: Component<
 	{

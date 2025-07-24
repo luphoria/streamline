@@ -1,6 +1,6 @@
 import { css, type Component } from "dreamland/core";
 import router from "../router";
-import Link from "../components/link";
+import { Link } from "dreamland/router";
 
 const Navbar: Component<{}, {}, {
     query: string;

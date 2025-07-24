@@ -1,7 +1,7 @@
 import { css, type Component } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
 import Icon from "../components/icon";
-import Link from "../components/link";
+import { Link } from "dreamland/router";
 import type { ReleaseGroupList } from "../types/MusicBrainzType";
 
 const Artist: Component<{

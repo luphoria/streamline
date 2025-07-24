@@ -19,7 +19,7 @@ importers:
         version: 3.2.6
       dreamland:
         specifier: github:MercuryWorkshop/dreamlandjs#vdom
-        version: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/13d3fff8af62fb0d5718ce568e821ba554ff44cb
+        version: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/12a3f5e88e2f4821746023538d90d2c2ee1389ca
       dreamland-router:
         specifier: github:MercuryWorkshop/dreamland2-router
         version: '@dreamlandjs/dreamland-router@https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5'
@@ -806,8 +806,8 @@ packages:
     resolution: {integrity: sha512-Q4sgBT60gzd0BB0lSyYD3xM4YxrXA9y4uBDof1JNYGzOXrQdQ6yX+7XIAqoFOGQFOTK1D3Hts5OllpxMDZFONQ==}
     engines: {node: '>=12'}
 
-  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/13d3fff8af62fb0d5718ce568e821ba554ff44cb:
-    resolution: {tarball: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/13d3fff8af62fb0d5718ce568e821ba554ff44cb}
+  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/12a3f5e88e2f4821746023538d90d2c2ee1389ca:
+    resolution: {tarball: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/12a3f5e88e2f4821746023538d90d2c2ee1389ca}
     version: 0.1.0
 
   dunder-proto@1.0.1:
@@ -1981,7 +1981,7 @@ snapshots:
 
   '@dreamlandjs/dreamland-router@https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5':
     dependencies:
-      dreamland: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/13d3fff8af62fb0d5718ce568e821ba554ff44cb
+      dreamland: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/12a3f5e88e2f4821746023538d90d2c2ee1389ca
 
   '@esbuild/aix-ppc64@0.25.8':
     optional: true
@@ -2633,7 +2633,7 @@ snapshots:
 
   dotenv@17.2.0: {}
 
-  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/13d3fff8af62fb0d5718ce568e821ba554ff44cb:
+  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/12a3f5e88e2f4821746023538d90d2c2ee1389ca:
     dependencies:
       domhandler: 5.0.3
       htm: 3.1.1

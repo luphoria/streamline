@@ -1,6 +1,6 @@
 import { css, type Component } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
-import Link from "../components/link";
+import { Link } from "dreamland/router";
 import { t } from "try";
 import Icon from "../components/icon";
 import CoverArt from "../components/coverart";
