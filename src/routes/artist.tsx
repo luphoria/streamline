@@ -54,16 +54,22 @@ export const ArtistView: Component<
 	return (
 		<div>
 			<div>
-				<input
-					value={use(this.mbid).bind()}
-					id="artistMbid"
-					placeholder="e0c97a4d-c392-41a9-a374-57af3e3eeab3"
-					type="text"
-				/>
-				<br />
-				<button id="artistButton" on:click={() => updateArtist(this.mbid)}>
-					view artist
-				</button>
+				<form
+					on:submit={(e) => {
+						e.preventDefault();
+						updateArtist(this.mbid);
+					}}
+				>
+					<input
+						value={use(this.mbid).bind()}
+						id="artistMbid"
+						placeholder="e0c97a4d-c392-41a9-a374-57af3e3eeab3"
+						type="text"
+					/>
+					<button id="artistButton" type="submit">
+						view artist
+					</button>
+				</form>
 			</div>
 			<div class="artist">{use(this.artistEl)}</div>
 		</div>

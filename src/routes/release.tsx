@@ -2,6 +2,7 @@ import { css, type Component } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
 import { Link } from "dreamland/router";
 import { t } from "try";
+import Router from "../router";
 import Icon from "../components/icon";
 import CoverArt from "../components/coverart";
 import store from "../store";
@@ -27,7 +28,15 @@ const Release: Component<{
 			<ol id="release-tracklist">
 				{use(this.release.trackList).mapEach((track) => (
 					<li>
-						<Link href={`/play/${track.mbid}`}>{track.title}</Link>
+						<span>{track.title}</span>
+						<button
+							on:click={() => Router.navigate(`/play/${track.mbid}/true`)}
+						>
+							Add to Queue
+						</button>
+						<button on:click={() => Router.navigate(`/play/${track.mbid}`)}>
+							Play
+						</button>
 					</li>
 				))}
 			</ol>
@@ -63,6 +72,10 @@ Release.style = css`
 		padding: 0.5rem;
 		border-bottom: 1px solid #999;
 		font-size: 0.95rem;
+	}
+
+	button {
+		float: right;
 	}
 `;
 
@@ -103,10 +116,17 @@ export const ReleaseView: Component<
 	return (
 		<div class="musicbrainz-search">
 			<div>
-				<input id="releaseMbid" value={use(this.mbid).bind()} type="text" />
-				<button id="releaseButton" on:click={() => updateReleases(this.mbid)}>
-					view release
-				</button>
+				<form
+					on:submit={(e) => {
+						e.preventDefault();
+						updateReleases(this.mbid);
+					}}
+				>
+					<input id="releaseMbid" value={use(this.mbid).bind()} type="text" />
+					<button id="releaseButton" type="submit">
+						view release
+					</button>
+				</form>
 				<button on:click={() => downloadRelease(this.mbid)}>
 					download release
 				</button>

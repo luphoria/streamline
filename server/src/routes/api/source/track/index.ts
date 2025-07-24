@@ -6,7 +6,21 @@ import { Result, t } from "try";
 import { AddRecording, DeleteRecording, GetRecording } from "../../../../db/db";
 import { sourceModules, mb } from "../../../../index";
 import mime from "mime";
+import { Context } from "hono";
 
+function createStreamingResponse(c: Context, filePath: string) {
+	const response = stream(c, async (stream) => {
+		const fileStream = Readable.toWeb(
+			fs.createReadStream(filePath)
+		) as ReadableStream<Uint8Array>;
+
+		await stream.pipe(fileStream);
+	});
+	const fileType = mime.getType(filePath);
+	if (fileType) response.headers.set("Content-Type", fileType);
+
+	return response;
+}
 export const GET = createHandler(async (c) => {
 	const mbid = c.req.query("mbid");
 	if (
@@ -34,17 +48,7 @@ export const GET = createHandler(async (c) => {
 		console.log(`File already in cache: ${DBReq.filepath}`);
 		// TODO: download anyway if flag is fixed to try specific source that isn't cached or if some kind of force flag sent
 
-		const response = stream(c, async (stream) => {
-			const fileStream = Readable.toWeb(
-				fs.createReadStream(DBReq.filepath)
-			) as ReadableStream<Uint8Array>;
-
-			await stream.pipe(fileStream);
-		});
-		const fileType = mime.getType(DBReq.filepath);
-		if (fileType) response.headers.set("Content-Type", fileType);
-
-		return response;
+		return createStreamingResponse(c, DBReq.filepath);
 	}
 
 	const preferredSource = sourceModules.get(source);
@@ -95,17 +99,7 @@ export const GET = createHandler(async (c) => {
 		});
 	}
 
-	const response = stream(c, async (stream) => {
-		const fileStream = Readable.toWeb(
-			fs.createReadStream(filePath.value)
-		) as ReadableStream<Uint8Array>;
-
-		await stream.pipe(fileStream);
-	});
-	const fileType = mime.getType(filePath.value);
-	if (fileType) response.headers.set("Content-Type", fileType);
-
-	return response;
+	return createStreamingResponse(c, filePath.value);
 });
 
 export const DELETE = createHandler(async (c) => {
