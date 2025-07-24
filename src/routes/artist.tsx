@@ -7,8 +7,6 @@ import type { ReleaseGroupList } from "../types/MusicBrainzType";
 const Artist: Component<{
 	artist: Awaited<ReturnType<MusicBrainz["ArtistInfo"]>>;
 }> = function () {
-	let resNumber = 0;
-	console.log(this.artist.releaseGroups);
 	return (
 		<div class="musicbrainz-artist">
 			<h3 id="artist-name">{this.artist.name}</h3>
@@ -16,11 +14,8 @@ const Artist: Component<{
 			<p>
 				{use(this.artist.releaseGroups).mapEach((group: ReleaseGroupList) => {
 					if (group.releases.length > 0) {
-						const number = resNumber;
-						resNumber += 1; // what is the point of this?
-						console.log(group);
 						return (
-							<span id={`release${number}`} mbid={group.mbid}>
+							<span mbid={group.mbid}>
 								<b>
 									<Link href={`/release/${group.releases[0].mbid}`}>
 										{group.title}

@@ -8,20 +8,14 @@ import store from "../store";
 
 const Release: Component<
 	{
-		updateArtist: any;
 		release: Awaited<ReturnType<MusicBrainz["ReleaseInfo"]>>;
-		coverArt?: string;
-	},
-	{},
-	{
-		trackCount: number;
+		coverArt?: string | undefined;
 	}
 > = function () {
-	this.trackCount = 0;
 	return (
 		<div>
 			<div class="release-header">
-				<CoverArt src={this.coverArt} size={250} />
+				<CoverArt src={this.coverArt ? this.coverArt : this.release.coverArt} size={250} />
 				<h3 id="release-title">{this.release.title}</h3>
 				<h4 id="release-artist">
 					{use(this.release.artists).mapEach((artist) => {
@@ -92,6 +86,7 @@ export const ReleaseView: Component<
 		}
 		this.downloadStatus = <div>{await response.value.text()}</div>;
 	};
+	
 	const updateReleases = async (mbid: string) => {
 		this.releaseEl = (
 			<div class="loader">
@@ -101,10 +96,10 @@ export const ReleaseView: Component<
 		const release = await window.mb.ReleaseInfo(mbid);
 		const coverArtUrl = await window.mb.HdCoverArtUrl(mbid);
 		this.releaseEl = (
-			// @ts-expect-error
 			<Release release={release} coverArt={coverArtUrl} />
 		);
 	};
+
 	use(this.mbid).listen(updateReleases);
 	return (
 		<div class="musicbrainz-search">

@@ -1,5 +1,5 @@
 import { css, type Component } from "dreamland/core";
-import router from "../router";
+import Router from "../router";
 import type { RecordingGroup } from "../types/MusicBrainzType";
 import Icon from "../components/icon";
 import CoverArt from "../components/coverart";
@@ -53,15 +53,15 @@ export const ResultItem: Component<
 			</select>
 
 			<span>
-				<button on:click={() => router.navigate(`/play/${this.song.mbid}`)}>
+				<button on:click={() => Router.navigate(`/play/${this.song.mbid}`)}>
 					Play
 				</button>
-				<button on:click={() => router.navigate(`/play/${this.song.mbid}/true`)}>
+				<button on:click={() => Router.navigate(`/play/${this.song.mbid}/true`)}>
 					Add to Queue
 				</button>
 				<button
 					on:click={() =>
-						router.navigate(`/release/${this.mbid}`)
+						Router.navigate(`/release/${this.mbid}`)
 					}
 				>
 					Open Release
