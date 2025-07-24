@@ -1,9 +1,7 @@
 import { createHandler } from "hono-file-router";
 import { t } from "try";
 import { AddRecording, GetRecording } from "../../../../db/db";
-import { MusicBrainz } from "../../../../../../src/utils/MusicBrainz";
-import { MB_URL } from "../../../../../.env";
-import { sourceModules } from "../../../../index";
+import { sourceModules, mb } from "../../../../index";
 
 export const GET = createHandler(async (c) => {
 	const mbid = c.req.query("mbid");
@@ -13,9 +11,6 @@ export const GET = createHandler(async (c) => {
 	) {
 		return new Response("Bad MBID", { status: 400 });
 	}
-
-	// Get release info by MBID
-	const mb = new MusicBrainz(MB_URL);
 	const releaseInfo = await mb.ReleaseInfo(mbid);
 	const source = c.req.query("source") || "";
 
@@ -50,12 +45,19 @@ export const GET = createHandler(async (c) => {
 		// Prioritize client-specified src
 		usedSource = source;
 
-		const searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
+		const searchResults = await sourceModules[source].Search(
+			artist,
+			songTitle,
+			keywords
+		);
 
 		// sort results
 
 		stream = await t(
-			sourceModules[source].Download(searchResults[0], releaseInfo.trackList[track].mbid)
+			sourceModules[source].Download(
+				searchResults[0],
+				releaseInfo.trackList[track].mbid
+			)
 		);
 
 		if (!stream.ok) {
@@ -64,13 +66,20 @@ export const GET = createHandler(async (c) => {
 			// Go by order
 			for (const source in sourceModules) {
 				usedSource = source;
-				console.log(`Trying source ${usedSource} . . . `)
-				const searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
+				console.log(`Trying source ${usedSource} . . . `);
+				const searchResults = await sourceModules[source].Search(
+					artist,
+					songTitle,
+					keywords
+				);
 
 				// sort results
-		
+
 				stream = await t(
-					sourceModules[source].Download(searchResults[0], releaseInfo.trackList[track].mbid)
+					sourceModules[source].Download(
+						searchResults[0],
+						releaseInfo.trackList[track].mbid
+					)
 				);
 				if (stream.ok) {
 					AddRecording(mbid, stream.value, source);

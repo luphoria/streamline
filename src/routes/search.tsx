@@ -15,8 +15,8 @@ export const ResultItem: Component<
 	}
 > = function () {
 	this.result = this.song.versions[0];
-	this.mbid = this.result.mbid
-	
+	this.mbid = this.result.mbid;
+
 	return (
 		<div>
 			<span>
@@ -56,14 +56,12 @@ export const ResultItem: Component<
 				<button on:click={() => Router.navigate(`/play/${this.song.mbid}`)}>
 					Play
 				</button>
-				<button on:click={() => Router.navigate(`/play/${this.song.mbid}/true`)}>
+				<button
+					on:click={() => Router.navigate(`/play/${this.song.mbid}/true`)}
+				>
 					Add to Queue
 				</button>
-				<button
-					on:click={() =>
-						Router.navigate(`/release/${this.mbid}`)
-					}
-				>
+				<button on:click={() => Router.navigate(`/release/${this.mbid}`)}>
 					Open Release
 				</button>
 			</span>

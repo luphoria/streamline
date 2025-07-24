@@ -32,9 +32,9 @@ export interface RecordingGroup {
 	mbid: string;
 }
 
-// TODO: We can type this more. 
-export interface ReleaseGroupList { 
-	[key: string]: any 
+// TODO: We can type this more.
+export interface ReleaseGroupList {
+	[key: string]: any;
 }
 
 // interface Song {

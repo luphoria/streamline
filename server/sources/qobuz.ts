@@ -8,9 +8,9 @@ export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
 	const searchQuery = `${queryArtist} - ${queryTitle}`;
 	const searchResults = [];
 
-    queryArtist = queryArtist.replaceAll(/[()[\].!?/’'"]/g, "").toLowerCase();
-    queryTitle = queryTitle.replaceAll(/[()[\].!?/’'"]/g, "").toLowerCase();
-    albumTitle = albumTitle.replaceAll(/[()[\].!?/’'"]/g, "").toLowerCase();
+	queryArtist = queryArtist.replaceAll(/[()[\].!?/’'"]/g, "").toLowerCase();
+	queryTitle = queryTitle.replaceAll(/[()[\].!?/’'"]/g, "").toLowerCase();
+	albumTitle = albumTitle.replaceAll(/[()[\].!?/’'"]/g, "").toLowerCase();
 
 	let resultsClean: {
 		artist: string;
@@ -50,9 +50,15 @@ export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
 
 	for (const result in searchResults) {
 		resultsClean.push({
-			artist: searchResults[result].performer.name.replaceAll(/[()[\].!?/’'"]/g, "").toLowerCase(),
-			title: searchResults[result].title.replaceAll(/[()[\].!?/’'"]/g, "").toLowerCase(),
-			albumTitle: searchResults[result].album.title.replaceAll(/[()[\].!?/’'"]/g, "").toLowerCase(),
+			artist: searchResults[result].performer.name
+				.replaceAll(/[()[\].!?/’'"]/g, "")
+				.toLowerCase(),
+			title: searchResults[result].title
+				.replaceAll(/[()[\].!?/’'"]/g, "")
+				.toLowerCase(),
+			albumTitle: searchResults[result].album.title
+				.replaceAll(/[()[\].!?/’'"]/g, "")
+				.toLowerCase(),
 			released: new Date(searchResults[result].release_date_original),
 			duration: searchResults[result].duration,
 			id: searchResults[result].id,
@@ -66,19 +72,22 @@ export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
 		return result.title == queryTitle;
 	});
 
-    console.log(resultsClean);
+	console.log(resultsClean);
 
 	if (albumTitle) {
-        console.log("Filtering by album: " + albumTitle)
-        const _resultsClean = resultsClean; 
+		console.log("Filtering by album: " + albumTitle);
+		const _resultsClean = resultsClean;
 		// release
 		resultsClean = resultsClean.filter((result) => {
-			return (result.albumTitle.includes(albumTitle) || albumTitle.includes(result.albumTitle));
+			return (
+				result.albumTitle.includes(albumTitle) ||
+				albumTitle.includes(result.albumTitle)
+			);
 		});
-        if (resultsClean.length == 0) resultsClean = _resultsClean; // Failsafe
+		if (resultsClean.length == 0) resultsClean = _resultsClean; // Failsafe
 	}
 	if (length) {
-        console.log("Sorting length")
+		console.log("Sorting length");
 		// duration (seconds)
 		resultsClean = resultsClean.sort((a, b) => {
 			return (
@@ -94,7 +103,7 @@ export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
 }
 
 export async function Download(searchResult) {
-    let data = await fetch(
+	let data = await fetch(
 		`${qobuz.qobuzDlUrl}/api/download-music?track_id=${searchResult.id}&quality=27`,
 		{
 			headers: {
@@ -112,12 +121,9 @@ export async function Download(searchResult) {
 	});
 	const stream = await response.arrayBuffer();
 
-    const filePath = qobuz.path + searchResult.id + ".flac"
+	const filePath = qobuz.path + searchResult.id + ".flac";
 
-	await fs.writeFileSync(
-		filePath,
-		await Buffer.from(stream)
-	);
+	await fs.writeFileSync(filePath, await Buffer.from(stream));
 
 	return filePath;
 }

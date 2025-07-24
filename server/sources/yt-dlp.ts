@@ -9,7 +9,7 @@ import { ytdlp } from "../.env";
 export const Name = "yt-dlp";
 export const friendlyName = "Youtube";
 
-export async function Search (artist, title, keywords?) {
+export async function Search(artist, title, keywords?) {
 	let results: { title: string; id: string; score: number }[] = [];
 	if (!keywords) keywords = "";
 	else keywords = keywords.replaceAll(/[()[\].!?/’'"]/g, "");
@@ -30,7 +30,10 @@ export async function Search (artist, title, keywords?) {
 	console.log(`${results.length} results before filtering`);
 
 	// Filter results
-	const songTitle = title.toLowerCase().replaceAll(/[()[\].!?/’'"]/g, "").replaceAll(/&/g, "and");
+	const songTitle = title
+		.toLowerCase()
+		.replaceAll(/[()[\].!?/’'"]/g, "")
+		.replaceAll(/&/g, "and");
 	artist = artist.toLowerCase().replaceAll(/[()[\].!?/’'"]/g, "");
 
 	for (const res in results) {
@@ -118,7 +121,7 @@ export async function Search (artist, title, keywords?) {
 	return results;
 }
 
-export async function Download (searchResult) {
+export async function Download(searchResult) {
 	console.log(searchResult);
 	const filePath = (
 		await exec(

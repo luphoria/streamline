@@ -22,6 +22,8 @@ export const qobuz = {
 	path: "./music/qobuz/",
 };
 
-// config options that get sent down to the client
-export const MB_URL = "https://musicbrainz.org/ws/2/";
-export const defaultSource = "qobuz";
+export const settings = {
+	MB_URL: "https://musicbrainz.org/ws/2/",
+	// the default used source
+	source: "qobuz",
+};

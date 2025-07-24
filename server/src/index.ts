@@ -3,14 +3,24 @@ import { serve } from "@hono/node-server";
 import { createFolderRoute } from "hono-file-router";
 import { fileURLToPath } from "node:url";
 import { loadSources } from "./util/loaders";
+import { settings } from "../.env";
+import { MusicBrainz } from "../../src/utils/MusicBrainz";
 
 const app = new Hono();
 (async () => {
-app.route("/", await createFolderRoute({ path: fileURLToPath(new URL("routes/", import.meta.url)) }));
-})()
+	app.route(
+		"/",
+		await createFolderRoute({
+			path: fileURLToPath(new URL("routes/", import.meta.url)),
+		})
+	);
+})();
 
-// Fetch all sourcing modules (from sources/)\
-export const sourceModules = await loadSources(new URL("../sources/", import.meta.url))
+// Fetch all sourcing modules (from sources/)
+export const sourceModules = await loadSources(
+	new URL("../sources/", import.meta.url)
+);
+export const mb = new MusicBrainz(settings.MB_URL);
 
 serve(
 	{

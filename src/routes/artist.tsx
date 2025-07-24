@@ -83,4 +83,4 @@ ArtistView.style = css`
 	.artist {
 		width: 100%;
 	}
-`
+`;

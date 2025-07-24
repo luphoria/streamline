@@ -1,8 +1,8 @@
-import type { Component } from "dreamland/core";
+import { css, type Component } from "dreamland/core";
 import { t } from "try";
 import store from "../store";
 import Icon from "../components/icon";
-import mime from "mime"
+import mime from "mime";
 import type { BlobTrack } from "webamp";
 
 export const Player: Component<
@@ -46,6 +46,7 @@ export const Player: Component<
 		const blob = await response.value.blob();
 
 		if (!window.webamp) {
+			const link = URL.createObjectURL(blob);
 			const player = new Audio(link);
 			player.controls = true;
 			player.play();
@@ -54,18 +55,24 @@ export const Player: Component<
 		}
 		const recordingInfo = await window.mb.RecordingInfo(mbid);
 		this.track = {
-				metaData: {
-					title: recordingInfo.title,
-					artist: recordingInfo.artists[0].name,
-				},
-				blob,
-		}
-		this.queue ? window.webamp.appendTracks([this.track]) : window.webamp.setTracksToPlay([this.track])
+			metaData: {
+				title: recordingInfo.title,
+				artist: recordingInfo.artists[0].name,
+			},
+			blob,
+		};
+		this.queue
+			? window.webamp.appendTracks([this.track])
+			: window.webamp.setTracksToPlay([this.track]);
 	};
 
 	const deleteCached = async (mbid: string) => {
 		this.player = <div>loading...</div>;
-		const response = await t(fetch(`/api/deleteItem?mbid=${mbid}`));
+		const response = await t(
+			fetch(`/api/source/track?mbid=${mbid}`, {
+				method: "DELETE",
+			})
+		);
 
 		if (!response.ok) {
 			this.player = <div>an error occured: {response.error}</div>;
@@ -90,30 +97,56 @@ export const Player: Component<
 	const downloadSong = async (track: BlobTrack) => {
 		const link = URL.createObjectURL(track.blob);
 
-		const downloader = <a style="display: none" href={link} download={`${track.metaData?.artist} - ${track.metaData?.title}.${mime.getExtension(track.blob.type)}`} />
+		const downloader = (
+			<a
+				style="display: none"
+				href={link}
+				download={`${track.metaData?.artist} - ${track.metaData?.title}.${mime.getExtension(track.blob.type)}`}
+			/>
+		);
 		document.body.appendChild(downloader);
 		downloader.click();
 
 		URL.revokeObjectURL(link);
 		downloader.remove();
-	}
+	};
 	use(this.mbid).listen(playSong);
 	return (
-		<div class="input-row">
-			<input
-				id="recordingMbid"
-				value={use(this.mbid)
-					.map((val) => decodeURIComponent(val))
-					.bind()}
-				type="text"
-			/>
-			<button on:click={() => playSong(this.mbid)}>fetch song</button>
-			<button on:click={() => deleteCached(this.mbid)}>
-				delete from cache
-			</button>
-			{use(this.track).andThen(<button on:click={() => downloadSong(this.track)}>download song</button>)}
-			<br />
-			{use(this.player)}
+		<div>
+			<div>
+				<input
+					id="recordingMbid"
+					value={use(this.mbid)
+						.map((val) => decodeURIComponent(val))
+						.bind()}
+					type="text"
+				/>
+				<button on:click={() => playSong(this.mbid)}>fetch song</button>
+				<button on:click={() => deleteCached(this.mbid)}>
+					delete from cache
+				</button>
+				{use(this.track).andThen(
+					<button on:click={() => downloadSong(this.track)}>
+						download song
+					</button>
+				)}
+			</div>
+			<div class="player">{use(this.player)}</div>
 		</div>
 	);
 };
+
+Player.style = css`
+	:scope {
+		display: flex;
+		gap: 0.5rem;
+		align-items: flex-start;
+		justify-content: center;
+		flex-direction: column;
+		padding: 0.5rem;
+	}
+
+	.player {
+		width: 100%;
+	}
+`;

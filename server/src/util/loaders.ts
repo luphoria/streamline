@@ -1,9 +1,6 @@
 import { readdir, stat } from "node:fs/promises";
 import { URL } from "node:url";
-import {
-	predicate as sourcePredicate,
-	type Source,
-} from "../sources/index";
+import { predicate as sourcePredicate, type Source } from "../sources/index";
 import type { PathLike } from "node:fs";
 
 export type StructurePredicate<T> = (structure: Partial<T>) => boolean;
@@ -57,10 +54,11 @@ export async function loadSources(
 	dir: PathLike,
 	recursive: boolean = true
 ): Promise<Map<string, Source>> {
-	const structures = await loadStructures<Source>(dir, sourcePredicate, recursive);
-
-	return structures.reduce(
-		(acc, cur) => acc.set(cur.Name, cur),
-		new Map()
+	const structures = await loadStructures<Source>(
+		dir,
+		sourcePredicate,
+		recursive
 	);
+
+	return structures.reduce((acc, cur) => acc.set(cur.Name, cur), new Map());
 }

@@ -21,10 +21,13 @@ db.exec(`
     )
 `);
 
-
-export const AddRecording = (mbid: string, filepath: string, source?: string) => {
+export const AddRecording = (
+	mbid: string,
+	filepath: string,
+	source?: string
+) => {
 	console.log(`DB: ${mbid} / ${filepath} (${source})`);
-  const insert = db.prepare(
+	const insert = db.prepare(
 		"INSERT INTO songs (mbid, filepath, source) VALUES (?, ?, ?)"
 	);
 

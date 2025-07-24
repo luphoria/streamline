@@ -7,7 +7,7 @@ import { soundcloud } from "../.env";
 export const Name = "soundcloud";
 export const friendlyName = "Soundcloud";
 
-export async function Search (artist, title, keywords?) {
+export async function Search(artist, title, keywords?) {
 	let results: {
 		uploader: string;
 		title: string;
@@ -110,9 +110,9 @@ export async function Search (artist, title, keywords?) {
 		return b.score - a.score;
 	});
 
-	results = results.filter (res => {
+	results = results.filter((res) => {
 		return res.score >= 25;
-	})
+	});
 
 	if (results.length === 0)
 		throw new Response("no good results found after scoring", {

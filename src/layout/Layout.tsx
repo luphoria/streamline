@@ -31,12 +31,12 @@ const Layout: Component<
 };
 
 Layout.style = css`
-    :scope {
+	:scope {
 		height: 100%;
 		width: calc(100%);
 		display: flex;
 		flex-direction: row;
-    }
+	}
 
 	main {
 		justify-content: center;
@@ -44,6 +44,6 @@ Layout.style = css`
 		overflow-y: auto;
 		padding: 1.5em;
 	}
-`
+`;
 
 export default Layout;

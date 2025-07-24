@@ -21,8 +21,8 @@ const Icon: Component<{
 
 Icon.style = css`
 	:scope {
-      image-rendering: pixelated;
-      width: auto;
-    }
-`
+		image-rendering: pixelated;
+		width: auto;
+	}
+`;
 export default Icon;

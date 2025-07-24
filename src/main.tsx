@@ -8,7 +8,7 @@ window.mb = new MusicBrainz(store.MB_URL);
 
 const root = document.getElementById("app")!;
 try {
-	Router.mount(root)
+	Router.mount(root);
 } catch (e) {
 	root.replaceWith(document.createTextNode("" + e));
 	throw e;

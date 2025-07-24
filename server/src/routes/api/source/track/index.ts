@@ -3,11 +3,9 @@ import { Readable } from "node:stream";
 import { createHandler } from "hono-file-router";
 import { stream } from "hono/streaming";
 import { Result, t } from "try";
-import { AddRecording, GetRecording } from "../../../../db/db";
-import { sourceModules } from "../../../../index"
-import { MusicBrainz } from "../../../../../../src/utils/MusicBrainz";
+import { AddRecording, DeleteRecording, GetRecording } from "../../../../db/db";
+import { sourceModules, mb } from "../../../../index";
 import mime from "mime";
-import { MB_URL } from "../../../../../.env";
 
 export const GET = createHandler(async (c) => {
 	const mbid = c.req.query("mbid");
@@ -17,9 +15,6 @@ export const GET = createHandler(async (c) => {
 	) {
 		return new Response("Bad MBID", { status: 400 });
 	}
-
-	// Get song info by MBID
-	const mb = new MusicBrainz(MB_URL);
 	const recordingInfo = await mb.RecordingInfo(mbid);
 	// TODO: sort related releases, pass selected release to scraper (for sorting responses), pass other listed artist credits (for filtering and sorting)
 	const artist = recordingInfo.artists[0].name;
@@ -43,31 +38,35 @@ export const GET = createHandler(async (c) => {
 			const fileStream = Readable.toWeb(
 				fs.createReadStream(DBReq.filepath)
 			) as ReadableStream<Uint8Array>;
-			
+
 			await stream.pipe(fileStream);
 		});
-		const fileType = mime.getType(DBReq.filepath)
-		if (fileType) response.headers.set("Content-Type", fileType)
+		const fileType = mime.getType(DBReq.filepath);
+		if (fileType) response.headers.set("Content-Type", fileType);
 
 		return response;
 	}
 
-	const preferredSource = sourceModules.get(source)
-	const usedSources: string[] = []
+	const preferredSource = sourceModules.get(source);
+	const usedSources: string[] = [];
 	// Prioritize client-specified src
 	if (preferredSource) {
-		const searchResults = await preferredSource.Search(artist, songTitle, keywords);
+		const searchResults = await preferredSource.Search(
+			artist,
+			songTitle,
+			keywords
+		);
 
 		// sort results...
 		console.log(searchResults);
-		// TODO: have a number of different tries for results in .env and retry them here 
+		// TODO: have a number of different tries for results in .env and retry them here
 
-		filePath = await t(
-			preferredSource.Download(searchResults[0])
-		);
-		
+		filePath = await t(preferredSource.Download(searchResults[0]));
+
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		filePath.ok ? AddRecording(mbid, filePath.value, source) : usedSources.push(source)
+		filePath.ok
+			? AddRecording(mbid, filePath.value, source)
+			: usedSources.push(source);
 	}
 
 	if (!filePath || !filePath.ok) {
@@ -75,15 +74,13 @@ export const GET = createHandler(async (c) => {
 		// Go by order
 		for (const source of sourceModules) {
 			if (usedSources.includes(source[0])) continue;
-			const module = source[1]
+			const module = source[1];
 			const searchResults = await module.Search(artist, songTitle, keywords);
 
 			// sort results...
 			console.log(searchResults);
-	
-			filePath = await t(
-				module.Download(searchResults[0])
-			);
+
+			filePath = await t(module.Download(searchResults[0]));
 			if (filePath.ok) {
 				AddRecording(mbid, filePath.value, source[0]);
 				break;
@@ -97,7 +94,7 @@ export const GET = createHandler(async (c) => {
 			status: 404,
 		});
 	}
-	
+
 	const response = stream(c, async (stream) => {
 		const fileStream = Readable.toWeb(
 			fs.createReadStream(filePath.value)
@@ -105,8 +102,41 @@ export const GET = createHandler(async (c) => {
 
 		await stream.pipe(fileStream);
 	});
-	const fileType = mime.getType(filePath.value)
-	if (fileType) response.headers.set("Content-Type", fileType)
+	const fileType = mime.getType(filePath.value);
+	if (fileType) response.headers.set("Content-Type", fileType);
 
 	return response;
+});
+
+export const DELETE = createHandler(async (c) => {
+	const mbid = c.req.query("mbid");
+	if (
+		!mbid ||
+		!mbid.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g)
+	) {
+		return new Response("Bad MBID", { status: 400 });
+	}
+
+	console.log(`Checking DB to delete ${mbid} . . .`);
+	const DBReq = GetRecording(mbid);
+	console.log(DBReq);
+	if (!DBReq) {
+		return new Response("Not Found", {
+			status: 404,
+		});
+	}
+	console.log(`File in cache: ${DBReq.filepath}\nDeleting ${mbid}. . .`);
+	// TODO: download anyway if flag is fixed to try specific source that isn't cached or if some kind of force flag sent
+	DeleteRecording(mbid);
+	// TODO: Maybe make this optional?
+	console.log(`Deleting ${DBReq.filepath} . . .`);
+	const result = await t(() => fs.unlinkSync(DBReq.filepath));
+	if (!result.ok) {
+		return new Response(`${result.error}`, {
+			status: 500,
+		});
+	}
+	console.log("Deleted.");
+
+	return new Response(mbid, { status: 200 });
 });

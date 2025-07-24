@@ -188,7 +188,7 @@ export class MusicBrainz {
 			releaseGroups: [],
 		};
 
-		// TODO: We can type this more deliberately. 
+		// TODO: We can type this more deliberately.
 		const releaseGroups: ReleaseGroupList = {};
 
 		for (const releaseGroup in artistFetch["release-groups"]) {
@@ -235,7 +235,7 @@ export class MusicBrainz {
 
 	// Search recordings
 	async SearchSongs(query: string) {
-		query = "\"" + query.replaceAll(/ /g, "\" \"") + "\"";
+		query = '"' + query.replaceAll(/ /g, '" "') + '"';
 		const data = await this.queryApi(
 			`recording/?query=${encodeURIComponent(query)}&limit=100&fmt=json`
 		);
@@ -262,12 +262,14 @@ export class MusicBrainz {
 				score: recording.score,
 			};
 
-			recording["artist-credit"].forEach((artist: { artist: { name: any; id: any; }; }) => {
-				recordingResult.artists.push({
-					name: artist.artist.name,
-					mbid: artist.artist.id,
-				});
-			});
+			recording["artist-credit"].forEach(
+				(artist: { artist: { name: any; id: any } }) => {
+					recordingResult.artists.push({
+						name: artist.artist.name,
+						mbid: artist.artist.id,
+					});
+				}
+			);
 
 			recording.releases.forEach((release: any) => {
 				recordingResult.versions.push({

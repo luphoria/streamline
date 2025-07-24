@@ -7,7 +7,6 @@ export const Settings: Component<
 		apiUrl: string;
 	}
 > = function (cx) {
-	// TODO: Populate options by .env
 	cx.mount = () => {
 		this.apiUrl = store.MB_URL;
 	};
@@ -51,11 +50,11 @@ Settings.style = css`
 	}
 
 	.settings-row {
-	  display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 1rem;
 	}
 
 	input[type="text"] {
@@ -63,9 +62,9 @@ Settings.style = css`
 	}
 
 	.h-group {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 0.5rem;
-    }	
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.5rem;
+	}
 `;

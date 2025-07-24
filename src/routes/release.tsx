@@ -6,16 +6,17 @@ import Icon from "../components/icon";
 import CoverArt from "../components/coverart";
 import store from "../store";
 
-const Release: Component<
-	{
-		release: Awaited<ReturnType<MusicBrainz["ReleaseInfo"]>>;
-		coverArt?: string | undefined;
-	}
-> = function () {
+const Release: Component<{
+	release: Awaited<ReturnType<MusicBrainz["ReleaseInfo"]>>;
+	coverArt?: string | undefined;
+}> = function () {
 	return (
 		<div>
 			<div class="release-header">
-				<CoverArt src={this.coverArt ? this.coverArt : this.release.coverArt} size={250} />
+				<CoverArt
+					src={this.coverArt ? this.coverArt : this.release.coverArt}
+					size={250}
+				/>
 				<h3 id="release-title">{this.release.title}</h3>
 				<h4 id="release-artist">
 					{use(this.release.artists).mapEach((artist) => {
@@ -51,17 +52,17 @@ Release.style = css`
 		margin: 0;
 	}
 
-    ol {
+	ol {
 		padding: 0;
 		margin-left: 1em;
 		width: 100%;
-    }
+	}
 
 	li {
 		width: 100%;
 		padding: 0.5rem;
 		border-bottom: 1px solid #999;
-		font-size: .95rem;
+		font-size: 0.95rem;
 	}
 `;
 
@@ -86,7 +87,7 @@ export const ReleaseView: Component<
 		}
 		this.downloadStatus = <div>{await response.value.text()}</div>;
 	};
-	
+
 	const updateReleases = async (mbid: string) => {
 		this.releaseEl = (
 			<div class="loader">
@@ -95,9 +96,7 @@ export const ReleaseView: Component<
 		);
 		const release = await window.mb.ReleaseInfo(mbid);
 		const coverArtUrl = await window.mb.HdCoverArtUrl(mbid);
-		this.releaseEl = (
-			<Release release={release} coverArt={coverArtUrl} />
-		);
+		this.releaseEl = <Release release={release} coverArt={coverArtUrl} />;
 	};
 
 	use(this.mbid).listen(updateReleases);
