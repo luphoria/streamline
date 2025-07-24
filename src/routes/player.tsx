@@ -9,6 +9,7 @@ export const Player: Component<
 	{
 		player: HTMLElement;
 		link: string | undefined;
+		queue: string;
 		mbid: string;
 	}
 > = function () {
@@ -54,7 +55,7 @@ export const Player: Component<
 			return;
 		}
 		const recordingInfo = await window.mb.RecordingInfo(mbid);
-		window.webamp.setTracksToPlay([
+		const track = [
 			{
 				metaData: {
 					title: recordingInfo.title,
@@ -62,7 +63,8 @@ export const Player: Component<
 				},
 				blob,
 			},
-		]);
+		]
+		this.queue ? window.webamp.appendTracks(track) : window.webamp.setTracksToPlay(track)
 	};
 
 	const deleteCached = async (mbid: string) => {

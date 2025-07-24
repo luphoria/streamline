@@ -56,6 +56,9 @@ export const ResultItem: Component<
 				<button on:click={() => router.navigate(`/play/${this.song.mbid}`)}>
 					Play
 				</button>
+				<button on:click={() => router.navigate(`/play/${this.song.mbid}/true`)}>
+					Add to Queue
+				</button>
 				<button
 					on:click={() =>
 						router.navigate(`/release/${this.mbid}`)
