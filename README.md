@@ -1,32 +1,26 @@
 # streamline
+project dedicated to bring the music to metadata - NOT the other way around. Streamline works as an interface to the entire library catalog of MusicBrainz, and per user request, finding audio for the song or release requested by the user!
 
-Streamline is a project dedicated to bring the music to metadata - NOT the other way around. Streamline indexes the entire catalog of MusicBrainz, and per user request, find audio for the release requested by the user.
-
-## TODO
-
-https://github.com/users/luphoria/projects/1
+# Put a screenshot here, or something, probably
 
 ## Install
 
-### Requires
-
-- https://github.com/slskd/slskd
-- https://github.com/yt-dlp/yt-dlp/ (LATEST)
-- https://pnpm.io/installation
+### Dependencies
+- Streamline itself runs on Node.js (v20 or higher), and uses `pnpm` for node package management.
+- Each plugin (i.e. `server/sources/slsk`, `server/sources/yt-dlp`) has its own related configuration (typically they rely on a separate running HTTP server or local binary); implementations are declared in `server/.env.js.example`. For ease of access, some existing plugins are included and have examples included in the repository. 
+ * The SoundCloud and YouTube example plugins both rely on [yt-dlp](https://yt-dlp). 
+ * The SoulSeek plugin relies on 
 
 ### Setup
-
-- Copy `.env.js.example` to `.env.js`.
-- `slskd.yml`:
-  - Create a SoulSeek account (on Nicotine+ is easy) and add the username and password to `soulseek: username` and `soulseek: password`.
-  - Note the `directories: downloads` configuration and add it to `.env.js` under `slskd.path`.
-  - Enable `web: authentication: api_key` and create any api key, then add it to `.env.js` under `slskd.apikey`.
-  - The other default .env.js settings should work by default unless you've changed other parts of slskd config.
-- yt-dlp should need no additional configuration, but create a youtube downloads folder and set that to the path in `.env.js`.
-  - Ensure that yt-dlp is at the latest version (as of writing: `2025.05.22` is confirmed to work). Some recent-but-outdated versions dont work.
-  - If `yt-dlp` is not in your PATH, set `ytdlp.binary` in `.env.js` to the path to the correct binary.
-- `pnpm i`
+- Configuring the Streamline server can be done from the `server/.env.js` file. `server/.env.js.example` is included with explanations for what your configuration should look like. 
+- Add source plugins in the `server/sources` folder, then define and configure them in `server/.env.js`. **Example plugins have already been included for ease of access!** These plugins are *example implementations* for reference when creating your own, but they also work out of the box, as described. 
+- `pnpm i` will install all of the node dependencies. 
 
 ## Run
 
 `pnpm run dev` (make sure slskd is running as well).
+
+## TODO
+Feel free to contribute!!
+
+https://github.com/users/luphoria/projects/1
