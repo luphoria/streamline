@@ -2,7 +2,7 @@ import { createHandler } from "hono-file-router";
 import { t } from "try";
 import { AddRecording, GetRecording } from "../../../../db/db";
 import { MusicBrainz } from "../../../../../../src/utils/MusicBrainz";
-import { MB_URL, sources } from "../../../../../.env";
+import { MB_URL } from "../../../../../.env";
 import { sourceModules } from "../../../../index";
 
 export const GET = createHandler(async (c) => {

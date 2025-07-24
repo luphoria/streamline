@@ -7,7 +7,7 @@ import { AddRecording, GetRecording } from "../../../../db/db";
 import { sourceModules } from "../../../../index"
 import { MusicBrainz } from "../../../../../../src/utils/MusicBrainz";
 import mime from "mime";
-import { MB_URL, sources } from "../../../../../.env";
+import { MB_URL } from "../../../../../.env";
 
 export const GET = createHandler(async (c) => {
 	const mbid = c.req.query("mbid");
@@ -39,13 +39,17 @@ export const GET = createHandler(async (c) => {
 		console.log(`File already in cache: ${DBReq.filepath}`);
 		// TODO: download anyway if flag is fixed to try specific source that isn't cached or if some kind of force flag sent
 
-		return stream(c, async (stream) => {
+		const response = stream(c, async (stream) => {
 			const fileStream = Readable.toWeb(
 				fs.createReadStream(DBReq.filepath)
 			) as ReadableStream<Uint8Array>;
 			
 			await stream.pipe(fileStream);
 		});
+		const fileType = mime.getType(DBReq.filepath)
+		if (fileType) response.headers.set("Content-Type", fileType)
+
+		return response;
 	}
 
 	const preferredSource = sourceModules.get(source)

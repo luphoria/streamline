@@ -9,17 +9,19 @@ export const slskd = {
 
 export const ytdlp = {
 	binary: "yt-dlp",
-	path: "/path/to/set/yt-dlp/downloads/",
+	path: "./music/soundcloud",
 };
 
 export const soundcloud = {
 	ytdlpBinary: "yt-dlp",
-	path: "/path/to/set/sc/downloads/",
+	path: "./music/yt-dlp",
 };
 
 export const qobuz = {
 	qobuzDlUrl: "https://eu.qobuz.squid.wtf",
-	path: "C:\\Users\\user\\streamline\\tests\\qobuz\\",
+	path: "./music/qobuz/",
 };
 
+// config options that get sent down to the client
 export const MB_URL = "https://musicbrainz.org/ws/2/";
+export const defaultSource = "qobuz";
