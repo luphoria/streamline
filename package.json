@@ -16,7 +16,6 @@
 		"better-sqlite3": "^12.2.0",
 		"dompurify": "^3.2.6",
 		"dreamland": "github:MercuryWorkshop/dreamlandjs#vdom",
-		"dreamland-router": "github:MercuryWorkshop/dreamland2-router",
 		"hono": "^4.8.5",
 		"hono-file-router": "github:Percslol/hono-file-router",
 		"is-mobile": "^5.0.0",

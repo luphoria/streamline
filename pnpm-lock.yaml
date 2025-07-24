@@ -20,9 +20,6 @@ importers:
       dreamland:
         specifier: github:MercuryWorkshop/dreamlandjs#vdom
         version: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/12a3f5e88e2f4821746023538d90d2c2ee1389ca
-      dreamland-router:
-        specifier: github:MercuryWorkshop/dreamland2-router
-        version: '@dreamlandjs/dreamland-router@https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5'
       hono:
         specifier: ^4.8.5
         version: 4.8.5
@@ -114,10 +111,6 @@ packages:
   '@babel/runtime@7.28.2':
     resolution: {integrity: sha512-KHp2IflsnGywDjBWDkR9iEqiWSpc8GIi0lgTT3mOElT0PP1tG26P4tmFI2YvAdzgq9RGyoHZQEIEdZy6Ec5xCA==}
     engines: {node: '>=6.9.0'}
-
-  '@dreamlandjs/dreamland-router@https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5':
-    resolution: {tarball: https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5}
-    version: 1.0.0
 
   '@esbuild/aix-ppc64@0.25.8':
     resolution: {integrity: sha512-urAvrUedIqEiFR3FYSLTWQgLu5tb+m0qZw0NBEasUeo6wuqatkMDaRT+1uABiGXEu5vqgPd7FGE1BhsAIy9QVA==}
@@ -1986,10 +1979,6 @@ snapshots:
   '@assemblyscript/loader@0.17.14': {}
 
   '@babel/runtime@7.28.2': {}
-
-  '@dreamlandjs/dreamland-router@https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5':
-    dependencies:
-      dreamland: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/12a3f5e88e2f4821746023538d90d2c2ee1389ca
 
   '@esbuild/aix-ppc64@0.25.8':
     optional: true
