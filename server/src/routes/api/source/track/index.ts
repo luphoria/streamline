@@ -94,7 +94,7 @@ export const GET = createHandler(async (c) => {
 		});
 	}
 	
-	const responseStream = stream(c, async (stream) => {
+	const response = stream(c, async (stream) => {
 		const fileStream = Readable.toWeb(
 			fs.createReadStream(filePath.value)
 		) as ReadableStream<Uint8Array>;
@@ -102,7 +102,7 @@ export const GET = createHandler(async (c) => {
 		await stream.pipe(fileStream);
 	});
 	const fileType = mime.getType(filePath.value)
-	if (fileType) c.header("Content-Type", fileType)
+	if (fileType) response.headers.set("Content-Type", fileType)
 
-	return responseStream;
+	return response;
 });

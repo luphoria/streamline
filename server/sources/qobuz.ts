@@ -112,7 +112,7 @@ export async function Download(searchResult) {
 	});
 	const stream = await response.arrayBuffer();
 
-    const filePath = qobuz.path + searchResult.id
+    const filePath = qobuz.path + searchResult.id + ".flac"
 
 	await fs.writeFileSync(
 		filePath,
