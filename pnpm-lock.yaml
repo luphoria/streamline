@@ -19,7 +19,7 @@ importers:
         version: 3.2.6
       dreamland:
         specifier: github:MercuryWorkshop/dreamlandjs#vdom
-        version: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/c9495fa4e08df0d2558b4db4668ca03f6ed206a9
+        version: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/13d3fff8af62fb0d5718ce568e821ba554ff44cb
       dreamland-router:
         specifier: github:MercuryWorkshop/dreamland2-router
         version: '@dreamlandjs/dreamland-router@https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5'
@@ -27,8 +27,8 @@ importers:
         specifier: ^4.8.5
         version: 4.8.5
       hono-file-router:
-        specifier: ^0.0.5
-        version: 0.0.5
+        specifier: github:Percslol/hono-file-router
+        version: https://codeload.github.com/Percslol/hono-file-router/tar.gz/f6eb706b865c00558abe5560deb802bf5b9e0805
       is-mobile:
         specifier: ^5.0.0
         version: 5.0.0
@@ -806,8 +806,8 @@ packages:
     resolution: {integrity: sha512-Q4sgBT60gzd0BB0lSyYD3xM4YxrXA9y4uBDof1JNYGzOXrQdQ6yX+7XIAqoFOGQFOTK1D3Hts5OllpxMDZFONQ==}
     engines: {node: '>=12'}
 
-  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/c9495fa4e08df0d2558b4db4668ca03f6ed206a9:
-    resolution: {tarball: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/c9495fa4e08df0d2558b4db4668ca03f6ed206a9}
+  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/13d3fff8af62fb0d5718ce568e821ba554ff44cb:
+    resolution: {tarball: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/13d3fff8af62fb0d5718ce568e821ba554ff44cb}
     version: 0.1.0
 
   dunder-proto@1.0.1:
@@ -1080,8 +1080,9 @@ packages:
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
-  hono-file-router@0.0.5:
-    resolution: {integrity: sha512-oQj3laYyhsCN6gvAKqek7TQ3xHUfla4kjwrL5tY+QLnT/jyvQ48nCnzmpOVv9vQQOE3BKjHINuEiLjN49RXsYQ==}
+  hono-file-router@https://codeload.github.com/Percslol/hono-file-router/tar.gz/f6eb706b865c00558abe5560deb802bf5b9e0805:
+    resolution: {tarball: https://codeload.github.com/Percslol/hono-file-router/tar.gz/f6eb706b865c00558abe5560deb802bf5b9e0805}
+    version: 0.0.5
 
   hono@4.8.5:
     resolution: {integrity: sha512-Up2cQbtNz1s111qpnnECdTGqSIUIhZJMLikdKkshebQSEBcoUKq6XJayLGqSZWidiH0zfHRCJqFu062Mz5UuRA==}
@@ -1980,7 +1981,7 @@ snapshots:
 
   '@dreamlandjs/dreamland-router@https://codeload.github.com/MercuryWorkshop/dreamland2-router/tar.gz/4def9e18cf6a5cd20d609d0799b1a5a2570f39a5':
     dependencies:
-      dreamland: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/c9495fa4e08df0d2558b4db4668ca03f6ed206a9
+      dreamland: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/13d3fff8af62fb0d5718ce568e821ba554ff44cb
 
   '@esbuild/aix-ppc64@0.25.8':
     optional: true
@@ -2632,7 +2633,7 @@ snapshots:
 
   dotenv@17.2.0: {}
 
-  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/c9495fa4e08df0d2558b4db4668ca03f6ed206a9:
+  dreamland@https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/13d3fff8af62fb0d5718ce568e821ba554ff44cb:
     dependencies:
       domhandler: 5.0.3
       htm: 3.1.1
@@ -3002,7 +3003,7 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
-  hono-file-router@0.0.5:
+  hono-file-router@https://codeload.github.com/Percslol/hono-file-router/tar.gz/f6eb706b865c00558abe5560deb802bf5b9e0805:
     dependencies:
       hono: 4.8.5
 

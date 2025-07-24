@@ -1,6 +1,8 @@
 import fs from "node:fs";
-import { qobuz } from "../.env.js";
-import { AddRecording } from "../server/db/db.js";
+import { qobuz } from "../../.env.js";
+
+export const Name = "qobuz";
+export const friendlyName = "Qobuz";
 
 export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
 	const searchQuery = `${queryArtist} - ${queryTitle}`;
@@ -41,12 +43,12 @@ export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
 		totalResults = searchData.data.tracks.total;
 		if (totalResults > 25) totalResults = 25;
 
-		for (let result in reqResults) {
+		for (const result in reqResults) {
 			searchResults.push(reqResults[result]);
 		}
 	}
 
-	for (let result in searchResults) {
+	for (const result in searchResults) {
 		resultsClean.push({
 			artist: searchResults[result].performer.name.replaceAll(/[()[\].!?/’'"]/g, "").toLowerCase(),
 			title: searchResults[result].title.replaceAll(/[()[\].!?/’'"]/g, "").toLowerCase(),
@@ -86,12 +88,12 @@ export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
 		});
 	}
 
-	for (let result in resultsClean) console.log(resultsClean[result]);
+	for (const result in resultsClean) console.log(resultsClean[result]);
 
 	return resultsClean;
 }
 
-export async function Download(searchResult, mbid) {
+export async function Download(searchResult) {
     let data = await fetch(
 		`${qobuz.qobuzDlUrl}/api/download-music?track_id=${searchResult.id}&quality=27`,
 		{
@@ -105,10 +107,10 @@ export async function Download(searchResult, mbid) {
 	data = await data.json();
 	const streamUrl = data["data"]["url"];
 
-	let stream = await fetch(streamUrl, {
+	const response = await fetch(streamUrl, {
 		method: "GET",
 	});
-	stream = await stream.arrayBuffer();
+	const stream = await response.arrayBuffer();
 
     const filePath = qobuz.path + searchResult.id
 
@@ -116,8 +118,6 @@ export async function Download(searchResult, mbid) {
 		filePath,
 		await Buffer.from(stream)
 	);
-
-    AddRecording(mbid, filePath, "qobuz");
 
 	return filePath;
 }

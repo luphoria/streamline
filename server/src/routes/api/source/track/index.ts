@@ -2,10 +2,11 @@ import fs from "node:fs";
 import { Readable } from "node:stream";
 import { createHandler } from "hono-file-router";
 import { stream } from "hono/streaming";
-import { t } from "try";
-import { GetRecording } from "../../../../db/db.js";
-import { MusicBrainz } from "../../../../../src/utils/MusicBrainz.js";
-import { MB_URL, sources } from "../../../../../.env.js";
+import { Result, t } from "try";
+import { AddRecording, GetRecording } from "../../../../db/db.js";
+import { sourceModules } from "../../../../index.js"
+import { MusicBrainz } from "../../../../../../src/utils/MusicBrainz.js";
+import { MB_URL, sources } from "../../../../../../.env.js";
 
 export const GET = createHandler(async (c) => {
 	const mbid = c.req.query("mbid");
@@ -28,7 +29,7 @@ export const GET = createHandler(async (c) => {
 	console.log(keywords);
 
 	const source = c.req.query("source") || "";
-	let filePath;
+	let filePath: Result<string> | undefined;
 
 	console.log("Checking DB for MBID . . .");
 	const DBReq = GetRecording(mbid);
@@ -41,58 +42,57 @@ export const GET = createHandler(async (c) => {
 			const fileStream = Readable.toWeb(
 				fs.createReadStream(DBReq.filepath)
 			) as ReadableStream<Uint8Array>;
-
+			
 			await stream.pipe(fileStream);
 		});
 	}
 
-	// Fetch all sourcing modules (from .env.js)
-	const sourceModules = {};
-
-	for (const source in sources) {
-		// Dynamically import each module by its path. (Does the file:/// uri work x-platform?)
-		sourceModules[sources[source].name] = (
-			await import(`file:///${sources[source].path}`)
-		);
-	}
-
+	const preferredSource = sourceModules.get(source)
+	const usedSources: string[] = []
 	// Prioritize client-specified src
-	if (sourceModules[source]) {
-		let searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
+	if (preferredSource) {
+		const searchResults = await preferredSource.Search(artist, songTitle, keywords);
 
 		// sort results...
+		console.log(searchResults);
 		// TODO: have a number of different tries for results in .env and retry them here 
 
 		filePath = await t(
-			sourceModules[source].Download(searchResults[0], mbid)
+			preferredSource.Download(searchResults[0])
 		);
-		if (!filePath.ok) delete sourceModules[source];
-		console.log(filePath.error)
+		
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+		filePath.ok ? AddRecording(mbid, filePath.value, source) : usedSources.push(source)
 	}
 
 	if (!filePath || !filePath.ok) {
 		console.log("Source not yet OK");
 		// Go by order
-		for (const source in sourceModules) {
-			let searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
+		for (const source of sourceModules) {
+			if (usedSources.includes(source[0])) continue;
+			const module = source[1]
+			const searchResults = await module.Search(artist, songTitle, keywords);
 
 			// sort results...
 			console.log(searchResults);
 	
 			filePath = await t(
-				sourceModules[source].Download(searchResults[0], mbid)
+				module.Download(searchResults[0])
 			);
-			if (filePath.ok) break;
+			if (filePath.ok) {
+				AddRecording(mbid, filePath.value, source[0]);
+				break;
+			}
 			console.log("Trying another source . . . ");
 		}
 	}
 
-	if (!filePath.ok) {
+	if (!filePath || !filePath.ok) {
 		return new Response("No sources were able to handle your request :(", {
 			status: 404,
 		});
 	}
-
+	
 	return stream(c, async (stream) => {
 		const fileStream = Readable.toWeb(
 			fs.createReadStream(filePath.value)

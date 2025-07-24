@@ -1,8 +1,9 @@
 import { createHandler } from "hono-file-router";
 import { t } from "try";
-import { GetRecording } from "../../../../db/db.js";
-import { MusicBrainz } from "../../../../../src/utils/MusicBrainz.js";
-import { MB_URL, sources } from "../../../../../.env.js";
+import { AddRecording, GetRecording } from "../../../../db/db.js";
+import { MusicBrainz } from "../../../../../../src/utils/MusicBrainz.js";
+import { MB_URL, sources } from "../../../../../../.env.js";
+import { sourceModules } from "../../../../index.js";
 
 export const GET = createHandler(async (c) => {
 	const mbid = c.req.query("mbid");
@@ -44,21 +45,12 @@ export const GET = createHandler(async (c) => {
 			};
 			continue;
 		}
-		// Fetch all sourcing modules (from .env.js)
-		const sourceModules = {};
-
-		for (const source in sources) {
-			// Dynamically import each module by its path. (Does the file:/// uri work x-platform?)
-			sourceModules[sources[source].name] = (
-				await import(`file:///${sources[source].path}`)
-			);
-		}
 
 		let stream;
 		// Prioritize client-specified src
 		usedSource = source;
 
-		let searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
+		const searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
 
 		// sort results
 
@@ -73,7 +65,7 @@ export const GET = createHandler(async (c) => {
 			for (const source in sourceModules) {
 				usedSource = source;
 				console.log(`Trying source ${usedSource} . . . `)
-				let searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
+				const searchResults = await sourceModules[source].Search(artist, songTitle, keywords);
 
 				// sort results
 		
@@ -81,6 +73,7 @@ export const GET = createHandler(async (c) => {
 					sourceModules[source].Download(searchResults[0], releaseInfo.trackList[track].mbid)
 				);
 				if (stream.ok) {
+					AddRecording(mbid, stream.value, source);
 					break;
 				}
 				console.log("Trying another source . . . ");

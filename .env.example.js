@@ -22,21 +22,4 @@ export const qobuz = {
 	path: "C:\\Users\\user\\streamline\\tests\\qobuz\\",
 };
 
-export const sources = [
-		{
-		name: "qobuz",
-		path: "C:\\Users\\user\\streamline\\sources\\qobuz.ts",
-	},
-	{
-		name: "slsk",
-		path: "C:\\Users\\user\\streamline\\sources\\slsk.ts",
-	},
-	{
-		name: "ytdlp",
-		path: "C:\\Users\\user\\streamline\\sources\\yt-dlp.ts",
-	},
-	{
-		name: "soundcloud",
-		path: "C:\\Users\\user\\streamline\\sources\\soundcloud.ts",
-	},
-];
+export const MB_URL = "https://musicbrainz.org/ws/2/";

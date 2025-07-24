@@ -1,9 +1,7 @@
 // Download a file from soulseek and then send it to the client.
 
 import fs from "node:fs";
-import { slskd } from "../.env.js";
-import slskSearch from "./slsk_search";
-import { AddRecording } from "../server/db/db.ts";
+import { slskd } from "../../.env.js";
 
 // Create a search in slskd
 const CreateSearch = async (query) => {
@@ -186,6 +184,9 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 	};
 };
 
+export const Name = "slskd";
+export const friendlyName = "Soulseek";
+
 export async function Search(artist, title) {
 	let search;
 	const query = `${artist} - ${title}`
@@ -269,8 +270,7 @@ export async function Search(artist, title) {
 
 
 export async function Download(
-	searchResult: { username: string; files: any[] },
-	mbid
+	searchResult: { username: string; files: any[] }
 ) {
 	let downloadResult;
 
@@ -308,12 +308,5 @@ export async function Download(
 			}
 		);
 
-	try {
-		const path = `${slskd.path}${filePath}`;
-		AddRecording(mbid, path, "slsk");
-
-		return path;
-	} catch (e) {
-		console.log(e);
-	}
+	return `${slskd.path}${filePath}`;
 }

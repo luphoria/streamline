@@ -1,11 +1,11 @@
 import { exec as nodeExec } from "node:child_process";
-import fs from "node:fs";
-import util from "node:util";
-
-import quote from "shell-quote/quote";
-import { soundcloud } from "../.env";
-import { AddRecording } from "../server/db/db";
 const exec = util.promisify(nodeExec);
+import util from "node:util";
+import quote from "shell-quote/quote";
+import { soundcloud } from "../../.env";
+
+export const Name = "soundcloud";
+export const friendlyName = "Soundcloud";
 
 export async function Search (artist, title, keywords?) {
 	let results: {
@@ -122,7 +122,7 @@ export async function Search (artist, title, keywords?) {
 	return results;
 }
 
-export async function Download (searchResult, mbid) {
+export async function Download (searchResult) {
 	const filePath = (
 		(
 			await exec(
@@ -133,9 +133,6 @@ export async function Download (searchResult, mbid) {
 
 	console.log("===");
 	console.log(filePath);
-
-	// TODO: Create a cache db associating mbid to filepath
-	AddRecording(mbid, filePath, "soundcloud");
 
 	return filePath;
 }

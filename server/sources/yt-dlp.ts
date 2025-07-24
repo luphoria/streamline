@@ -1,12 +1,13 @@
 import { exec as nodeExec } from "node:child_process";
-import fs from "node:fs";
+const exec = util.promisify(nodeExec);
 import util from "node:util";
 
 // import { t } from "try";
 import quote from "shell-quote/quote";
-import { ytdlp } from "../.env";
-import { AddRecording } from "../server/db/db";
-const exec = util.promisify(nodeExec);
+import { ytdlp } from "../../.env";
+
+export const Name = "yt-dlp";
+export const friendlyName = "Youtube";
 
 export async function Search (artist, title, keywords?) {
 	let results: { title: string; id: string; score: number }[] = [];
@@ -117,7 +118,7 @@ export async function Search (artist, title, keywords?) {
 	return results;
 }
 
-export async function Download (searchResult, mbid) {
+export async function Download (searchResult) {
 	console.log(searchResult);
 	const filePath = (
 		await exec(
@@ -125,9 +126,6 @@ export async function Download (searchResult, mbid) {
 		)
 	).stdout.split("\n")[0];
 	console.log(filePath);
-
-	// TODO: Create a cache db associating mbid to filepath
-	AddRecording(mbid, filePath, "yt-dlp");
 
 	return filePath;
 }

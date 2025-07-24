@@ -6,7 +6,7 @@
 		"build": "tsc && vite build",
 		"preview": "vite preview",
 		"dev": "concurrently -n vite,api \"vite --host\" \"npm run api\"",
-		"api": "nodemon ./server/index.ts",
+		"api": "nodemon ./server/src/index.ts",
 		"format": "prettier --write .",
 		"lint": "eslint ./src/",
 		"lint:fix": "eslint ./src/ --fix"
@@ -18,7 +18,7 @@
 		"dreamland": "github:MercuryWorkshop/dreamlandjs#vdom",
 		"dreamland-router": "github:MercuryWorkshop/dreamland2-router",
 		"hono": "^4.8.5",
-		"hono-file-router": "^0.0.5",
+		"hono-file-router": "github:Percslol/hono-file-router",
 		"is-mobile": "^5.0.0",
 		"prompt-sync": "^4.2.0",
 		"shell-quote": "^1.8.3",
