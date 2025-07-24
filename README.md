@@ -10,7 +10,7 @@ Streamline works as an interface to the entire library catalog of MusicBrainz, a
 ### Dependencies
 - Streamline itself runs on Node.js (v20 or higher), and uses `pnpm` for node package management.
 - Each plugin (i.e. `server/sources/slsk`, `server/sources/yt-dlp`) has its own related configuration (typically they rely on a separate running HTTP server or local binary); implementations are declared in `server/.env.js.example`. For ease of access, some existing plugins are included and have examples included in the repository. 
- * The SoundCloud and YouTube example plugins both rely on [yt-dlp](https://yt-dlp) **at the latest version**. 
+ * The SoundCloud and YouTube example plugins both rely on [yt-dlp](https://github.com/yt-dlp/yt-dlp) **at the latest version**. 
  * The SoulSeek example plugin relies on [slskd](https://github.com/slskd/slskd). 
  * The Qobuz example plugin uses [Qobuz-DL](https://github.com/QobuzDL/Qobuz-DL). 
 
