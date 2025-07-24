@@ -1,7 +1,7 @@
 # streamline
 Streamline is a project dedicated to bring the music to metadata - NOT the other way around. 
 
-# Put a screenshot here, or something, probably
+<img width="1652" height="1035" alt="Screenshot_2025-07-24_14-13-32" src="https://github.com/user-attachments/assets/ea6f8144-fadf-4b5d-8fed-b8000c928eef" />
 
 Streamline works as an interface to the entire library catalog of MusicBrainz, and per user request, finding audio for the song or release requested by the user!
 
