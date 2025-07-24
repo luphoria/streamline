@@ -6,6 +6,7 @@ import { Result, t } from "try";
 import { AddRecording, GetRecording } from "../../../../db/db";
 import { sourceModules } from "../../../../index"
 import { MusicBrainz } from "../../../../../../src/utils/MusicBrainz";
+import mime from "mime";
 import { MB_URL, sources } from "../../../../../.env";
 
 export const GET = createHandler(async (c) => {
@@ -93,11 +94,15 @@ export const GET = createHandler(async (c) => {
 		});
 	}
 	
-	return stream(c, async (stream) => {
+	const responseStream = stream(c, async (stream) => {
 		const fileStream = Readable.toWeb(
 			fs.createReadStream(filePath.value)
 		) as ReadableStream<Uint8Array>;
 
 		await stream.pipe(fileStream);
 	});
+	const fileType = mime.getType(filePath.value)
+	if (fileType) c.header("Content-Type", fileType)
+
+	return responseStream;
 });

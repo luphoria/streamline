@@ -32,6 +32,9 @@ importers:
       is-mobile:
         specifier: ^5.0.0
         version: 5.0.0
+      mime:
+        specifier: ^4.0.7
+        version: 4.0.7
       prompt-sync:
         specifier: ^4.2.0
         version: 4.2.0
@@ -1329,6 +1332,11 @@ packages:
 
   milkdrop-preset-utils@0.1.0:
     resolution: {integrity: sha512-yK5y03SN8INC+ssLLYGGsaAHgNxXEUK6PQVV44rg9OAA27F2aPM0tA5uGsDdASH9sgPaAaRVMV5NoEvEkh66Sw==}
+
+  mime@4.0.7:
+    resolution: {integrity: sha512-2OfDPL+e03E0LrXaGYOtTFIYhiuzep94NSsuhrNULq+stylcJedcHdzHtz0atMUuGwJfFYs0YL5xeC/Ca2x0eQ==}
+    engines: {node: '>=16'}
+    hasBin: true
 
   mimic-response@3.1.0:
     resolution: {integrity: sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==}
@@ -3237,6 +3245,8 @@ snapshots:
     dependencies:
       babel-runtime: 6.26.0
       lodash: 4.17.21
+
+  mime@4.0.7: {}
 
   mimic-response@3.1.0: {}
 

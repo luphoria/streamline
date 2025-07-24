@@ -20,6 +20,7 @@
 		"hono": "^4.8.5",
 		"hono-file-router": "github:Percslol/hono-file-router",
 		"is-mobile": "^5.0.0",
+		"mime": "^4.0.7",
 		"prompt-sync": "^4.2.0",
 		"shell-quote": "^1.8.3",
 		"try": "1.0.0-beta.9",
