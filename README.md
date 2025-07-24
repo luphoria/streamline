@@ -8,8 +8,9 @@ project dedicated to bring the music to metadata - NOT the other way around. Str
 ### Dependencies
 - Streamline itself runs on Node.js (v20 or higher), and uses `pnpm` for node package management.
 - Each plugin (i.e. `server/sources/slsk`, `server/sources/yt-dlp`) has its own related configuration (typically they rely on a separate running HTTP server or local binary); implementations are declared in `server/.env.js.example`. For ease of access, some existing plugins are included and have examples included in the repository. 
- * The SoundCloud and YouTube example plugins both rely on [yt-dlp](https://yt-dlp). 
- * The SoulSeek plugin relies on 
+ * The SoundCloud and YouTube example plugins both rely on [yt-dlp](https://yt-dlp) **at the latest version**. 
+ * The SoulSeek example plugin relies on [slskd](https://github.com/slskd/slskd). 
+ * The Qobuz example plugin uses [Qobuz-DL](https://github.com/QobuzDL/Qobuz-DL). 
 
 ### Setup
 - Configuring the Streamline server can be done from the `server/.env.js` file. `server/.env.js.example` is included with explanations for what your configuration should look like. 
@@ -17,8 +18,9 @@ project dedicated to bring the music to metadata - NOT the other way around. Str
 - `pnpm i` will install all of the node dependencies. 
 
 ## Run
+Ensure that your plugin APIs (e.g. slskd, Qobuz-DL) are running as well, and then run
 
-`pnpm run dev` (make sure slskd is running as well).
+`pnpm run dev` 🎉
 
 ## TODO
 Feel free to contribute!!
