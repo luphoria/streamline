@@ -63,9 +63,14 @@ export const GET = createHandler(async (c) => {
 
 		// sort results...
 		console.log(searchResults);
-		// TODO: have a number of different tries for results in .env and retry them here
 
-		filePath = await t(preferredSource.Download(searchResults[0]));
+		let tries = preferredSource.tries ? preferredSource.tries : 3;
+		if (searchResults.length < tries) tries = searchResults.length;
+
+		for (let i = 0; i < tries; i++) {
+			filePath = await t(preferredSource.Download(searchResults[i]));
+			if (filePath.ok) break;
+		}
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		filePath.ok

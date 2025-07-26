@@ -185,6 +185,7 @@ const AwaitDownloadCompletion = async (username, filePath) => {
 
 export const Name = "slsk";
 export const friendlyName = "Soulseek";
+export const tries = slskd.tries ? slskd.tries : 3;
 
 export async function Search(artist, title) {
 	let search;

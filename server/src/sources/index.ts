@@ -1,6 +1,7 @@
 import { StructurePredicate } from "../util/loaders";
 
 export interface Source {
+	tries: number;
 	Name: string;
 	friendlyName: string;
 	Search: (artist: string, title: string, keywords: string) => any[];
