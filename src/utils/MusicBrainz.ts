@@ -9,7 +9,7 @@ export class MusicBrainz {
 		this.apiUrl = apiUrl;
 		this.userAgent = userAgent
 			? userAgent
-			: "python-musicbrainz/0.7.3 ( john.pork42@gmail.com )";
+			: "streamline/0.0.1 (https://github.com/luphoria/streamline) contact@streamline.pn";
 	}
 
 	// should not be used outside of this file. queries musicbrainz api

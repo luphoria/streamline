@@ -16,8 +16,7 @@ const search = async (queryType, queryData) => {
 	let res = await fetch(req, {
 		headers: {
 			// Any UA works but you need some kind of contact information.
-			// We are lying in this UA.
-			"User-Agent": "python-musicbrainz/0.7.3 ( john.pork42@gmail.com )",
+			"User-Agent": "streamline/0.0.1 (https://github.com/luphoria/streamline) contact@streamline.pn",
 		},
 	});
 	console.info(req);
