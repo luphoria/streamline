@@ -30,6 +30,7 @@ export const slskd = {
 	apikey: "YOUR_API_KEY_HERE", !!! You have to declare and create this key
 	path: "/home/[user]/.local/share/slskd/downloads/", // Make sure slskd is set to download here
 	allowFiletypes: [".mp3", ".flac", ".ogg", ".m4a", ".wma"],
+	tries: 3 
 };
 
 export const ytdlp = {
@@ -55,5 +56,6 @@ export const qobuz = {
 	// TODO: Instead shuffle an array of different qobuz-dl instances.
 	qobuzDlUrl: "http://localhost:2222", // https://eu.qobuz.squid.wtf
 	path: "./music/qobuz/",
+	tries: 2
 };
 
