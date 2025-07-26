@@ -67,18 +67,20 @@ export const GET = createHandler(async (c) => {
 		let tries = preferredSource.tries ? preferredSource.tries : 3;
 		if (searchResults.length < tries) tries = searchResults.length;
 
+		let filePath;
+
 		for (let i = 0; i < tries; i++) {
 			filePath = await t(preferredSource.Download(searchResults[i]));
-			if (filePath.ok) break;
+			if (filePath) if (filePath.ok) {
+				AddRecording(mbid, filePath.value, source)
+				break;
+			}
+			usedSources.push(source);
 		}
-
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		filePath.ok
-			? AddRecording(mbid, filePath.value, source)
-			: usedSources.push(source);
 	}
 
 	if (!filePath || !filePath.ok) {
+		usedSources.push(source);
 		console.log("Source not yet OK");
 		// Go by order
 		for (const source of sourceModules) {
@@ -89,7 +91,16 @@ export const GET = createHandler(async (c) => {
 			// sort results...
 			console.log(searchResults);
 
-			filePath = await t(module.Download(searchResults[0]));
+			let tries = module.tries ? module.tries : 1;
+			if (searchResults.length < tries) tries = searchResults.length;
+
+			let filePath;
+	
+			for (let i = 0; i < tries; i++) {
+				filePath = await t(module.Download(searchResults[i]));
+				if (filePath) if (filePath.ok) break;
+			}
+
 			if (filePath.ok) {
 				AddRecording(mbid, filePath.value, source[0]);
 				break;

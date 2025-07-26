@@ -53,12 +53,16 @@ export const GET = createHandler(async (c) => {
 
 		// sort results
 
-		stream = await t(
-			sourceModules[source].Download(
-				searchResults[0],
+		let tries = sourceModules[source].tries ? sourceModules[source].tries : 3;
+		if (searchResults.length < tries) tries = searchResults.length;
+
+		for (let i = 0; i < tries; i++) {
+			stream = await t(
+				sourceModules[source].Download(searchResults[i]),
 				releaseInfo.trackList[track].mbid
-			)
-		);
+			);
+			if (stream) if (stream.ok) break;
+		}
 
 		if (!stream.ok) {
 			delete sourceModules[source];
@@ -75,12 +79,19 @@ export const GET = createHandler(async (c) => {
 
 				// sort results
 
-				stream = await t(
-					sourceModules[source].Download(
-						searchResults[0],
+				let tries = sourceModules[source].tries
+					? sourceModules[source].tries
+					: 1;
+				if (searchResults.length < tries) tries = searchResults.length;
+
+				for (let i = 0; i < tries; i++) {
+					stream = await t(
+						sourceModules[source].Download(searchResults[i]),
 						releaseInfo.trackList[track].mbid
-					)
-				);
+					);
+					if (stream) if (stream.ok) break;
+				}
+
 				if (stream.ok) {
 					AddRecording(mbid, stream.value, source);
 					break;

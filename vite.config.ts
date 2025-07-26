@@ -4,7 +4,7 @@ export default {
 	server: {
 		port: 4321,
 		strictPort: true,
-		allowedHosts: ["vite.percs.dev"],
+		allowedHosts: ["vite.percs.dev", "streamline.luphoria.com"],
 		proxy: {
 			"/api/": {
 				target: "http://localhost:4322/",
