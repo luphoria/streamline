@@ -93,7 +93,7 @@ export const GET = createHandler(async (c) => {
 
 			let tries = module.tries ? module.tries : 1;
 			if (searchResults.length < tries) tries = searchResults.length;
-				
+
 			for (let i = 0; i < tries; i++) {
 				filePath = await t(module.Download(searchResults[i]));
 				if (filePath) if (filePath.ok) {
@@ -101,6 +101,10 @@ export const GET = createHandler(async (c) => {
 					AddRecording(mbid, filePath.value, source[1].Name);
 					break;
 				}
+			}
+
+			if (filePath) if (filePath.ok) {
+				break;
 			}
 
 			console.log("Trying another source . . . ");
