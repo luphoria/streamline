@@ -53,13 +53,13 @@ export class MusicBrainz {
 	// Recording (song)
 	async RecordingInfo(mbid: string) {
 		const recordingFetch = await this.queryApi(
-			`recording/${mbid}?inc=artists+releases&fmt=json`
+			`recording/${mbid}?inc=artists+releases+release-groups&fmt=json`
 		);
 
 		const res: {
 			title: string;
 			artists: { name: string; mbid: string }[];
-			releases: { title: string; disambiguation: boolean; artists: string[] }[];
+			releases: { releaseGroup: string, title: string; disambiguation: string; artists: string[], releaseDate: string }[];
 			length: number;
 			releaseDate: string;
 		} = {
@@ -80,10 +80,10 @@ export class MusicBrainz {
 		for (const release in recordingFetch.releases) {
 			res.releases.push({
 				title: recordingFetch.releases[release]["title"],
-				disambiguation: recordingFetch.releases[release]["disambiguation"]
-					? true
-					: false,
+				disambiguation: recordingFetch.releases[release]["disambiguation"],
 				artists: [],
+				releaseGroup: recordingFetch.releases[release]["release-group"]["id"],
+				releaseDate: recordingFetch.releases[release]["release-group"]["first-release-date"]
 			});
 			for (const artist in recordingFetch.releases[release]["artist-credit"]) {
 				res.artists.push({
@@ -119,6 +119,7 @@ export class MusicBrainz {
 			trackList: { title: string; mbid: string }[];
 			coverArt: any;
 			mbid: string;
+			releaseDate: string
 			releaseGroup: string | null;
 		} = {
 			title: releaseFetch["title"],
@@ -129,6 +130,7 @@ export class MusicBrainz {
 			releaseGroup: releaseFetch["release-group"]
 				? releaseFetch["release-group"]["id"]
 				: null,
+			releaseDate: releaseFetch["first-release-date"]
 		};
 
 		// Populate artists

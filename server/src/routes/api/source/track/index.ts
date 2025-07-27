@@ -72,7 +72,7 @@ export const GET = createHandler(async (c) => {
 			filePath = await t(preferredSource.Download(searchResults[i]));
 			if (filePath) if (filePath.ok) {
 				console.log(`${preferredSource.Name}: File ${artist} - ${songTitle} successfully downloaded!`)
-				AddRecording(mbid, filePath.value, source)
+				AddRecording(mbid, filePath.value, source, recordingInfo.artists, songTitle, recordingInfo.releases[0].releaseGroup, recordingInfo.releaseDate)
 				break;
 			}
 		}
@@ -97,7 +97,7 @@ export const GET = createHandler(async (c) => {
 				filePath = await t(module.Download(searchResults[i]));
 				if (filePath) if (filePath.ok) {
 					console.log(`${source[1].Name}: File ${artist} - ${songTitle} successfully downloaded!`)
-					AddRecording(mbid, filePath.value, source[1].Name);
+					AddRecording(mbid, filePath.value, source[1].Name, recordingInfo.artists, songTitle, recordingInfo.releases[0].releaseGroup, recordingInfo.releaseDate);
 					break;
 				}
 			}
