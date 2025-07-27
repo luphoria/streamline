@@ -54,7 +54,8 @@ export const GET = createHandler(async (c) => {
 	const preferredSource = sourceModules.get(source);
 	const usedSources: string[] = [];
 	// Prioritize client-specified src
-	if (preferredSource) {
+
+	if (preferredSource) { 
 		const searchResults = await preferredSource.Search(
 			artist,
 			songTitle,
@@ -67,11 +68,10 @@ export const GET = createHandler(async (c) => {
 		let tries = preferredSource.tries ? preferredSource.tries : 3;
 		if (searchResults.length < tries) tries = searchResults.length;
 
-		let filePath;
-
 		for (let i = 0; i < tries; i++) {
 			filePath = await t(preferredSource.Download(searchResults[i]));
 			if (filePath) if (filePath.ok) {
+				console.log(`${preferredSource.Name}: File ${artist} - ${songTitle} successfully downloaded!`)
 				AddRecording(mbid, filePath.value, source)
 				break;
 			}
@@ -93,18 +93,16 @@ export const GET = createHandler(async (c) => {
 
 			let tries = module.tries ? module.tries : 1;
 			if (searchResults.length < tries) tries = searchResults.length;
-
-			let filePath;
-	
+				
 			for (let i = 0; i < tries; i++) {
 				filePath = await t(module.Download(searchResults[i]));
-				if (filePath) if (filePath.ok) break;
+				if (filePath) if (filePath.ok) {
+					console.log(`${source[1].Name}: File ${artist} - ${songTitle} successfully downloaded!`)
+					AddRecording(mbid, filePath.value, source[1].Name);
+					break;
+				}
 			}
 
-			if (filePath.ok) {
-				AddRecording(mbid, filePath.value, source[0]);
-				break;
-			}
 			console.log("Trying another source . . . ");
 		}
 	}
