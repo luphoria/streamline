@@ -140,6 +140,7 @@ export const DELETE = createHandler(async (c) => {
 	// TODO: download anyway if flag is fixed to try specific source that isn't cached or if some kind of force flag sent
 	DeleteRecording(mbid);
 	// TODO: Maybe make this optional?
+	/*
 	console.log(`Deleting ${DBReq.filepath} . . .`);
 	const result = await t(() => fs.unlinkSync(DBReq.filepath));
 	if (!result.ok) {
@@ -147,6 +148,7 @@ export const DELETE = createHandler(async (c) => {
 			status: 500,
 		});
 	}
+		*/
 	console.log("Deleted.");
 
 	return new Response(mbid, { status: 200 });

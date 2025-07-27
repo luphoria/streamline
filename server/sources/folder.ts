@@ -14,48 +14,81 @@ const recursiveFolderSync = (folder) => {
 		const filename = path.join(folder, files[file]);
 		const fstat = fs.lstatSync(filename);
 		if (fstat.isDirectory()) recursiveFolderSync(filename);
-		else folderItems[filename.replaceAll(/[()[\].!?’'"]/g, "").toLowerCase()] = filename;
+		else
+			folderItems[filename.replaceAll(/[()[\]!?’'"]/g, "").toLowerCase()] =
+				filename;
 	}
 
-	return folderItems
-}
+	return folderItems;
+};
 
 const loopFolderSync = async () => {
 	console.log(`[folder] Synchronizing folder ${folder.path} . . .`);
 	folderItems = {};
 	recursiveFolderSync(folder.path);
-	console.log(`[folder] Synchronized (${Object.keys(folderItems).length} items)`);
-	setTimeout(loopFolderSync, 60000*5);
-}
+	console.log(
+		`[folder] Synchronized (${Object.keys(folderItems).length} items)`
+	);
+	setTimeout(loopFolderSync, 60000 * 5);
+};
 
 loopFolderSync();
 
 export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
-	let results:{cleanName: string, filename: string, score: number}[] = []; 
+	let results: { cleanName: string; filename: string; score: number }[] = [];
 	for (const item in folderItems) {
 		results.push({
 			cleanName: item,
 			filename: folderItems[item],
-			score: 0
-		})
-	};
+			score: 0,
+		});
+	}
 
-	const queryArtistClean = queryArtist.replaceAll(/[()[\].!?’'"]/g, "").toLowerCase();
-	const queryTitleClean = queryTitle.replaceAll(/[()[\].!?’'"]/g, "").toLowerCase();
-	const albumTitleClean = albumTitle ? albumTitle.replaceAll(/[()[\].!?’'"]/g, "").toLowerCase() : ""
+	const queryArtistClean = queryArtist
+		.replaceAll(/[()[\]!?’'"]/g, "")
+		.toLowerCase();
+	const queryTitleClean = queryTitle
+		.replaceAll(/[()[\]!?’'"]/g, "")
+		.toLowerCase();
+	const albumTitleClean = albumTitle
+		? albumTitle.replaceAll(/[()[\]!?’'"]/g, "").toLowerCase()
+		: "";
 
-	results = results.filter(result => {
-		return result.cleanName.includes(queryArtistClean) && result.cleanName.includes(queryTitleClean);
+	results = results.filter((result) => {
+		return (
+			result.cleanName.includes(queryArtistClean) &&
+			result.cleanName.includes(queryTitleClean)
+		);
 	});
 
-	console.log(`${results.length} items after filtering for query ${queryArtist} and ${queryTitle}`)
+	console.log(
+		`${results.length} items after filtering for query ${queryArtist} and ${queryTitle}`
+	);
 
 	for (let result in results) {
 		//TODO: seconds length
-		if (results[result].cleanName.includes(albumTitleClean)) results[result].score += 15; // Album title
 
-		if(results[result].filename.includes(queryTitle)) results[result].score += 5; // Unsanitized title
-		if(results[result].filename.includes(queryArtist)) results[result].score += 5; // Unsanitized artist
+		// Search for JUST the artist - title (in cases where the filename is XX. artist - title.flac )
+		const resultSplit = results[result].cleanName.split(".");
+		for (let item in resultSplit) {
+			resultSplit[item] = resultSplit[item].replaceAll(" ", "");
+			if (resultSplit[item] == `${queryArtistClean}-${queryTitleClean}`)
+				results[result].score += 20;
+		}
+
+		if (results[result].cleanName.includes(albumTitleClean))
+			results[result].score += 15; // Album title
+		if (
+			results[result].cleanName.includes(
+				`${queryArtistClean} - ${queryTitleClean}`
+			)
+		)
+			results[result].score += 15; // Album title
+
+		if (results[result].filename.includes(queryTitle))
+			results[result].score += 5; // Unsanitized title
+		if (results[result].filename.includes(queryArtist))
+			results[result].score += 5; // Unsanitized artist
 	}
 
 	console.log(results[0]);
