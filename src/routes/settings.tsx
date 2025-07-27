@@ -35,10 +35,11 @@ export const Settings: Component<
 			<div class="settings-row">
 				<span class="title">Download source</span>
 				<select value={use(store.source).bind()}>
-					<option value="yt-dlp">YouTube</option>
-					<option value="slsk">Soulseek</option>
-					<option value="soundcloud">SoundCloud</option>
+					<option value="folder">Music folder</option>
 					<option value="qobuz">Qobuz</option>
+					<option value="slsk">Soulseek</option>
+					<option value="yt-dlp">YouTube</option>
+					<option value="soundcloud">SoundCloud</option>
 				</select>
 			</div>
 		</div>
