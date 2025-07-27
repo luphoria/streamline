@@ -75,7 +75,6 @@ export const GET = createHandler(async (c) => {
 				AddRecording(mbid, filePath.value, source)
 				break;
 			}
-			usedSources.push(source);
 		}
 	}
 
