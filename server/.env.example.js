@@ -4,7 +4,7 @@ export const MB_URL = "https://musicbrainz.org/ws/2/";
 // Default client settings. 
 export const settings = {
 	MB_URL: "https://musicbrainz.org/ws/2/", // Client MusicBrainz API. This can be self-hosted.
-	source: "qobuz", // the default client-requested source
+	source: "folder", // the default client-requested source
 };
 
 // -- -- -- // 
@@ -18,6 +18,11 @@ export const settings = {
    the client-requested source, then (on failure)
    down the list of any other source plugins.
 */ 
+
+export const folder = {
+	path: "C:\\Users\\user\\Music\\!RIPS\\",
+	tries: 1
+};
 
 export const slskd = {
 	// SoulSeek wrapper: https://github.com/slskd/slskd
