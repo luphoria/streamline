@@ -33,7 +33,7 @@ db.exec(`
 	  artists TEXT NOT NULL,
 	  title TEXT NOT NULL,
 	  release TEXT NOT NULL,
-	  release-date TEXT
+	  release_date TEXT
     )
 `);
 /*
@@ -58,9 +58,9 @@ export const AddRecording = (
 	releaseDate?: string
 
 ) => {
-	console.log(`DB: ${artists[0]} - ${title}: ${mbid}/release-${releaseGroup} / ${filepath} (${source})`);
+	console.log(`DB: ${artists[0]} - ${title}: ${mbid}/release-${release} / ${filepath} (${source})`);
 	const insert = db.prepare(
-		"INSERT INTO songs (mbid, filepath, source, artists, title, release, release-date) VALUES (?, ?, ?, ?, ?, ?, ?)"
+		"INSERT INTO songs (mbid, filepath, source, artists, title, release, release_date) VALUES (?, ?, ?, ?, ?, ?, ?)"
 	);
 
 	return insert.run(mbid, filepath, source, JSON.stringify(artists), title, release, releaseDate);

@@ -22,10 +22,10 @@ const Layout: Component<
 	return (
 		<div>
 			<Navbar />
-			<main this={use(this.container).bind()}>
+			<main this={use(this.container)}>
 				<fieldset>{use(this.outlet)}</fieldset>
 			</main>
-			<div id="player" this={use(this.player).bind()}></div>
+			<div id="player" this={use(this.player)}></div>
 		</div>
 	);
 };

@@ -28,13 +28,13 @@ export const Settings: Component<
 					<input
 						type="text"
 						id="musicBrainzApiUrl"
-						value={use(this.apiUrl).bind()}
+						value={use(this.apiUrl)}
 					/>
 				</div>
 			</div>
 			<div class="settings-row">
 				<span class="title">Download source</span>
-				<select value={use(store.source).bind()}>
+				<select value={use(store.source)}>
 					<option value="folder">Music folder</option>
 					<option value="qobuz">Qobuz</option>
 					<option value="slsk">Soulseek</option>

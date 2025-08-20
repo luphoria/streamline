@@ -122,7 +122,7 @@ export const ReleaseView: Component<
 						updateReleases(this.mbid);
 					}}
 				>
-					<input id="releaseMbid" value={use(this.mbid).bind()} type="text" />
+					<input id="releaseMbid" value={use(this.mbid)} type="text" />
 					<button id="releaseButton" type="submit">
 						view release
 					</button>

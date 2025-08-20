@@ -14,7 +14,7 @@ const app = new Hono();
 			path: fileURLToPath(new URL("routes/", import.meta.url)),
 		})
 	);
-	console.log(app);
+	console.log(app.routes)
 })();
 
 // Fetch all sourcing modules (from sources/)

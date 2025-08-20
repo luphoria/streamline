@@ -61,7 +61,7 @@ export const ArtistView: Component<
 					}}
 				>
 					<input
-						value={use(this.mbid).bind()}
+						value={use(this.mbid)}
 						id="artistMbid"
 						placeholder="e0c97a4d-c392-41a9-a374-57af3e3eeab3"
 						type="text"

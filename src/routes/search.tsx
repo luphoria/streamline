@@ -37,7 +37,7 @@ export const ResultItem: Component<
 				</span>
 			</span>
 			<span class="spacer"></span>
-			<select value={use(this.mbid).bind()} name="versions">
+			<select value={use(this.mbid)} name="versions">
 				{this.song.versions.map((release) => {
 					return (
 						<option value={release.mbid}>

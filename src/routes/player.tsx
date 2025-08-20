@@ -117,8 +117,7 @@ export const Player: Component<
 				<input
 					id="recordingMbid"
 					value={use(this.mbid)
-						.map((val) => decodeURIComponent(val))
-						.bind()}
+						.map((val) => decodeURIComponent(val))}
 					type="text"
 				/>
 				<button on:click={() => playSong(this.mbid)}>fetch song</button>

@@ -28,7 +28,7 @@ const Navbar: Component<
 						type="text"
 						id="songSearchValue"
 						placeholder="ARTIST - SONG or search..."
-						value={use(this.query).bind()}
+						value={use(this.query)}
 					/>
 					<button id="songSearchBtn" type="submit">
 						Search!
