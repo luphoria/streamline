@@ -1,7 +1,7 @@
 // Download a file from soulseek and then send it to the client.
 
 import fs from "node:fs";
-import { slskd } from "../.env";
+import { slskd } from "../config";
 
 // Create a search in slskd
 const CreateSearch = async (query) => {

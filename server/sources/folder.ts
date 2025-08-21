@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { folder } from "../.env";
+import { folder } from "../config";
 
 export const Name = "folder";
 export const friendlyName = "Music folder";
@@ -9,6 +9,7 @@ export const tries = folder.tries ? folder.tries : 1;
 let folderItems = {};
 
 const recursiveFolderSync = (folder) => {
+	console.log(`[folder] Synchronizing folder ${folder} . . .`);
 	const files = fs.readdirSync(folder);
 	for (const file in files) {
 		const filename = path.join(folder, files[file]);
@@ -19,20 +20,15 @@ const recursiveFolderSync = (folder) => {
 				filename;
 	}
 
-	return folderItems;
-};
-
-const loopFolderSync = async () => {
-	console.log(`[folder] Synchronizing folder ${folder.path} . . .`);
-	folderItems = {};
-	recursiveFolderSync(folder.path);
 	console.log(
 		`[folder] Synchronized (${Object.keys(folderItems).length} items)`
 	);
-	setTimeout(loopFolderSync, 60000 * 5);
+
+	return folderItems;
 };
 
-loopFolderSync();
+recursiveFolderSync(folder.path);
+setInterval(() => recursiveFolderSync(folder.path), 60000 * 5);
 
 export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
 	let results: { cleanName: string; filename: string; score: number }[] = [];

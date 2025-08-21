@@ -4,7 +4,7 @@ import util from "node:util";
 
 // import { t } from "try";
 import quote from "shell-quote/quote";
-import { ytdlp } from "../.env";
+import { ytdlp } from "../config";
 
 export const Name = "yt-dlp";
 export const friendlyName = "Youtube";

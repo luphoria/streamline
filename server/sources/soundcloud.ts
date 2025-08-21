@@ -2,7 +2,7 @@ import { exec as nodeExec } from "node:child_process";
 const exec = util.promisify(nodeExec);
 import util from "node:util";
 import quote from "shell-quote/quote";
-import { soundcloud } from "../.env";
+import { soundcloud } from "../config";
 
 export const Name = "soundcloud";
 export const friendlyName = "Soundcloud";

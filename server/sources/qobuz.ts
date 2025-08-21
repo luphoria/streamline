@@ -1,10 +1,11 @@
 import fs from "node:fs";
-import { qobuz } from "../.env";
+import path from "node:path";
+import { qobuz } from "../config";
 
 export const Name = "qobuz";
 export const friendlyName = "Qobuz";
 export const tries = qobuz.tries ? qobuz.tries : 2;
-
+ 
 export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
 	const searchQuery = `${queryArtist} - ${queryTitle}`;
 	const searchResults = [];
@@ -122,7 +123,7 @@ export async function Download(searchResult) {
 	});
 	const stream = await response.arrayBuffer();
 
-	const filePath = qobuz.path + searchResult.id + ".flac";
+	const filePath = path.join(qobuz.path, `${searchResult.id}.flac`);
 
 	await fs.writeFileSync(filePath, await Buffer.from(stream));
 

@@ -17,7 +17,7 @@
 		"dompurify": "^3.2.6",
 		"dreamland": "github:MercuryWorkshop/dreamlandjs#vdom",
 		"hono": "^4.9.2",
-		"hono-file-router": "link:/home/codespace/hono-file-router/",
+		"hono-file-router": "github:Percslol/hono-file-router",
 		"honox": "^0.1.44",
 		"is-mobile": "^5.0.0",
 		"mime": "^4.0.7",

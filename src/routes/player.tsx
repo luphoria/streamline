@@ -22,7 +22,7 @@ export const Player: Component<
 			</div>
 		);
 		const response = await t(
-			fetch(`/api/source/track?mbid=${mbid}&source=${store.source}`)
+			fetch(`${store.API_URL}source/track?mbid=${mbid}&source=${store.source}`)
 		);
 		if (!response.ok) {
 			this.player = <div>an error occured: {response.error}</div>;
@@ -69,7 +69,7 @@ export const Player: Component<
 	const deleteCached = async (mbid: string) => {
 		this.player = <div>loading...</div>;
 		const response = await t(
-			fetch(`/api/source/track?mbid=${mbid}`, {
+			fetch(`${store.API_URL}source/track?mbid=${mbid}`, {
 				method: "DELETE",
 			})
 		);

@@ -3,7 +3,7 @@ import { serve } from "@hono/node-server";
 import { createFolderRoute } from "hono-file-router";
 import { fileURLToPath } from "node:url";
 import { loadSources } from "./util/loaders";
-import { settings } from "../.env";
+import { settings } from "../config";
 import { MusicBrainz } from "../../src/utils/MusicBrainz";
 
 const app = new Hono();

@@ -91,7 +91,7 @@ export const ReleaseView: Component<
 	const downloadRelease = async (mbid: string) => {
 		this.downloadStatus = <div>loading...</div>;
 		const response = await t(
-			fetch(`/api/source/release?mbid=${mbid}&source=${store.source}`)
+			fetch(`${store.API_URL}source/release?mbid=${mbid}&source=${store.source}`)
 		);
 		if (!response.ok) {
 			this.downloadStatus = <div>an error occured: {response.error}</div>;
