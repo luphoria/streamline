@@ -18,6 +18,10 @@ export const Settings: Component<{}, {}, {
 			this.sources = [];
 			return;
 		}
+		if (!response.value.ok) {
+			this.sources = [];
+			return;
+		}
 		const data = await response.value.json();
 		this.sources = data;
 		this.sourcesDropdown.value = store.source;

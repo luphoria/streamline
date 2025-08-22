@@ -1,6 +1,6 @@
 import { createHandler } from "hono-file-router";
 import { sourceModules } from "../../../../index";
-import { Source } from "../../../../sources";
+import { Source } from "../../../../structures/sources";
 
 export const GET = createHandler(async (c) => {
 	const sourceList: Partial<Source>[] = [];

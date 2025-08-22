@@ -103,7 +103,7 @@ export const GET = createHandler(async (c) => {
 				}
 			}
 
-			if (filePath) if (filePath.ok) {
+			if (filePath && filePath.ok) {
 				break;
 			}
 
