@@ -48,7 +48,7 @@ export const Settings: Component<{}, {}, {
 				</div>
 			</div>
 			<div class="settings-row">
-				<span class="title">Download source</s pan>
+				<span class="title">Download source</span>
 				<select value={use(store.source)} this={use(this.sourcesDropdown)}>
 					{use(this.sources).mapEach((val) => <option value={val.Name}>{val.friendlyName}</option>)}
 				</select>

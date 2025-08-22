@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@hono/node-server':
         specifier: ^1.19.0
-        version: 1.19.0(hono@4.9.2)
+        version: 1.19.0(hono@4.9.4)
       better-sqlite3:
         specifier: ^12.2.0
         version: 12.2.0
@@ -21,14 +21,14 @@ importers:
         specifier: github:MercuryWorkshop/dreamlandjs#vdom
         version: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/7267cc1031e573bb84843d37aeaf7c0d5ade2796
       hono:
-        specifier: ^4.9.2
-        version: 4.9.2
+        specifier: ^4.9.4
+        version: 4.9.4
       hono-file-router:
         specifier: github:Percslol/hono-file-router
         version: https://codeload.github.com/Percslol/hono-file-router/tar.gz/c0b0f09e3bc1c25658ef25fcec98661d1de96fc2
       honox:
         specifier: ^0.1.44
-        version: 0.1.44(hono@4.9.2)
+        version: 0.1.44(hono@4.9.4)
       is-mobile:
         specifier: ^5.0.0
         version: 5.0.0
@@ -1293,8 +1293,8 @@ packages:
     resolution: {tarball: https://codeload.github.com/Percslol/hono-file-router/tar.gz/c0b0f09e3bc1c25658ef25fcec98661d1de96fc2}
     version: 0.0.5
 
-  hono@4.9.2:
-    resolution: {integrity: sha512-UG2jXGS/gkLH42l/1uROnwXpkjvvxkl3kpopL3LBo27NuaDPI6xHNfuUSilIHcrBkPfl4y0z6y2ByI455TjNRw==}
+  hono@4.9.4:
+    resolution: {integrity: sha512-61hl6MF6ojTl/8QSRu5ran6GXt+6zsngIUN95KzF5v5UjiX/xnrLR358BNRawwIRO49JwUqJqQe3Rb2v559R8Q==}
     engines: {node: '>=16.9.0'}
 
   honox@0.1.44:
@@ -1531,8 +1531,8 @@ packages:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
 
-  magic-string@0.30.17:
-    resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
+  magic-string@0.30.18:
+    resolution: {integrity: sha512-yi8swmWbO17qHhwIBNeeZxTceJMeBvWJaId6dyvTSOwTipqeHhMhOrz6513r1sOKnpvQ7zkhlG8tPrpilwTxHQ==}
 
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
@@ -2447,14 +2447,14 @@ snapshots:
       '@eslint/core': 0.15.2
       levn: 0.4.1
 
-  '@hono/node-server@1.19.0(hono@4.9.2)':
+  '@hono/node-server@1.19.0(hono@4.9.4)':
     dependencies:
-      hono: 4.9.2
+      hono: 4.9.4
 
-  '@hono/vite-dev-server@0.19.1(hono@4.9.2)':
+  '@hono/vite-dev-server@0.19.1(hono@4.9.4)':
     dependencies:
-      '@hono/node-server': 1.19.0(hono@4.9.2)
-      hono: 4.9.2
+      '@hono/node-server': 1.19.0(hono@4.9.4)
+      hono: 4.9.4
       minimatch: 9.0.5
 
   '@humanfs/core@0.19.1': {}
@@ -2779,7 +2779,7 @@ snapshots:
       '@vue/compiler-ssr': 3.5.19
       '@vue/shared': 3.5.19
       estree-walker: 2.0.2
-      magic-string: 0.30.17
+      magic-string: 0.30.18
       postcss: 8.5.6
       source-map-js: 1.2.1
 
@@ -3530,18 +3530,18 @@ snapshots:
 
   hono-file-router@https://codeload.github.com/Percslol/hono-file-router/tar.gz/c0b0f09e3bc1c25658ef25fcec98661d1de96fc2:
     dependencies:
-      hono: 4.9.2
+      hono: 4.9.4
 
-  hono@4.9.2: {}
+  hono@4.9.4: {}
 
-  honox@0.1.44(hono@4.9.2):
+  honox@0.1.44(hono@4.9.4):
     dependencies:
       '@babel/generator': 7.25.6
       '@babel/parser': 7.25.6
       '@babel/traverse': 7.25.6
       '@babel/types': 7.25.6
-      '@hono/vite-dev-server': 0.19.1(hono@4.9.2)
-      hono: 4.9.2
+      '@hono/vite-dev-server': 0.19.1(hono@4.9.4)
+      hono: 4.9.4
       jsonc-parser: 3.3.1
       precinct: 12.1.2
     optionalDependencies:
@@ -3761,7 +3761,7 @@ snapshots:
     dependencies:
       js-tokens: 4.0.0
 
-  magic-string@0.30.17:
+  magic-string@0.30.18:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 

@@ -68,13 +68,13 @@ export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
 	}
 
 	resultsClean = resultsClean.filter((result) => {
-		return result.artist == queryArtist;
+		return result.artist === queryArtist;
 	});
 	resultsClean = resultsClean.filter((result) => {
-		return result.title == queryTitle;
+		return result.title === queryTitle;
 	});
 
-	console.log(resultsClean);
+	console.log("first result filter", resultsClean);
 
 	if (albumTitle) {
 		console.log("Filtering by album: " + albumTitle);
@@ -88,6 +88,7 @@ export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
 		});
 		if (resultsClean.length == 0) resultsClean = _resultsClean; // Failsafe
 	}
+
 	if (length) {
 		console.log("Sorting length");
 		// duration (seconds)
@@ -98,8 +99,7 @@ export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
 			);
 		});
 	}
-
-	for (const result in resultsClean) console.log(resultsClean[result]);
+	console.log("last before return", resultsClean);
 
 	return resultsClean;
 }
@@ -114,7 +114,7 @@ export async function Download(searchResult) {
 			method: "GET",
 		}
 	);
-
+	console.log(data.status)
 	data = await data.json();
 	const streamUrl = data["data"]["url"];
 

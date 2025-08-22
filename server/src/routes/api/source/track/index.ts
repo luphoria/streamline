@@ -63,14 +63,15 @@ export const GET = createHandler(async (c) => {
 		);
 
 		// sort results...
-		console.log(searchResults);
+		console.log("haiaiai :3", searchResults, searchResults.length);
 
 		let tries = preferredSource.tries ? preferredSource.tries : 3;
 		if (searchResults.length < tries) tries = searchResults.length;
 
 		for (let i = 0; i < tries; i++) {
 			filePath = await t(preferredSource.Download(searchResults[i]));
-			if (filePath) if (filePath.ok) {
+			console.log(filePath.ok, filePath.error)
+			if (filePath && filePath.ok) {
 				console.log(`${preferredSource.Name}: File ${artist} - ${songTitle} successfully downloaded!`)
 				AddRecording(mbid, filePath.value, source, recordingInfo.artists, songTitle, recordingInfo.releases[0].releaseGroup, recordingInfo.releaseDate)
 				break;
