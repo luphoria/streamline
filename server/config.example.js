@@ -1,13 +1,13 @@
-// Server settings. 
+// Server settings.
 export const MB_URL = "https://musicbrainz.org/ws/2/";
 
-// Default client settings. 
+// Default client settings.
 export const settings = {
 	MB_URL: "https://musicbrainz.org/ws/2/", // Client MusicBrainz API. This can be self-hosted.
 	source: "folder", // the default client-requested source
 };
 
-// -- -- -- // 
+// -- -- -- //
 
 /* Below are various example configurations for 
    Streamline source plugins which are included
@@ -17,11 +17,11 @@ export const settings = {
    first the cache, then
    the client-requested source, then (on failure)
    down the list of any other source plugins.
-*/ 
+*/
 
 export const folder = {
 	path: "C:\\Users\\user\\Music\\!RIPS\\",
-	tries: 1
+	tries: 1,
 };
 
 export const slskd = {
@@ -36,7 +36,7 @@ export const slskd = {
 	apikey: "YOUR_API_KEY_HERE", // !!! You have to declare and create this key
 	path: "/home/[user]/.local/share/slskd/downloads/", // Make sure slskd is set to download here
 	allowFiletypes: [".mp3", ".flac", ".ogg", ".m4a", ".wma"],
-	tries: 3 
+	tries: 3,
 };
 
 export const ytdlp = {
@@ -46,8 +46,8 @@ export const ytdlp = {
 	(as of writing: `2025.05.22` is confirmed to work, 
 	but stable releases from earlier in the year did not)
 	*/
-	binary: "yt-dlp", // Binary path for yt-dlp. 
-	path: "./music/soundcloud",
+	binary: "yt-dlp", // Binary path for yt-dlp.
+	path: "./music/yt-dlp",
 };
 
 export const soundcloud = {
@@ -56,8 +56,8 @@ export const soundcloud = {
 	(as of writing: `2025.05.22` is confirmed to work, 
 	but stable releases from earlier in the year did not)
 	*/
-	ytdlpBinary: "yt-dlp", // Binary path for yt-dlp (which also includes a soundcloud downloader). 
-	path: "./music/yt-dlp",
+	ytdlpBinary: "yt-dlp", // Binary path for yt-dlp (which also includes a soundcloud downloader).
+	path: "./music/soundcloud",
 };
 
 export const qobuz = {
@@ -67,6 +67,5 @@ export const qobuz = {
 	*/
 	qobuzDlUrl: "http://localhost:2222", // https://eu.qobuz.squid.wtf
 	path: "./music/qobuz/",
-	tries: 2
+	tries: 2,
 };
-

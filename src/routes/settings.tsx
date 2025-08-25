@@ -2,18 +2,21 @@ import { css, type Component } from "dreamland/core";
 import store from "../store";
 import { t } from "try";
 
-
-export const Settings: Component<{}, {}, {
-	sourcesDropdown: HTMLSelectElement;
-	sources: any[]
-}> = function (cx) {
+export const Settings: Component<
+	{},
+	{},
+	{
+		sourcesDropdown: HTMLSelectElement;
+		sources: any[];
+	}
+> = function (cx) {
 	cx.mount = () => {
 		fetchNewSources(store.API_URL);
-	}
+	};
 	this.sources = [];
-	const setMBURL = (url: string) => window.mb.SetApiUrl(url)
+	const setMBURL = (url: string) => window.mb.SetApiUrl(url);
 	const fetchNewSources = async (url: string) => {
-		const response = await t(fetch(`${url}source/list`))
+		const response = await t(fetch(`${url}source/list`));
 		if (!response.ok) {
 			this.sources = [];
 			return;
@@ -44,20 +47,17 @@ export const Settings: Component<{}, {}, {
 			<div class="settings-row">
 				<span class="title">MusicBrainz API URL</span>
 				<div class="h-group">
-					<input
-						type="text"
-						id="musicBrainzApiUrl"
-						value={use(store.MB_URL)}
-					/>
+					<input type="text" id="musicBrainzApiUrl" value={use(store.MB_URL)} />
 				</div>
 			</div>
 			<div class="settings-row">
 				<span class="title">Download source</span>
 				<select value={use(store.source)} this={use(this.sourcesDropdown)}>
-					{use(this.sources).mapEach((val) => <option value={val.Name}>{val.friendlyName}</option>)}
+					{use(this.sources).mapEach((val) => (
+						<option value={val.Name}>{val.friendlyName}</option>
+					))}
 				</select>
 			</div>
-
 		</div>
 	);
 };

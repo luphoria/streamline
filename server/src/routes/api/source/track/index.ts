@@ -55,7 +55,7 @@ export const GET = createHandler(async (c) => {
 	const usedSources: string[] = [];
 	// Prioritize client-specified src
 
-	if (preferredSource) { 
+	if (preferredSource) {
 		const searchResults = await preferredSource.Search(
 			artist,
 			songTitle,
@@ -70,10 +70,20 @@ export const GET = createHandler(async (c) => {
 
 		for (let i = 0; i < tries; i++) {
 			filePath = await t(preferredSource.Download(searchResults[i]));
-			console.log(filePath.ok, filePath.error)
+			console.log(filePath.ok, filePath.error);
 			if (filePath && filePath.ok) {
-				console.log(`${preferredSource.Name}: File ${artist} - ${songTitle} successfully downloaded!`)
-				AddRecording(mbid, filePath.value, source, recordingInfo.artists, songTitle, recordingInfo.releases[0].releaseGroup, recordingInfo.releaseDate)
+				console.log(
+					`${preferredSource.Name}: File ${artist} - ${songTitle} successfully downloaded!`
+				);
+				AddRecording(
+					mbid,
+					filePath.value,
+					source,
+					recordingInfo.artists,
+					songTitle,
+					recordingInfo.releases[0].releaseGroup,
+					recordingInfo.releaseDate
+				);
 				break;
 			}
 		}
@@ -96,11 +106,22 @@ export const GET = createHandler(async (c) => {
 
 			for (let i = 0; i < tries; i++) {
 				filePath = await t(module.Download(searchResults[i]));
-				if (filePath) if (filePath.ok) {
-					console.log(`${source[1].Name}: File ${artist} - ${songTitle} successfully downloaded!`)
-					AddRecording(mbid, filePath.value, source[1].Name, recordingInfo.artists, songTitle, recordingInfo.releases[0].releaseGroup, recordingInfo.releaseDate);
-					break;
-				}
+				if (filePath)
+					if (filePath.ok) {
+						console.log(
+							`${source[1].Name}: File ${artist} - ${songTitle} successfully downloaded!`
+						);
+						AddRecording(
+							mbid,
+							filePath.value,
+							source[1].Name,
+							recordingInfo.artists,
+							songTitle,
+							recordingInfo.releases[0].releaseGroup,
+							recordingInfo.releaseDate
+						);
+						break;
+					}
 			}
 
 			if (filePath && filePath.ok) {
@@ -112,9 +133,15 @@ export const GET = createHandler(async (c) => {
 	}
 
 	if (!filePath || !filePath.ok) {
-		return new Response("No sources were able to handle your request :(", {
-			status: 404,
-		});
+		return c.json(
+			{
+				success: false,
+				message: "No sources were able to handle your request :(",
+			},
+			{
+				status: 404,
+			}
+		);
 	}
 
 	return createStreamingResponse(c, filePath.value);

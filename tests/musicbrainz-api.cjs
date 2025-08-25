@@ -16,7 +16,8 @@ const search = async (queryType, queryData) => {
 	let res = await fetch(req, {
 		headers: {
 			// Any UA works but you need some kind of contact information.
-			"User-Agent": "streamline/0.0.1 (https://github.com/luphoria/streamline) contact@streamline.pn",
+			"User-Agent":
+				"streamline/0.0.1 (https://github.com/luphoria/streamline) contact@streamline.pn",
 		},
 	});
 	console.info(req);

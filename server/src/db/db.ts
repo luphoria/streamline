@@ -52,18 +52,27 @@ export const AddRecording = (
 	mbid: string,
 	filepath: string,
 	source: string,
-	artists: {name: string, mbid: string}[],
+	artists: { name: string; mbid: string }[],
 	title: string,
 	release: string,
 	releaseDate?: string
-
 ) => {
-	console.log(`DB: ${artists[0]} - ${title}: ${mbid}/release-${release} / ${filepath} (${source})`);
+	console.log(
+		`DB: ${artists[0]} - ${title}: ${mbid}/release-${release} / ${filepath} (${source})`
+	);
 	const insert = db.prepare(
 		"INSERT INTO songs (mbid, filepath, source, artists, title, release, release_date) VALUES (?, ?, ?, ?, ?, ?, ?)"
 	);
 
-	return insert.run(mbid, filepath, source, JSON.stringify(artists), title, release, releaseDate);
+	return insert.run(
+		mbid,
+		filepath,
+		source,
+		JSON.stringify(artists),
+		title,
+		release,
+		releaseDate
+	);
 };
 
 export const GetRecording = (mbid) => {

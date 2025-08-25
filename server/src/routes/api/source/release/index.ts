@@ -93,7 +93,15 @@ export const GET = createHandler(async (c) => {
 				}
 
 				if (stream.ok) {
-					AddRecording(releaseInfo.trackList[track].mbid, stream.value, source, [releaseInfo.artists[0]], songTitle, mbid, releaseInfo.releaseDate);
+					AddRecording(
+						releaseInfo.trackList[track].mbid,
+						stream.value,
+						source,
+						[releaseInfo.artists[0]],
+						songTitle,
+						mbid,
+						releaseInfo.releaseDate
+					);
 					break;
 				}
 				console.log("Trying another source . . . ");

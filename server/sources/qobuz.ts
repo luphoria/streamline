@@ -5,7 +5,7 @@ import { qobuz } from "../config";
 export const Name = "qobuz";
 export const friendlyName = "Qobuz";
 export const tries = qobuz.tries ? qobuz.tries : 2;
- 
+
 export async function Search(queryArtist, queryTitle, albumTitle?, length?) {
 	const searchQuery = `${queryArtist} - ${queryTitle}`;
 	const searchResults = [];
@@ -114,7 +114,7 @@ export async function Download(searchResult) {
 			method: "GET",
 		}
 	);
-	console.log(data.status)
+	console.log(data.status);
 	data = await data.json();
 	const streamUrl = data["data"]["url"];
 

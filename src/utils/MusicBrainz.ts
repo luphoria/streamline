@@ -59,7 +59,13 @@ export class MusicBrainz {
 		const res: {
 			title: string;
 			artists: { name: string; mbid: string }[];
-			releases: { releaseGroup: string, title: string; disambiguation: string; artists: string[], releaseDate: string }[];
+			releases: {
+				releaseGroup: string;
+				title: string;
+				disambiguation: string;
+				artists: string[];
+				releaseDate: string;
+			}[];
 			length: number;
 			releaseDate: string;
 		} = {
@@ -83,7 +89,10 @@ export class MusicBrainz {
 				disambiguation: recordingFetch.releases[release]["disambiguation"],
 				artists: [],
 				releaseGroup: recordingFetch.releases[release]["release-group"]["id"],
-				releaseDate: recordingFetch.releases[release]["release-group"]["first-release-date"]
+				releaseDate:
+					recordingFetch.releases[release]["release-group"][
+						"first-release-date"
+					],
 			});
 			for (const artist in recordingFetch.releases[release]["artist-credit"]) {
 				res.artists.push({
@@ -119,7 +128,7 @@ export class MusicBrainz {
 			trackList: { title: string; mbid: string }[];
 			coverArt: any;
 			mbid: string;
-			releaseDate: string
+			releaseDate: string;
 			releaseGroup: string | null;
 		} = {
 			title: releaseFetch["title"],
@@ -130,7 +139,7 @@ export class MusicBrainz {
 			releaseGroup: releaseFetch["release-group"]
 				? releaseFetch["release-group"]["id"]
 				: null,
-			releaseDate: releaseFetch["first-release-date"]
+			releaseDate: releaseFetch["first-release-date"],
 		};
 
 		// Populate artists

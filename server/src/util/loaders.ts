@@ -1,6 +1,9 @@
 import { readdir, stat } from "node:fs/promises";
 import { URL } from "node:url";
-import { predicate as sourcePredicate, type Source } from "../structures/sources";
+import {
+	predicate as sourcePredicate,
+	type Source,
+} from "../structures/sources";
 import type { PathLike } from "node:fs";
 
 export type StructurePredicate<T> = (structure: Partial<T>) => boolean;

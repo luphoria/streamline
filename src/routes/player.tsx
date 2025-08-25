@@ -10,38 +10,33 @@ export const Player: Component<
 	{},
 	{
 		player: HTMLElement;
-		track: BlobTrack;
+		track: BlobTrack | null;
 		queue: string;
 		mbid: string;
 	}
 > = function () {
-	const playSong = async (mbid: string) => {
-		this.player = (
+	const setLoading = () =>
+		(this.player = (
 			<div class="loader">
 				<Icon name="search_doc" />
 			</div>
-		);
+		));
+	const playSong = async (mbid: string) => {
+		setLoading();
+		this.track = null;
 		const response = await t(
 			fetch(`${store.API_URL}source/track?mbid=${mbid}&source=${store.source}`)
 		);
 		if (!response.ok) {
-			this.player = <div>an error occured: {response.error}</div>;
 			console.error(response.error);
+			this.player = <div>an error occured: {response.error}</div>;
 			return;
 		}
-		switch (response.value.status) {
-			case 200:
-				this.player = <div>playing in webamp!</div>;
-				break;
-			case 404:
-				this.player = <div>file not in cache</div>;
-				return;
-			case 500:
-				this.player = <div>error: {response.error}</div>;
-				return;
-			default:
-				this.player = <div>unknown error or lack of response</div>;
-				return;
+		if (!response.value.ok) {
+			const data = await response.value.json();
+			console.error(response.error);
+			this.player = <div>an error occured: {data.message}</div>;
+			return;
 		}
 		const blob = await response.value.blob();
 
@@ -64,10 +59,11 @@ export const Player: Component<
 		this.queue
 			? window.webamp.appendTracks([this.track])
 			: window.webamp.setTracksToPlay([this.track]);
+		this.player = <div>playing in webamp!</div>;
 	};
 
 	const deleteCached = async (mbid: string) => {
-		this.player = <div>loading...</div>;
+		setLoading();
 		const response = await t(
 			fetch(`${store.API_URL}source/track?mbid=${mbid}`, {
 				method: "DELETE",
@@ -116,8 +112,7 @@ export const Player: Component<
 			<div>
 				<input
 					id="recordingMbid"
-					value={use(this.mbid)
-						.map((val) => decodeURIComponent(val))}
+					value={use(this.mbid).map((val) => decodeURIComponent(val))}
 					type="text"
 				/>
 				<button on:click={() => playSong(this.mbid)}>fetch song</button>
