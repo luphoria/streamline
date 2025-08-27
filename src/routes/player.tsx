@@ -7,14 +7,19 @@ import type { BlobTrack } from "webamp";
 
 export const Player: Component<
 	{},
-	{},
+	{
+		"on:routeshown": (path: string) => void;
+	},
 	{
 		player: HTMLElement;
 		track: BlobTrack | null;
-		queue: string;
+		url: URL;
 		mbid: string;
 	}
 > = function () {
+	this["on:routeshown"] = (path: string) => {
+		this.url = new URL(path, location.origin);
+	};
 	const setLoading = () =>
 		(this.player = (
 			<div class="loader">
@@ -56,7 +61,7 @@ export const Player: Component<
 			},
 			blob,
 		};
-		this.queue
+		this.url.searchParams.get("query")
 			? window.webamp.appendTracks([this.track])
 			: window.webamp.setTracksToPlay([this.track]);
 		this.player = <div>playing in webamp!</div>;
@@ -120,7 +125,7 @@ export const Player: Component<
 					delete from cache
 				</button>
 				{use(this.track).andThen(
-					<button on:click={() => downloadSong(this.track)}>
+					<button on:click={() => downloadSong(this.track!)}>
 						download song
 					</button>
 				)}

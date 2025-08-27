@@ -30,7 +30,12 @@ const Release: Component<{
 					<li>
 						<span>{track.title}</span>
 						<button
-							on:click={() => Router.navigate(`/play/${track.mbid}/true`)}
+							on:click={() => Router.navigate(`/play/${track.mbid}?download`)}
+						>
+							Download
+						</button>
+						<button
+							on:click={() => Router.navigate(`/play/${track.mbid}?queue`)}
 						>
 							Add to Queue
 						</button>

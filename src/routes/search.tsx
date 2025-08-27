@@ -57,9 +57,14 @@ export const ResultItem: Component<
 					Play
 				</button>
 				<button
-					on:click={() => Router.navigate(`/play/${this.song.mbid}/true`)}
+					on:click={() => Router.navigate(`/play/${this.song.mbid}?queue`)}
 				>
 					Add to Queue
+				</button>
+				<button
+					on:click={() => Router.navigate(`/play/${this.song.mbid}?download`)}
+				>
+					Download
 				</button>
 				<button on:click={() => Router.navigate(`/release/${this.mbid}`)}>
 					Open Release
