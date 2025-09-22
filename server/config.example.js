@@ -9,11 +9,11 @@ export const settings = {
 
 // -- -- -- //
 
-/* Below are various example configurations for 
+/* Below are various example configurations for
    Streamline source plugins which are included
-   for ease of access. 
+   for ease of access.
 
-   For  source plugins, the server prioritizes 
+   For  source plugins, the server prioritizes
    first the cache, then
    the client-requested source, then (on failure)
    down the list of any other source plugins.
@@ -42,8 +42,8 @@ export const slskd = {
 export const ytdlp = {
 	/*
 	YouTube Music wrapper: https://github.com/yt-dlp/yt-dlp
-	**Ensure that yt-dlp is at the latest version** 
-	(as of writing: `2025.05.22` is confirmed to work, 
+	**Ensure that yt-dlp is at the latest version**
+	(as of writing: `2025.05.22` is confirmed to work,
 	but stable releases from earlier in the year did not)
 	*/
 	binary: "yt-dlp", // Binary path for yt-dlp.
@@ -52,8 +52,8 @@ export const ytdlp = {
 
 export const soundcloud = {
 	/* SoundCloud wrapper: https://github.com/yt-dlp/yt-dlp
-	**Ensure that yt-dlp is at the latest version** 
-	(as of writing: `2025.05.22` is confirmed to work, 
+	**Ensure that yt-dlp is at the latest version**
+	(as of writing: `2025.05.22` is confirmed to work,
 	but stable releases from earlier in the year did not)
 	*/
 	ytdlpBinary: "yt-dlp", // Binary path for yt-dlp (which also includes a soundcloud downloader).
@@ -61,11 +61,11 @@ export const soundcloud = {
 };
 
 export const qobuz = {
-	/* 
+	/*
 	Qobuz wrapper: https://github.com/QobuzDL/Qobuz-DL
 	TODO: Instead shuffle an array of different qobuz-dl instances.
 	*/
-	qobuzDlUrl: "http://localhost:2222", // https://eu.qobuz.squid.wtf
+	qobuzDlUrl: "http://localhost:2222", // https://qobuz.squid.wtf
 	path: "./music/qobuz/",
 	tries: 2,
 };
