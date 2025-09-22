@@ -18,6 +18,7 @@ const Layout: Component<
 			},
 		});
 		window.webamp.renderWhenReady(this.player);
+		console.log(this.outlet);
 	};
 	return (
 		<div>

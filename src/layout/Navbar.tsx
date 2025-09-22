@@ -1,6 +1,5 @@
 import { css, type Component } from "dreamland/core";
-import router from "../router";
-import { Link } from "dreamland/router";
+import { router, Link } from "dreamland/router";
 
 const Navbar: Component<
 	{},

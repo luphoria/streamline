@@ -1,8 +1,7 @@
 import { css, type Component } from "dreamland/core";
 import { MusicBrainz } from "../utils/MusicBrainz";
-import { Link } from "dreamland/router";
+import { Link, router } from "dreamland/router";
 import { t } from "try";
-import Router from "../router";
 import Icon from "../components/icon";
 import CoverArt from "../components/coverart";
 import store from "../store";
@@ -30,16 +29,16 @@ const Release: Component<{
 					<li>
 						<span>{track.title}</span>
 						<button
-							on:click={() => Router.navigate(`/play/${track.mbid}?download`)}
+							on:click={() => router.navigate(`/play/${track.mbid}?download`)}
 						>
 							Download
 						</button>
 						<button
-							on:click={() => Router.navigate(`/play/${track.mbid}?queue`)}
+							on:click={() => router.navigate(`/play/${track.mbid}?queue`)}
 						>
 							Add to Queue
 						</button>
-						<button on:click={() => Router.navigate(`/play/${track.mbid}`)}>
+						<button on:click={() => router.navigate(`/play/${track.mbid}`)}>
 							Play
 						</button>
 					</li>
