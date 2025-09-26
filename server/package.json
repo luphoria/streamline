@@ -14,7 +14,8 @@
 		"mime": "^4.1.0",
 		"prompt-sync": "^4.2.0",
 		"shell-quote": "^1.8.3",
-		"try": "1.0.0-beta.10"
+		"try": "1.0.0-beta.10",
+		"musicbrainz-api": "^0.25.1"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.3.1",

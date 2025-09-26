@@ -2,7 +2,7 @@ import { createHandler } from "hono-file-router";
 import { t } from "try";
 import { AddRecording, GetRecording } from "../../../../db/db";
 import { sourceModules, mb } from "../../../../index";
-
+//TODO: redo the like whole implementation of this
 export const GET = createHandler(async (c) => {
 	const mbid = c.req.query("mbid");
 	if (

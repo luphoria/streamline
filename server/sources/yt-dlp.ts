@@ -125,7 +125,7 @@ export async function Download(searchResult) {
 	console.log(searchResult);
 	const filePath = (
 		await exec(
-			`${ytdlp.binary} "https://www.youtube.com/watch?v=${quote([searchResult.id])}" -f wv+ba -P ${ytdlp.path} --no-warnings --restrict-filenames --print "after_move:filepath" --sponsorblock-remove all`
+			`${ytdlp.binary} "https://www.youtube.com/watch?v=${quote([searchResult.id])}" -f wv+ba -P ${ytdlp.path} --no-warnings --restrict-filenames --print "after_move:filepath" --sponsorblock-remove all --extract-audio --audio-format wav`
 		)
 	).stdout.split("\n")[0];
 	console.log(filePath);

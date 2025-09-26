@@ -4,7 +4,7 @@ import { createFolderRoute } from "hono-file-router";
 import { fileURLToPath } from "node:url";
 import { loadSources } from "./util/loaders";
 import { settings } from "../config";
-import { MusicBrainz } from "../../src/utils/MusicBrainz";
+import { MusicBrainzApi } from "musicbrainz-api";
 
 const app = new Hono();
 (async () => {
@@ -20,7 +20,11 @@ const app = new Hono();
 export const sourceModules = await loadSources(
 	new URL("../sources/", import.meta.url)
 );
-export const mb = new MusicBrainz(settings.MB_URL);
+export const mb = new MusicBrainzApi({
+    appName: "streamline (https://github.com/luphoria/streamline)",
+    appVersion: "0.0.1",
+    appContactInfo: "contact@streamline.pn",
+});
 
 serve(
 	{

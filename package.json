@@ -16,7 +16,8 @@
 		"mime": "^4.1.0",
 		"try": "1.0.0-beta.10",
 		"webamp": "2.2.0",
-		"xp.css": "^0.2.6"
+		"xp.css": "^0.2.6",
+		"musicbrainz-api": "^0.25.1"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.3.1",

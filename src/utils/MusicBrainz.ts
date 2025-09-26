@@ -259,11 +259,9 @@ export class MusicBrainz {
 				return;
 			}
 
-			const title = recording.title;
-
 			const recordingResult: SongVersion = {
 				mbid: recording.id,
-				title: "title",
+				title: recording.title,
 				artists: [],
 				versions: [],
 				length: recording.length,
