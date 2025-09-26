@@ -1,5 +1,4 @@
 import type { ReleaseGroupList, SongVersion } from "../types/MusicBrainzType";
-import DOMPurify from "dompurify";
 
 export class MusicBrainz {
 	apiUrl: string;
@@ -264,12 +263,12 @@ export class MusicBrainz {
 
 			const recordingResult: SongVersion = {
 				mbid: recording.id,
-				title: DOMPurify.sanitize(title),
+				title: "title",
 				artists: [],
 				versions: [],
 				length: recording.length,
 				hasVideo: recording.video !== null,
-				releaseDate: DOMPurify.sanitize(recording["first-release-date"] || ""),
+				releaseDate: recording["first-release-date"] || "",
 				score: recording.score,
 			};
 
