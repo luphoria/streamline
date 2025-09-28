@@ -11,7 +11,7 @@
 		"lint:fix": "eslint ./src/ --fix"
 	},
 	"dependencies": {
-		"dreamland": "github:MercuryWorkshop/dreamlandjs",
+		"dreamland": "0.1.0",
 		"is-mobile": "^5.0.0",
 		"mime": "^4.1.0",
 		"try": "1.0.0-beta.10",
