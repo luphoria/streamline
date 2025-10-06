@@ -1,6 +1,5 @@
-import { MusicBrainz } from "./utils/MusicBrainz";
 import { Route, router, Router } from "dreamland/router";
-import { type Component } from "dreamland/core";
+import { css, type Component } from "dreamland/core";
 import store from "./store";
 
 import Home from "./routes/home";
@@ -13,7 +12,14 @@ import { Player } from "./routes/player";
 
 import "xp.css/dist/XP.css";
 import "./styles/main.css";
-window.mb = new MusicBrainz(store.MB_URL);
+import { CoverArtArchiveApi, MusicBrainzApi } from "musicbrainz-api";
+
+window.mb = new MusicBrainzApi({
+	appName: "streamline (https://github.com/luphoria/streamline)",
+	appVersion: "0.0.1",
+	appContactInfo: "contact@streamline.pn",
+});
+window.coverArt = new CoverArtArchiveApi();
 
 const App: Component = function (cx) {
 	cx.init = () => {
@@ -34,7 +40,16 @@ const App: Component = function (cx) {
 		</div>
 	);
 };
+App.style = css`
+	#app {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 
+		justify-content: flex-start;
+		align-items: center;
+	}
+`;
 const root = document.getElementById("app")!;
 try {
 	root.appendChild(<App />);

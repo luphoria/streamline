@@ -30,15 +30,18 @@ export const GET = createHandler(async (c) => {
 	) {
 		return new Response("Bad MBID", { status: 400 });
 	}
-	const recordingInfo = await mb.lookup("recording", mbid, ["artist-credits", "releases"])
-	console.log(recordingInfo)
+	const recordingInfo = await mb.lookup("recording", mbid, [
+		"artist-credits",
+		"releases",
+	]);
+	console.log(recordingInfo);
 	// TODO: sort related releases, pass selected release to scraper (for sorting responses), pass other listed artist credits (for filtering and sorting)
 	const artist = recordingInfo["artist-credit"][0].name;
 	const songTitle = recordingInfo.title;
 	const keywords = recordingInfo.releases[0]
 		? recordingInfo.releases[0].title
 		: "";
-	console.log(artist, songTitle)
+	console.log(artist, songTitle);
 
 	const source = c.req.query("source") || "";
 
@@ -53,11 +56,7 @@ export const GET = createHandler(async (c) => {
 	}
 
 	async function SearchAndDownload(source: Source) {
-		const searchResults = await source.Search(
-			artist,
-			songTitle,
-			keywords
-		);
+		const searchResults = await source.Search(artist, songTitle, keywords);
 
 		// sort results...
 		console.log("haiaiai :3", searchResults, searchResults.length);
@@ -79,18 +78,18 @@ export const GET = createHandler(async (c) => {
 
 		return null;
 	}
-	
+
 	const preferredSource = sourceModules.get(source);
 	let filePath: string | null = null;
 	let usedSource = "";
 	if (preferredSource) {
-		usedSource = source[0]
+		usedSource = source[0];
 		filePath = await SearchAndDownload(preferredSource);
 	}
 	if (!filePath) {
 		for (const source of sourceModules) {
 			if (source[0] === usedSource) continue;
-			usedSource = source[0]
+			usedSource = source[0];
 			filePath = await SearchAndDownload(source[1]);
 			if (filePath) break;
 		}
@@ -106,8 +105,8 @@ export const GET = createHandler(async (c) => {
 				status: 404,
 			}
 		);
-	};
-	
+	}
+
 	AddRecording(
 		mbid,
 		filePath,

@@ -53,11 +53,13 @@ export const Player: Component<
 			this.player = player;
 			return;
 		}
-		const recordingInfo = await window.mb.RecordingInfo(mbid);
+		const recordingInfo = await window.mb.lookup("recording", mbid, [
+			"artist-credits",
+		]);
 		this.track = {
 			metaData: {
 				title: recordingInfo.title,
-				artist: recordingInfo.artists[0].name,
+				artist: recordingInfo["artist-credit"]![0].name,
 			},
 			blob,
 		};

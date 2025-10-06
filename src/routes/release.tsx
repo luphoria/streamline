@@ -1,44 +1,41 @@
 import { css, type Component } from "dreamland/core";
-import { MusicBrainz } from "../utils/MusicBrainz";
 import { Link, router } from "dreamland/router";
 import { t } from "try";
 import Icon from "../components/icon";
 import CoverArt from "../components/coverart";
 import store from "../store";
+import type { IRelease } from "musicbrainz-api";
 
 const Release: Component<{
-	release: Awaited<ReturnType<MusicBrainz["ReleaseInfo"]>>;
+	release: IRelease;
 	coverArt?: string | undefined;
 }> = function () {
 	return (
 		<div>
 			<div class="release-header">
-				<CoverArt
-					src={this.coverArt ? this.coverArt : this.release.coverArt}
-					size={250}
-				/>
+				<CoverArt src={""} size={250} />
 				<h3 id="release-title">{this.release.title}</h3>
 				<h4 id="release-artist">
-					{use(this.release.artists).mapEach((artist) => {
-						return <Link href={`/artist/${artist.mbid}`}>{artist.name}</Link>;
+					{use(this.release["artist-credit"]).mapEach((artist) => {
+						return (
+							<Link href={`/artist/${artist.artist.id}`}>{artist.name}</Link>
+						);
 					})}
 				</h4>
 			</div>
 			<ol id="release-tracklist">
-				{use(this.release.trackList).mapEach((track) => (
+				{use(this.release["media"][0]["tracks"]).mapEach((track) => (
 					<li>
 						<span>{track.title}</span>
 						<button
-							on:click={() => router.navigate(`/play/${track.mbid}?download`)}
+							on:click={() => router.navigate(`/play/${track.id}?download`)}
 						>
 							Download
 						</button>
-						<button
-							on:click={() => router.navigate(`/play/${track.mbid}?queue`)}
-						>
+						<button on:click={() => router.navigate(`/play/${track.id}?queue`)}>
 							Add to Queue
 						</button>
-						<button on:click={() => router.navigate(`/play/${track.mbid}`)}>
+						<button on:click={() => router.navigate(`/play/${track.id}`)}>
 							Play
 						</button>
 					</li>
@@ -86,7 +83,6 @@ Release.style = css`
 export const ReleaseView: Component<
 	{},
 	{
-		update: (mbid: string) => Promise<void>;
 		releaseEl: HTMLElement;
 		downloadStatus: HTMLElement;
 		mbid: string;
@@ -113,9 +109,12 @@ export const ReleaseView: Component<
 				<Icon name="search_doc" />
 			</div>
 		);
-		const release = await window.mb.ReleaseInfo(mbid);
-		const coverArtUrl = await window.mb.HdCoverArtUrl(mbid);
-		this.releaseEl = <Release release={release} coverArt={coverArtUrl} />;
+		const release = await window.mb.lookup("release", mbid, [
+			"recordings",
+			"artist-credits",
+		]);
+		console.log(release);
+		this.releaseEl = <Release release={release} />;
 	};
 
 	use(this.mbid).listen(updateReleases);
@@ -123,7 +122,7 @@ export const ReleaseView: Component<
 		<div class="musicbrainz-search">
 			<div>
 				<form
-					on:submit={(e) => {
+					on:submit={(e: SubmitEvent) => {
 						e.preventDefault();
 						updateReleases(this.mbid);
 					}}

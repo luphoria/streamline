@@ -21,13 +21,14 @@ Streamline works as an interface to the entire library catalog of MusicBrainz, a
 
 - Configuring the Streamline server can be done from the `server/config.js` file. `server/config.example.js` is included with explanations for what your configuration should look like.
 - Add source plugins in the `server/sources` folder, then define and configure them in `server/config.js`. **Example plugins have already been included for ease of access!** These plugins are _example implementations_ for reference when creating your own, but they also work out of the box, as described.
-- `pnpm i` will install all of the node dependencies.
+- `pnpm i` will install all of the node dependencies for the client and server using a pnpm workspace.
 
 ## Run
 
 Ensure that your plugin APIs (e.g. slskd, Qobuz-DL) are running as well, and then run
 
-`pnpm run dev` 🎉
+`pnpm run dev` in the root, as well as the server/ directory
+🎉
 
 ## TODO
 

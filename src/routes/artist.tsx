@@ -1,31 +1,28 @@
 import { css, type Component } from "dreamland/core";
-import { MusicBrainz } from "../utils/MusicBrainz";
 import Icon from "../components/icon";
 import { Link } from "dreamland/router";
-import type { ReleaseGroupList } from "../types/MusicBrainzType";
+import type { IArtist } from "musicbrainz-api";
 
 const Artist: Component<{
-	artist: Awaited<ReturnType<MusicBrainz["ArtistInfo"]>>;
+	artist: IArtist;
 }> = function () {
 	return (
 		<div class="musicbrainz-artist">
 			<h3 id="artist-name">{this.artist.name}</h3>
 			<h4 id="artist-disambiguation">{this.artist.disambiguation}</h4>
 			<p>
-				{use(this.artist.releaseGroups).mapEach((group: ReleaseGroupList) => {
-					if (group.releases.length > 0) {
-						return (
-							<span mbid={group.mbid}>
-								<b>
-									<Link href={`/release/${group.releases[0].mbid}`}>
-										{group.title}
-									</Link>{" "}
-								</b>
-								({group.date}) [{group.type}]
-								<br />
-							</span>
-						);
-					}
+				{use(this.artist["release-groups"]).mapEach((group) => {
+					return (
+						<span mbid={group.id}>
+							<b>
+								<Link href={`/release/${group.id}`}>
+									{group.title}
+								</Link>{" "}
+							</b>
+							({group["first-release-date"]}) [{group["primary-type"]}]
+							<br />
+						</span>
+					);
 				})}
 			</p>
 		</div>
@@ -47,7 +44,10 @@ export const ArtistView: Component<
 				<Icon name="search_doc" />
 			</div>
 		);
-		const artist = await window.mb.ArtistInfo(mbid);
+		const artist = await window.mb.lookup("artist", mbid, [
+			"release-groups",
+			"releases"
+		]);
 		this.artistEl = <Artist artist={artist} />;
 	};
 	use(this.mbid).listen(updateArtist);
@@ -55,7 +55,7 @@ export const ArtistView: Component<
 		<div>
 			<div>
 				<form
-					on:submit={(e) => {
+					on:submit={(e: SubmitEvent) => {
 						e.preventDefault();
 						updateArtist(this.mbid);
 					}}

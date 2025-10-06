@@ -14,22 +14,22 @@
 		"dreamland": "0.1.0",
 		"is-mobile": "^5.0.0",
 		"mime": "^4.1.0",
+		"musicbrainz-api": "^0.25.1",
 		"try": "1.0.0-beta.10",
 		"webamp": "2.2.0",
-		"xp.css": "^0.2.6",
-		"musicbrainz-api": "^0.25.1"
+		"xp.css": "^0.2.6"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.3.1",
-		"@eslint/js": "^9.36.0",
+		"@eslint/js": "^9.37.0",
 		"@types/eslint": "^9.6.1",
 		"@types/estree": "^1.0.8",
-		"@typescript-eslint/eslint-plugin": "^8.44.1",
-		"@typescript-eslint/parser": "^8.44.1",
-		"eslint": "^9.36.0",
+		"@typescript-eslint/eslint-plugin": "^8.46.0",
+		"@typescript-eslint/parser": "^8.46.0",
+		"eslint": "^9.37.0",
 		"prettier": "^3.6.2",
 		"tslib": "^2.8.1",
-		"typescript": "^5.9.2",
-		"vite": "^7.1.7"
+		"typescript": "^5.9.3",
+		"vite": "^7.1.9"
 	}
 }

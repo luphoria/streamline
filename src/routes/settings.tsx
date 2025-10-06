@@ -14,7 +14,7 @@ export const Settings: Component<
 		fetchNewSources(store.API_URL);
 	};
 	this.sources = [];
-	const setMBURL = (url: string) => window.mb.SetApiUrl(url);
+	const setMBURL = (url: string) => (window.mb.config.baseUrl = url);
 	const fetchNewSources = async (url: string) => {
 		const response = await t(fetch(`${url}source/list`));
 		if (!response.ok) {
