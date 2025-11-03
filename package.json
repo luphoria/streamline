@@ -11,7 +11,7 @@
 		"lint:fix": "eslint ./src/ --fix"
 	},
 	"dependencies": {
-		"dreamland": "0.1.0",
+		"dreamland": "^0.1.2",
 		"is-mobile": "^5.0.0",
 		"mime": "^4.1.0",
 		"musicbrainz-api": "^0.25.1",

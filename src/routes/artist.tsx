@@ -48,6 +48,10 @@ export const ArtistView: Component<
 			"release-groups",
 			"releases"
 		]);
+		const artistReleases = await window.mb.search("release", {
+			artist: mbid,
+			inc: ["release-groups", "artist-credits"],
+		})
 		this.artistEl = <Artist artist={artist} />;
 	};
 	use(this.mbid).listen(updateArtist);
