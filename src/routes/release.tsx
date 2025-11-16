@@ -83,7 +83,7 @@ Release.style = css`
 export const ReleaseView: Component<
 	{},
 	{
-		release: IRelease;
+		release: IRelease | null;
 		downloadStatus: HTMLElement;
 		mbid: string;
 	}
@@ -104,6 +104,7 @@ export const ReleaseView: Component<
 	};
 
 	const updateReleases = async (mbid: string) => {
+		this.release = null;
 		const release = await window.mb.lookup("release", mbid, [
 			"recordings",
 			"artist-credits",
@@ -134,7 +135,7 @@ export const ReleaseView: Component<
 			</div>
 			<div class="release">
 				{use(this.release).andThen(
-					() => <Release release={this.release} />,
+					(release) => <Release release={release} />,
 					<div class="loader">
 						<Icon name="search_doc" />
 					</div>

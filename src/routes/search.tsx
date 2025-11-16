@@ -124,9 +124,9 @@ export const Search: Component<
 		query: string;
 	}
 > = function () {
-	this.results = null;
 	const updateSongs = async (query: string) => {
 		if (!query) return;
+		this.results = null;
 		const results = await window.mb.search("recording", {
 			query: decodeURIComponent(query),
 			limit: 100,
@@ -138,8 +138,8 @@ export const Search: Component<
 	return (
 		<div id="search-results">
 			{use(this.results).andThen(
-				() => <div>
-					{use(this.results!.recordings).mapEach((recording) => (
+				(results) => <div>
+					{results.recordings.map((recording) => (
 						<Recording recording={recording} />
 					))}
 				</div>,

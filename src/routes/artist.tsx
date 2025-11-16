@@ -33,12 +33,13 @@ export const ArtistView: Component<
 	{},
 	{},
 	{
-		artist: IArtist;
+		artist: IArtist | null;
 		mbid: string;
 	}
 > = function () {
 	const updateArtist = async (mbid: string) => {
 		if (!mbid) return;
+		this.artist = null;
 		const artist = await window.mb.lookup("artist", mbid, [
 			"release-groups",
 			"releases"
