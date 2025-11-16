@@ -33,17 +33,12 @@ export const ArtistView: Component<
 	{},
 	{},
 	{
-		artistEl: HTMLElement;
+		artist: IArtist;
 		mbid: string;
 	}
 > = function () {
 	const updateArtist = async (mbid: string) => {
 		if (!mbid) return;
-		this.artistEl = (
-			<div class="loader">
-				<Icon name="search_doc" />
-			</div>
-		);
 		const artist = await window.mb.lookup("artist", mbid, [
 			"release-groups",
 			"releases"
@@ -52,7 +47,7 @@ export const ArtistView: Component<
 			artist: mbid,
 			inc: ["release-groups", "artist-credits"],
 		})
-		this.artistEl = <Artist artist={artist} />;
+		this.artist = artist;
 	};
 	use(this.mbid).listen(updateArtist);
 	return (
@@ -75,7 +70,12 @@ export const ArtistView: Component<
 					</button>
 				</form>
 			</div>
-			<div class="artist">{use(this.artistEl)}</div>
+			<div class="artist">{use(this.artist).andThen(
+				(artist) => <Artist artist={artist} />,
+				<div class="loader">
+					<Icon name="search_doc" />
+				</div>
+			)}</div>
 		</div>
 	);
 };

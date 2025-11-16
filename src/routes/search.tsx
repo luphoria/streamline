@@ -1,6 +1,6 @@
 import { css, type Component } from "dreamland/core";
 import { router } from "dreamland/router";
-import type { IRecording, IRecordingList } from "musicbrainz-api";
+import type { IArtistCredit, IRecording, IRecordingList } from "musicbrainz-api";
 import Icon from "../components/icon";
 import CoverArt from "../components/coverart";
 import { Link } from "dreamland/router";
@@ -25,7 +25,7 @@ export const Recording: Component<
 				/>
 				<span class="song-info">
 					<div class="artist">
-						{use(this.recording["artist-credit"]).mapEach((artist) => {
+						{use(this.recording["artist-credit"] as IArtistCredit[]).mapEach((artist) => {
 							return (
 								<div>
 									<Link href={`/artist/${artist.artist.id}`}>
@@ -124,23 +124,22 @@ export const Search: Component<
 		query: string;
 	}
 > = function () {
-	this.results = {
-		recordings: [],
-	};
+	this.results = null;
 	const updateSongs = async (query: string) => {
 		if (!query) return;
-		this.results = await window.mb.search("recording", {
+		const results = await window.mb.search("recording", {
 			query: decodeURIComponent(query),
 			limit: 100,
 			inc: ["releases"],
 		});
+		this.results = results;
 	};
 	use(this.query).listen(updateSongs);
 	return (
 		<div id="search-results">
 			{use(this.results).andThen(
-				<div>
-					{use(this.results.recordings).mapEach((recording) => (
+				() => <div>
+					{use(this.results!.recordings).mapEach((recording) => (
 						<Recording recording={recording} />
 					))}
 				</div>,

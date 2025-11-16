@@ -83,7 +83,7 @@ Release.style = css`
 export const ReleaseView: Component<
 	{},
 	{
-		releaseEl: HTMLElement;
+		release: IRelease;
 		downloadStatus: HTMLElement;
 		mbid: string;
 	}
@@ -104,17 +104,11 @@ export const ReleaseView: Component<
 	};
 
 	const updateReleases = async (mbid: string) => {
-		this.releaseEl = (
-			<div class="loader">
-				<Icon name="search_doc" />
-			</div>
-		);
 		const release = await window.mb.lookup("release", mbid, [
 			"recordings",
 			"artist-credits",
 		]);
-		console.log(release);
-		this.releaseEl = <Release release={release} />;
+		this.release = release;
 	};
 
 	use(this.mbid).listen(updateReleases);
@@ -138,7 +132,14 @@ export const ReleaseView: Component<
 
 				{use(this.downloadStatus)}
 			</div>
-			<div class="release">{use(this.releaseEl)}</div>
+			<div class="release">
+				{use(this.release).andThen(
+					() => <Release release={this.release} />,
+					<div class="loader">
+						<Icon name="search_doc" />
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };
