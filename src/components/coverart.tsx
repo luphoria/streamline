@@ -14,7 +14,7 @@ const CoverArt: Component<{
 			on:error={(e: any) => {
 				let el = e.target as HTMLImageElement;
 				el.src = "/shell32/cd_unknown.gif";
-				el.setAttribute("style", "image-rendering: pixelated; scale: 0.6;");
+				el.setAttribute("style", "scale: 0.6;");
 			}}
 			alt="Cover Art"
 		/>
