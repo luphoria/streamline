@@ -29,7 +29,7 @@ const Artist: Component<{
 	);
 };
 
-export const ArtistView: Component<
+const ArtistView: Component<
 	{},
 	{},
 	{
@@ -95,3 +95,5 @@ ArtistView.style = css`
 		width: 100%;
 	}
 `;
+
+export default ArtistView;

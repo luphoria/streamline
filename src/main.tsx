@@ -1,18 +1,17 @@
-import { Route, router, Router } from "dreamland/router";
 import { css, type Component } from "dreamland/core";
-import store from "./store";
+import { Route, router, Router } from "dreamland/router";
+import { CoverArtArchiveApi, MusicBrainzApi } from "musicbrainz-api";
+import _store from "./store";
 
 import Home from "./routes/home";
 import Layout from "./layout/Layout";
-import { ArtistView } from "./routes/artist";
-import { ReleaseView } from "./routes/release";
-import { Search } from "./routes/search";
-import { Settings } from "./routes/settings";
-import { Player } from "./routes/player";
+import ArtistView from "./routes/artist";
+import ReleaseView from "./routes/release";
+import Search from "./routes/search";
+import Settings from "./routes/settings";
+import Player from "./routes/player";
 
 import "xp.css/dist/XP.css";
-import "./styles/main.css";
-import { CoverArtArchiveApi, MusicBrainzApi } from "musicbrainz-api";
 
 window.mb = new MusicBrainzApi({
 	appName: "streamline (https://github.com/luphoria/streamline)",

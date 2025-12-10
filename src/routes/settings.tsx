@@ -8,10 +8,14 @@ export const Settings: Component<
 	{
 		sourcesDropdown: HTMLSelectElement;
 		sources: any[];
+		sourceTable: HTMLTableSectionElement
 	}
 > = function (cx) {
 	cx.mount = () => {
 		fetchNewSources(store.API_URL);
+		/*
+		Array.from(temp1.rows, (row) => row.dataset.source);
+		*/
 	};
 	this.sources = [];
 	const setMBURL = (url: string) => (window.mb.config.baseUrl = url);
@@ -52,11 +56,43 @@ export const Settings: Component<
 			</div>
 			<div class="settings-row">
 				<span class="title">Download source</span>
-				<select value={use(store.source)} this={use(this.sourcesDropdown)}>
-					{use(this.sources).mapEach((val) => (
-						<option value={val.Name}>{val.friendlyName}</option>
-					))}
-				</select>
+				<table>
+					<tbody
+					on:drop={(e) => {
+						e.preventDefault();
+						const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'));
+						const dropTarget = (e.target as HTMLElement).closest('tr');
+						if (!dropTarget) return;
+						
+						const dropIndex = Array.from(this.sourceTable.rows).indexOf(dropTarget as HTMLTableRowElement);
+						
+						const newSources = [...this.sources];
+						const [draggedItem] = newSources.splice(draggedIndex, 1);
+						newSources.splice(dropIndex, 0, draggedItem);
+						this.sources = newSources;
+						
+						store.sources = Array.from(this.sourceTable.rows, (row) => row.dataset.source);
+						console.log(store.sources);
+					}}
+					this={use(this.sourceTable)}>
+						{use(this.sources).mapEach((val, index) => (
+							<tr
+								data-source={val.Name} 
+								draggable="true"
+								on:dragstart={(e) => {
+									e.dataTransfer.effectAllowed = 'move';
+									e.dataTransfer.setData('text/plain', index.toString());
+								}}
+								on:dragover={(e) => {
+									e.preventDefault();
+									e.dataTransfer.dropEffect = 'move';
+								}}
+							>
+								<td>{val.friendlyName}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
 			</div>
 		</div>
 	);
@@ -85,3 +121,5 @@ Settings.style = css`
 		gap: 0.5rem;
 	}
 `;
+
+export default Settings;

@@ -5,7 +5,7 @@ import Icon from "../components/icon";
 import mime from "mime";
 import type { BlobTrack } from "webamp";
 
-export const Player: Component<
+const Player: Component<
 	{},
 	{
 		"on:routeshown": (path: string) => void;
@@ -151,3 +151,5 @@ Player.style = css`
 		width: 100%;
 	}
 `;
+
+export default Player;

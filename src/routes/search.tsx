@@ -116,7 +116,7 @@ Recording.style = css`
 	}
 `;
 
-export const Search: Component<
+const Search: Component<
 	{},
 	{},
 	{
@@ -150,3 +150,5 @@ export const Search: Component<
 		</div>
 	);
 };
+
+export default Search;

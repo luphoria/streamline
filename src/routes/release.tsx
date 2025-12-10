@@ -80,7 +80,7 @@ Release.style = css`
 	}
 `;
 
-export const ReleaseView: Component<
+const ReleaseView: Component<
 	{},
 	{
 		release: IRelease | null;
@@ -159,3 +159,5 @@ ReleaseView.style = css`
 		width: 100%;
 	}
 `;
+
+export default ReleaseView;

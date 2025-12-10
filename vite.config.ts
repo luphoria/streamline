@@ -2,7 +2,7 @@ import type { UserConfig } from "vite";
 
 export default {
 	server: {
-		port: 4321,
+		port: 6767,
 		strictPort: true,
 		allowedHosts: ["vite.percs.dev", "streamline.luphoria.com"],
 		proxy: {
