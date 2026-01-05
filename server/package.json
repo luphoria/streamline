@@ -9,29 +9,29 @@
 	"dependencies": {
 		"@hono/node-server": "^1.19.7",
 		"better-sqlite3": "12.5.0",
-		"hono": "^4.10.8",
+		"hono": "^4.11.3",
 		"hono-file-router": "github:Percslol/hono-file-router",
 		"mime": "^4.1.0",
-		"musicbrainz-api": "^0.27.0",
+		"musicbrainz-api": "^0.27.1",
 		"prompt-sync": "^4.2.0",
 		"shell-quote": "^1.8.3",
 		"try": "1.0.3"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.3.3",
-		"@eslint/js": "^9.39.1",
+		"@eslint/js": "^9.39.2",
 		"@types/better-sqlite3": "^7.6.13",
 		"@types/eslint": "^9.6.1",
 		"@types/estree": "^1.0.8",
-		"@typescript-eslint/eslint-plugin": "^8.49.0",
-		"@typescript-eslint/parser": "^8.49.0",
+		"@typescript-eslint/eslint-plugin": "^8.51.0",
+		"@typescript-eslint/parser": "^8.51.0",
 		"dotenv": "^17.2.3",
-		"eslint": "^9.39.1",
+		"eslint": "^9.39.2",
 		"nodemon": "^3.1.11",
 		"prettier": "^3.7.4",
 		"tslib": "^2.8.1",
-		"typescript": "^5.9.3",
-		"tsx": "4.21.0"
+		"tsx": "4.21.0",
+		"typescript": "^5.9.3"
 	},
 	"nodemonConfig": {
 		"execMap": {

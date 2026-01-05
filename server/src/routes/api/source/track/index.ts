@@ -2,7 +2,7 @@ import fs from "node:fs";
 import { Readable } from "node:stream";
 import { createHandler } from "hono-file-router";
 import { stream } from "hono/streaming";
-import { Result, t } from "try";
+import { t } from "try";
 import { AddRecording, DeleteRecording, GetRecording } from "../../../../db/db";
 import { sourceModules, mb } from "../../../../index";
 import mime from "mime";
@@ -43,7 +43,7 @@ export const GET = createHandler(async (c) => {
 		: "";
 	console.log(artist, songTitle);
 
-	const source = c.req.query("source") || "";
+	const sources = c.req.query("sources")?.split(",") || "";
 
 	console.log("Checking DB for MBID . . .");
 	const DBReq = GetRecording(mbid);
@@ -55,7 +55,8 @@ export const GET = createHandler(async (c) => {
 		return createStreamingResponse(c, DBReq.filepath);
 	}
 
-	async function SearchAndDownload(source: Source) {
+	async function SearchAndDownload(source: Source | undefined) {
+	  if (!source) return null;
 		const searchResults = await source.Search(artist, songTitle, keywords);
 
 		// sort results...
@@ -79,19 +80,13 @@ export const GET = createHandler(async (c) => {
 		return null;
 	}
 
-	const preferredSource = sourceModules.get(source);
 	let filePath: string | null = null;
-	let usedSource = "";
-	if (preferredSource) {
-		usedSource = source[0];
-		filePath = await SearchAndDownload(preferredSource);
-	}
-	if (!filePath) {
-		for (const source of sourceModules) {
-			if (source[0] === usedSource) continue;
-			usedSource = source[0];
-			filePath = await SearchAndDownload(source[1]);
-			if (filePath) break;
+	let usedSource: string = "unknown";
+	for (const source of sources) {
+		filePath = await SearchAndDownload(sourceModules.get(source));
+		if (filePath) {
+		  usedSource = source;
+			break;
 		}
 	}
 

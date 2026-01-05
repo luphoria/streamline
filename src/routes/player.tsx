@@ -30,7 +30,7 @@ const Player: Component<
 		setLoading();
 		this.track = null;
 		const response = await t(
-			fetch(`${store.API_URL}source/track?mbid=${mbid}&source=${store.source}`)
+			fetch(`${store.API_URL}source/track?mbid=${mbid}&sources=${store.sources}`)
 		);
 		if (!response.ok) {
 			console.error(response.error);

@@ -12,10 +12,7 @@ export const Settings: Component<
 	}
 > = function (cx) {
 	cx.mount = () => {
-		fetchNewSources(store.API_URL);
-		/*
-		Array.from(temp1.rows, (row) => row.dataset.source);
-		*/
+    fetchNewSources(store.API_URL);
 	};
 	this.sources = [];
 	const setMBURL = (url: string) => (window.mb.config.baseUrl = url);
@@ -31,7 +28,6 @@ export const Settings: Component<
 		}
 		const data = await response.value.json();
 		this.sources = data;
-		this.sourcesDropdown.value = store.source;
 	};
 	use(store.MB_URL).listen(setMBURL);
 	use(store.API_URL).listen(fetchNewSources);
