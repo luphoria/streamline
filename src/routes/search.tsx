@@ -1,6 +1,10 @@
 import { css, type Component } from "dreamland/core";
 import { router } from "dreamland/router";
-import type { IArtistCredit, IRecording, IRecordingList } from "musicbrainz-api";
+import type {
+	IArtistCredit,
+	IRecording,
+	IRecordingList,
+} from "musicbrainz-api";
 import Icon from "../components/icon";
 import CoverArt from "../components/coverart";
 import { Link } from "dreamland/router";
@@ -25,16 +29,18 @@ export const Recording: Component<
 				/>
 				<span class="song-info">
 					<div class="artist">
-						{use(this.recording["artist-credit"] as IArtistCredit[]).mapEach((artist) => {
-							return (
-								<div>
-									<Link href={`/artist/${artist.artist.id}`}>
-										{artist.name}
-									</Link>
-									,
-								</div>
-							);
-						})}
+						{use(this.recording["artist-credit"] as IArtistCredit[]).mapEach(
+							(artist) => {
+								return (
+									<div>
+										<Link href={`/artist/${artist.artist.id}`}>
+											{artist.name}
+										</Link>
+										,
+									</div>
+								);
+							}
+						)}
 					</div>
 					<div class="title">
 						<b>{this.recording.title}</b> (
@@ -138,11 +144,13 @@ const Search: Component<
 	return (
 		<div id="search-results">
 			{use(this.results).andThen(
-				(results) => <div>
-					{results.recordings.map((recording) => (
-						<Recording recording={recording} />
-					))}
-				</div>,
+				(results) => (
+					<div>
+						{results.recordings.map((recording) => (
+							<Recording recording={recording} />
+						))}
+					</div>
+				),
 				<div class="loader">
 					<Icon name="search_web" />
 				</div>

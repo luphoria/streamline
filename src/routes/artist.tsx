@@ -15,9 +15,7 @@ const Artist: Component<{
 					return (
 						<span mbid={group.id}>
 							<b>
-								<Link href={`/release/${group.id}`}>
-									{group.title}
-								</Link>{" "}
+								<Link href={`/release/${group.id}`}>{group.title}</Link>{" "}
 							</b>
 							({group["first-release-date"]}) [{group["primary-type"]}]
 							<br />
@@ -42,12 +40,12 @@ const ArtistView: Component<
 		this.artist = null;
 		const artist = await window.mb.lookup("artist", mbid, [
 			"release-groups",
-			"releases"
+			"releases",
 		]);
 		const artistReleases = await window.mb.search("release", {
 			artist: mbid,
 			inc: ["release-groups", "artist-credits"],
-		})
+		});
 		this.artist = artist;
 	};
 	use(this.mbid).listen(updateArtist);
@@ -71,12 +69,16 @@ const ArtistView: Component<
 					</button>
 				</form>
 			</div>
-			<div class="artist">{use(this.artist).andThen(
-				(artist) => <Artist artist={artist} />,
-				<div class="loader">
-					<Icon name="search_doc" />
-				</div>
-			)}</div>
+			<div class="artist">
+				{use(this.artist).andThen(
+					(artist) => (
+						<Artist artist={artist} />
+					),
+					<div class="loader">
+						<Icon name="search_doc" />
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };

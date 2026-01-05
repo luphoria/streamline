@@ -56,7 +56,7 @@ export const GET = createHandler(async (c) => {
 	}
 
 	async function SearchAndDownload(source: Source | undefined) {
-	  if (!source) return null;
+		if (!source) return null;
 		const searchResults = await source.Search(artist, songTitle, keywords);
 
 		// sort results...
@@ -85,7 +85,7 @@ export const GET = createHandler(async (c) => {
 	for (const source of sources) {
 		filePath = await SearchAndDownload(sourceModules.get(source));
 		if (filePath) {
-		  usedSource = source;
+			usedSource = source;
 			break;
 		}
 	}

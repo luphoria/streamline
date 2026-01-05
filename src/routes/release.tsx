@@ -135,7 +135,9 @@ const ReleaseView: Component<
 			</div>
 			<div class="release">
 				{use(this.release).andThen(
-					(release) => <Release release={release} />,
+					(release) => (
+						<Release release={release} />
+					),
 					<div class="loader">
 						<Icon name="search_doc" />
 					</div>

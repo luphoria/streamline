@@ -17,9 +17,9 @@ const Player: Component<
 		mbid: string;
 	}
 > = function () {
-	this["on:routeshown"] = (path: string) => {
-		this.url = new URL(path, location.origin);
-	};
+	this["on:routeshown"] = (path: string) =>
+		(this.url = new URL(path, location.origin));
+
 	const setLoading = () =>
 		(this.player = (
 			<div class="loader">
@@ -30,7 +30,9 @@ const Player: Component<
 		setLoading();
 		this.track = null;
 		const response = await t(
-			fetch(`${store.API_URL}source/track?mbid=${mbid}&sources=${store.sources}`)
+			fetch(
+				`${store.API_URL}source/track?mbid=${mbid}&sources=${store.sources}`
+			)
 		);
 		if (!response.ok) {
 			console.error(response.error);

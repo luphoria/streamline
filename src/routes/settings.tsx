@@ -8,11 +8,11 @@ export const Settings: Component<
 	{
 		sourcesDropdown: HTMLSelectElement;
 		sources: any[];
-		sourceTable: HTMLTableSectionElement
+		sourceTable: HTMLTableSectionElement;
 	}
 > = function (cx) {
 	cx.mount = () => {
-    fetchNewSources(store.API_URL);
+		fetchNewSources(store.API_URL);
 	};
 	this.sources = [];
 	const setMBURL = (url: string) => (window.mb.config.baseUrl = url);
@@ -54,34 +54,42 @@ export const Settings: Component<
 				<span class="title">Download source</span>
 				<table>
 					<tbody
-					on:drop={(e) => {
-						e.preventDefault();
-						const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'));
-						const dropTarget = (e.target as HTMLElement).closest('tr');
-						if (!dropTarget) return;
-						
-						const dropIndex = Array.from(this.sourceTable.rows).indexOf(dropTarget as HTMLTableRowElement);
-						
-						const newSources = [...this.sources];
-						const [draggedItem] = newSources.splice(draggedIndex, 1);
-						newSources.splice(dropIndex, 0, draggedItem);
-						this.sources = newSources;
-						
-						store.sources = Array.from(this.sourceTable.rows, (row) => row.dataset.source);
-						console.log(store.sources);
-					}}
-					this={use(this.sourceTable)}>
+						on:drop={(e) => {
+							e.preventDefault();
+							const draggedIndex = parseInt(
+								e.dataTransfer.getData("text/plain")
+							);
+							const dropTarget = (e.target as HTMLElement).closest("tr");
+							if (!dropTarget) return;
+
+							const dropIndex = Array.from(this.sourceTable.rows).indexOf(
+								dropTarget as HTMLTableRowElement
+							);
+
+							const newSources = [...this.sources];
+							const [draggedItem] = newSources.splice(draggedIndex, 1);
+							newSources.splice(dropIndex, 0, draggedItem);
+							this.sources = newSources;
+
+							store.sources = Array.from(
+								this.sourceTable.rows,
+								(row) => row.dataset.source
+							);
+							console.log(store.sources);
+						}}
+						this={use(this.sourceTable)}
+					>
 						{use(this.sources).mapEach((val, index) => (
 							<tr
-								data-source={val.Name} 
+								data-source={val.Name}
 								draggable="true"
 								on:dragstart={(e) => {
-									e.dataTransfer.effectAllowed = 'move';
-									e.dataTransfer.setData('text/plain', index.toString());
+									e.dataTransfer.effectAllowed = "move";
+									e.dataTransfer.setData("text/plain", index.toString());
 								}}
 								on:dragover={(e) => {
 									e.preventDefault();
-									e.dataTransfer.dropEffect = 'move';
+									e.dataTransfer.dropEffect = "move";
 								}}
 							>
 								<td>{val.friendlyName}</td>
