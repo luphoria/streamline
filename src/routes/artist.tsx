@@ -50,35 +50,15 @@ const ArtistView: Component<
 	};
 	use(this.mbid).listen(updateArtist);
 	return (
-		<div>
-			<div>
-				<form
-					on:submit={(e: SubmitEvent) => {
-						e.preventDefault();
-						updateArtist(this.mbid);
-					}}
-				>
-					<input
-						value={use(this.mbid)}
-						id="artistMbid"
-						placeholder="e0c97a4d-c392-41a9-a374-57af3e3eeab3"
-						type="text"
-					/>
-					<button id="artistButton" type="submit">
-						view artist
-					</button>
-				</form>
-			</div>
-			<div class="artist">
-				{use(this.artist).andThen(
-					(artist) => (
-						<Artist artist={artist} />
-					),
-					<div class="loader">
-						<Icon name="search_doc" />
-					</div>
-				)}
-			</div>
+		<div class="artist">
+			{use(this.artist).andThen(
+				(artist) => (
+					<Artist artist={artist} />
+				),
+				<div class="loader">
+					<Icon name="search_doc" />
+				</div>
+			)}
 		</div>
 	);
 };

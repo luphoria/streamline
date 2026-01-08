@@ -95,11 +95,6 @@ const Player: Component<
 	return (
 		<div>
 			<div>
-				<input
-					id="recordingMbid"
-					value={use(this.mbid).map((val) => decodeURIComponent(val))}
-					type="text"
-				/>
 				<button on:click={() => playSong(this.mbid)}>fetch song</button>
 				<button on:click={() => deleteCached(this.mbid)}>
 					delete from cache
