@@ -11,7 +11,7 @@ const Player: Component<
 		"on:routeshown": (path: string) => void;
 	},
 	{
-		player: HTMLElement;
+		status: string | null;
 		track: BlobTrack | null;
 		url: URL;
 		mbid: string;
@@ -20,14 +20,8 @@ const Player: Component<
 	this["on:routeshown"] = (path: string) =>
 		(this.url = new URL(path, location.origin));
 
-	const setLoading = () =>
-		(this.player = (
-			<div class="loader">
-				<Icon name="search_doc" />
-			</div>
-		));
 	const playSong = async (mbid: string) => {
-		setLoading();
+		this.status = null;
 		this.track = null;
 		const response = await t(
 			fetch(
@@ -35,26 +29,16 @@ const Player: Component<
 			)
 		);
 		if (!response.ok) {
-			console.error(response.error);
-			this.player = <div>an error occured: {response.error}</div>;
+			this.status = `an error occured: ${response.error}`;
 			return;
 		}
 		if (!response.value.ok) {
 			const data = await response.value.json();
-			console.error(response.error);
-			this.player = <div>an error occured: {data.message}</div>;
+			this.status = `an error occured: ${data.message}`;
 			return;
 		}
 		const blob = await response.value.blob();
 
-		if (!window.webamp) {
-			const link = URL.createObjectURL(blob);
-			const player = new Audio(link);
-			player.controls = true;
-			player.play();
-			this.player = player;
-			return;
-		}
 		const recordingInfo = await window.mb.lookup("recording", mbid, [
 			"artist-credits",
 		]);
@@ -68,11 +52,11 @@ const Player: Component<
 		this.url.searchParams.get("query")
 			? window.webamp.appendTracks([this.track])
 			: window.webamp.setTracksToPlay([this.track]);
-		this.player = <div>playing in webamp!</div>;
+		this.status = "playing in webamp!";
 	};
 
 	const deleteCached = async (mbid: string) => {
-		setLoading();
+		this.status = null;
 		const response = await t(
 			fetch(`${store.API_URL}source/track?mbid=${mbid}`, {
 				method: "DELETE",
@@ -80,24 +64,16 @@ const Player: Component<
 		);
 
 		if (!response.ok) {
-			this.player = <div>an error occured: {response.error}</div>;
-			console.error(response.error);
+			this.status = `an error occured: ${response.error}`;
+			return;
+		}
+		if (!response.value.ok) {
+			const data = await response.value.json();
+			this.status = `an error occured: ${data.message}`;
 			return;
 		}
 
-		switch (response.value.status) {
-			case 200:
-				this.player = <div>deleted item from cache</div>;
-				break;
-			case 404:
-				this.player = <div>file not in cache</div>;
-				break;
-			case 500:
-				this.player = <div>error: {response.error}</div>;
-				break;
-			default:
-				this.player = <div>unknown error or lack of response</div>;
-		}
+		this.status = "deleted item from cache";
 	};
 	const downloadSong = async (track: BlobTrack) => {
 		const link = URL.createObjectURL(track.blob);
@@ -129,12 +105,19 @@ const Player: Component<
 					delete from cache
 				</button>
 				{use(this.track).andThen(
-					<button on:click={() => downloadSong(this.track!)}>
+					(track) => <button on:click={() => downloadSong(track)}>
 						download song
 					</button>
 				)}
 			</div>
-			<div class="player">{use(this.player)}</div>
+			<div class="player">
+				{use(this.status).andThen(
+					(status) => <div>{status}</div>,
+					<div class="loader">
+						<Icon name="search_doc" />
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };

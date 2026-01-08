@@ -29,7 +29,7 @@ const App: Component = function (cx) {
 			<Router>
 				<Route show={<Layout />}>
 					<Route show={<Home />} />
-					<Route path="play/:mbid/:queue" show={<Player />} />
+					<Route path="play/:mbid" show={<Player />} />
 					<Route path="search/:query" show={<Search />} />
 					<Route path="artist/:mbid" show={<ArtistView />} />
 					<Route path="release/:mbid" show={<ReleaseView />} />
