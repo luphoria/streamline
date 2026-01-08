@@ -57,24 +57,22 @@ export const GET = createHandler(async (c) => {
 
 	async function SearchAndDownload(source: Source | undefined) {
 		if (!source) return null;
-		const searchResults = await source.Search(artist, songTitle, keywords);
-
-		// sort results...
-		console.log("haiaiai :3", searchResults, searchResults.length);
+		const searchResults = await t(source.Search(artist, songTitle, keywords));
+		if (!searchResults.ok) {
+			return null;
+		}
 
 		let tries = source.tries ? source.tries : 3;
 		if (searchResults.length < tries) tries = searchResults.length;
 
 		for (let i = 0; i < tries; i++) {
 			const filePath = await t(source.Download(searchResults[i]));
-			console.log(filePath.ok, filePath.error);
-			if (filePath.ok) {
-				console.log(
-					`${source.Name}: File ${artist} - ${songTitle} successfully downloaded!`
-				);
+			if (!filePath.ok) continue;
+			console.log(
+				`${source.Name}: File ${artist} - ${songTitle} successfully downloaded!`
+			);
 
-				return filePath.value;
-			}
+			return filePath.value;
 		}
 
 		return null;
@@ -106,7 +104,7 @@ export const GET = createHandler(async (c) => {
 		mbid,
 		filePath,
 		usedSource,
-		recordingInfo["artist-credit"],
+		recordingInfo["artist-credit"]!,
 		songTitle,
 		"placeholder 3:",
 		recordingInfo["first-release-date"]
@@ -128,9 +126,15 @@ export const DELETE = createHandler(async (c) => {
 	const DBReq = GetRecording(mbid);
 	console.log(DBReq);
 	if (!DBReq) {
-		return new Response("Not Found", {
-			status: 404,
-		});
+		return c.json(
+			{
+				success: false,
+				message: "The track was not found in the cache database.",
+			},
+			{
+				status: 404,
+			}
+		);
 	}
 	console.log(`File in cache: ${DBReq.filepath}\nDeleting ${mbid}. . .`);
 	// TODO: download anyway if flag is fixed to try specific source that isn't cached or if some kind of force flag sent

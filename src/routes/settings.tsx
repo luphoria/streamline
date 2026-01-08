@@ -27,7 +27,6 @@ const settingsCss = css`
 	}
 `;
 
-
 const ServerSettings: Component<
 	{},
 	{},
@@ -79,7 +78,9 @@ const ServerSettings: Component<
 					<tbody
 						on:drop={(e) => {
 							e.preventDefault();
-							const draggedIndex = parseInt(e.dataTransfer.getData("text/plain"));
+							const draggedIndex = parseInt(
+								e.dataTransfer.getData("text/plain")
+							);
 							const dropTarget = (e.target as HTMLElement).closest("tr");
 							if (!dropTarget) return;
 
@@ -123,13 +124,13 @@ const ServerSettings: Component<
 	);
 };
 
-ServerSettings.style = settingsCss
+ServerSettings.style = settingsCss;
 export const Settings: Component<{}, {}, {}> = function (cx) {
-	const setMBURL = (url: string) =>  {
+	const setMBURL = (url: string) => {
 		window.mb.config.baseUrl = url;
 		//@ts-expect-error calling something internally to take over
 		window.mb.httpClient = window.mb.initHttpClient();
-	}
+	};
 	use(store.MB_URL).listen(setMBURL);
 	return (
 		<div>
@@ -150,6 +151,6 @@ export const Settings: Component<{}, {}, {}> = function (cx) {
 		</div>
 	);
 };
-Settings.style = settingsCss
+Settings.style = settingsCss;
 
 export default Settings;
