@@ -8,13 +8,13 @@ const CoverArt: Component<{
 	return (
 		<img
 			class={`component-coverart ${this.class}`}
-			height={this.size}
-			width={this.size}
-			src={this.src}
+			height={use(this.size)}
+			width={use(this.size)}
+			src={use(this.src)}
 			on:error={(e: any) => {
 				let el = e.target as HTMLImageElement;
 				el.src = "/shell32/cd_unknown.gif";
-				el.setAttribute("style", "image-rendering: pixelated; scale: 0.6;");
+				el.setAttribute("style", "scale: 0.6;");
 			}}
 			alt="Cover Art"
 		/>

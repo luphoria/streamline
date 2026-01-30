@@ -1,4 +1,5 @@
 import Database from "better-sqlite3";
+import { type IArtistCredit } from "musicbrainz-api";
 
 const db = new Database("./streamline.db");
 
@@ -48,15 +49,15 @@ db.exec(`
     )
 `);
 */
-export const AddRecording = (
+export function AddRecording(
 	mbid: string,
 	filepath: string,
 	source: string,
-	artists: { name: string; mbid: string }[],
+	artists: IArtistCredit[],
 	title: string,
 	release: string,
 	releaseDate?: string
-) => {
+) {
 	console.log(
 		`DB: ${artists[0]} - ${title}: ${mbid}/release-${release} / ${filepath} (${source})`
 	);
@@ -73,16 +74,16 @@ export const AddRecording = (
 		release,
 		releaseDate
 	);
-};
+}
 
-export const GetRecording = (mbid) => {
+export function GetRecording(mbid: string) {
 	const get = db.prepare("SELECT * FROM songs WHERE mbid = ?");
 
 	return get.get(mbid);
-};
+}
 
-export const DeleteRecording = (mbid) => {
+export function DeleteRecording(mbid: string) {
 	const del = db.prepare("DELETE FROM songs WHERE mbid = ?");
 
 	return del.run(mbid);
-};
+}

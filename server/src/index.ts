@@ -21,9 +21,9 @@ export const sourceModules = await loadSources(
 	new URL("../sources/", import.meta.url)
 );
 export const mb = new MusicBrainzApi({
-    appName: "streamline (https://github.com/luphoria/streamline)",
-    appVersion: "0.0.1",
-    appContactInfo: "contact@streamline.pn",
+	appName: "streamline (https://github.com/luphoria/streamline)",
+	appVersion: "0.0.1",
+	appContactInfo: "contact@streamline.pn",
 });
 
 serve(

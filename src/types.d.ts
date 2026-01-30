@@ -1,9 +1,10 @@
 import type Webamp from "webamp";
-import type { MusicBrainz } from "./utils/MusicBrainz";
+import type { CoverArtArchiveApi, MusicBrainzApi } from "musicbrainz-api";
 
 declare global {
 	interface Window {
-		mb: MusicBrainz;
+		mb: MusicBrainzApi;
+		coverArt: CoverArtArchiveApi;
 		webamp: Webamp;
 	}
 }

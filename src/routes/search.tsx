@@ -1,47 +1,59 @@
 import { css, type Component } from "dreamland/core";
 import { router } from "dreamland/router";
-import type { RecordingGroup } from "../types/MusicBrainzType";
+import type {
+	IArtistCredit,
+	IRecording,
+	IRecordingList,
+} from "musicbrainz-api";
 import Icon from "../components/icon";
 import CoverArt from "../components/coverart";
 import { Link } from "dreamland/router";
 
-export const ResultItem: Component<
+export const Recording: Component<
 	{
-		song: RecordingGroup;
+		recording: IRecording;
 	},
 	{
-		mbid: string;
-		result: any;
+		selectedRelease: string;
 	}
 > = function () {
-	this.result = this.song.versions[0];
-	this.mbid = this.result.mbid;
+	if (!this.recording.releases) return <div></div>;
+	this.selectedRelease = this.recording.releases[0].id;
 
 	return (
 		<div>
 			<span>
-				<CoverArt src={this.result.coverArt} size={75} />
+				<CoverArt
+					src={use`https://archive.org/download/mbid-${this.selectedRelease}/__ia_thumb.jpg`}
+					size={75}
+				/>
 				<span class="song-info">
 					<div class="artist">
-						{use(this.song.artists).mapEach((artist) => {
-							return (
-								<div>
-									<Link href={`/artist/${artist.mbid}`}>{artist.name}</Link>,
-								</div>
-							);
-						})}
+						{use(this.recording["artist-credit"] as IArtistCredit[]).mapEach(
+							(artist) => {
+								return (
+									<div>
+										<Link href={`/artist/${artist.artist.id}`}>
+											{artist.name}
+										</Link>
+										,
+									</div>
+								);
+							}
+						)}
 					</div>
 					<div class="title">
-						<b>{this.song.title}</b> ({this.song.releaseDate})
+						<b>{this.recording.title}</b> (
+						{this.recording["first-release-date"]})
 					</div>
 				</span>
 			</span>
 			<span class="spacer"></span>
-			<select value={use(this.mbid)} name="versions">
-				{this.song.versions.map((release) => {
+			<select value={use(this.selectedRelease)} name="versions">
+				{use(this.recording.releases).mapEach((release) => {
 					return (
-						<option value={release.mbid}>
-							{release.title} ({release.releaseDate}){" "}
+						<option value={release.id}>
+							{release.title} ({release.date}){" "}
 							{release.country == "XW" || release.country == "XE"
 								? "[global]"
 								: `[${release.country}]`}{" "}
@@ -53,20 +65,24 @@ export const ResultItem: Component<
 			</select>
 
 			<span>
-				<button on:click={() => router.navigate(`/play/${this.song.mbid}`)}>
+				<button on:click={() => router.navigate(`/play/${this.recording.id}`)}>
 					Play
 				</button>
 				<button
-					on:click={() => router.navigate(`/play/${this.song.mbid}?queue`)}
+					on:click={() => router.navigate(`/play/${this.recording.id}?queue`)}
 				>
 					Add to Queue
 				</button>
 				<button
-					on:click={() => router.navigate(`/play/${this.song.mbid}?download`)}
+					on:click={() =>
+						router.navigate(`/play/${this.recording.id}?download`)
+					}
 				>
 					Download
 				</button>
-				<button on:click={() => router.navigate(`/release/${this.mbid}`)}>
+				<button
+					on:click={() => router.navigate(`/release/${this.selectedRelease}`)}
+				>
 					Open Release
 				</button>
 			</span>
@@ -74,7 +90,7 @@ export const ResultItem: Component<
 	);
 };
 
-ResultItem.style = css`
+Recording.style = css`
 	:scope {
 		display: flex;
 		flex-direction: row;
@@ -106,38 +122,41 @@ ResultItem.style = css`
 	}
 `;
 
-export const SearchResults: Component<{
-	results: RecordingGroup[];
-}> = function () {
-	return (
-		<div id="searchresults">
-			{use(this.results).mapEach((song) => {
-				return <ResultItem song={song} />;
-			})}
-		</div>
-	);
-};
-export const Search: Component<
+const Search: Component<
 	{},
 	{},
 	{
-		searchResults: HTMLElement;
+		results: IRecordingList | null;
 		query: string;
 	}
 > = function () {
 	const updateSongs = async (query: string) => {
 		if (!query) return;
-		this.searchResults = (
-			<div class="loader">
-				<Icon name="search_web" />
-			</div>
-		);
-		const songs = (await window.mb.SearchSongs(
-			decodeURIComponent(query)
-		)) as RecordingGroup[];
-		console.log(songs);
-		this.searchResults = <SearchResults results={songs} />;
+		this.results = null;
+		const results = await window.mb.search("recording", {
+			query: decodeURIComponent(query),
+			limit: 100,
+			inc: ["releases"],
+		});
+		this.results = results;
 	};
 	use(this.query).listen(updateSongs);
-	return <div id="search-results">{use(this.searchResults)}</div>;
+	return (
+		<div id="search-results">
+			{use(this.results).andThen(
+				(results) => (
+					<div>
+						{results.recordings.map((recording) => (
+							<Recording recording={recording} />
+						))}
+					</div>
+				),
+				<div class="loader">
+					<Icon name="search_web" />
+				</div>
+			)}
+		</div>
+	);
 };
+
+export default Search;

@@ -2,7 +2,7 @@ import fs from "node:fs";
 import { Readable } from "node:stream";
 import { createHandler } from "hono-file-router";
 import { stream } from "hono/streaming";
-import { Result, t } from "try";
+import { t } from "try";
 import { AddRecording, DeleteRecording, GetRecording } from "../../../../db/db";
 import { sourceModules, mb } from "../../../../index";
 import mime from "mime";
@@ -30,17 +30,20 @@ export const GET = createHandler(async (c) => {
 	) {
 		return new Response("Bad MBID", { status: 400 });
 	}
-	const recordingInfo = await mb.lookup("recording", mbid, ["artist-credits", "releases"])
-	console.log(recordingInfo)
+	const recordingInfo = await mb.lookup("recording", mbid, [
+		"artist-credits",
+		"releases",
+	]);
+	console.log(recordingInfo);
 	// TODO: sort related releases, pass selected release to scraper (for sorting responses), pass other listed artist credits (for filtering and sorting)
 	const artist = recordingInfo["artist-credit"][0].name;
 	const songTitle = recordingInfo.title;
 	const keywords = recordingInfo.releases[0]
 		? recordingInfo.releases[0].title
 		: "";
-	console.log(artist, songTitle)
+	console.log(artist, songTitle);
 
-	const source = c.req.query("source") || "";
+	const sources = c.req.query("sources")?.split(",") || "";
 
 	console.log("Checking DB for MBID . . .");
 	const DBReq = GetRecording(mbid);
@@ -52,47 +55,36 @@ export const GET = createHandler(async (c) => {
 		return createStreamingResponse(c, DBReq.filepath);
 	}
 
-	async function SearchAndDownload(source: Source) {
-		const searchResults = await source.Search(
-			artist,
-			songTitle,
-			keywords
-		);
-
-		// sort results...
-		console.log("haiaiai :3", searchResults, searchResults.length);
+	async function SearchAndDownload(source: Source | undefined) {
+		if (!source) return null;
+		const searchResults = await t(source.Search(artist, songTitle, keywords));
+		if (!searchResults.ok) {
+			return null;
+		}
 
 		let tries = source.tries ? source.tries : 3;
 		if (searchResults.length < tries) tries = searchResults.length;
 
 		for (let i = 0; i < tries; i++) {
 			const filePath = await t(source.Download(searchResults[i]));
-			console.log(filePath.ok, filePath.error);
-			if (filePath.ok) {
-				console.log(
-					`${source.Name}: File ${artist} - ${songTitle} successfully downloaded!`
-				);
+			if (!filePath.ok) continue;
+			console.log(
+				`${source.Name}: File ${artist} - ${songTitle} successfully downloaded!`
+			);
 
-				return filePath.value;
-			}
+			return filePath.value;
 		}
 
 		return null;
 	}
-	
-	const preferredSource = sourceModules.get(source);
+
 	let filePath: string | null = null;
-	let usedSource = "";
-	if (preferredSource) {
-		usedSource = source[0]
-		filePath = await SearchAndDownload(preferredSource);
-	}
-	if (!filePath) {
-		for (const source of sourceModules) {
-			if (source[0] === usedSource) continue;
-			usedSource = source[0]
-			filePath = await SearchAndDownload(source[1]);
-			if (filePath) break;
+	let usedSource: string = "unknown";
+	for (const source of sources) {
+		filePath = await SearchAndDownload(sourceModules.get(source));
+		if (filePath) {
+			usedSource = source;
+			break;
 		}
 	}
 
@@ -106,13 +98,13 @@ export const GET = createHandler(async (c) => {
 				status: 404,
 			}
 		);
-	};
-	
+	}
+
 	AddRecording(
 		mbid,
 		filePath,
 		usedSource,
-		recordingInfo["artist-credit"],
+		recordingInfo["artist-credit"]!,
 		songTitle,
 		"placeholder 3:",
 		recordingInfo["first-release-date"]
@@ -134,9 +126,15 @@ export const DELETE = createHandler(async (c) => {
 	const DBReq = GetRecording(mbid);
 	console.log(DBReq);
 	if (!DBReq) {
-		return new Response("Not Found", {
-			status: 404,
-		});
+		return c.json(
+			{
+				success: false,
+				message: "The track was not found in the cache database.",
+			},
+			{
+				status: 404,
+			}
+		);
 	}
 	console.log(`File in cache: ${DBReq.filepath}\nDeleting ${mbid}. . .`);
 	// TODO: download anyway if flag is fixed to try specific source that isn't cached or if some kind of force flag sent
