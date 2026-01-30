@@ -80,9 +80,10 @@ Release.style = css`
 const ReleaseView: Component<
 	{},
 	{
-		release: IRelease | null;
-		coverArt: string | null;
 		mbid: string;
+	}, 
+	{
+		release: IRelease | null;
 	}
 > = function () {
 	const updateReleases = async (mbid: string) => {
