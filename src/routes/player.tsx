@@ -23,22 +23,21 @@ const Player: Component<
 	const playSong = async (mbid: string) => {
 		this.status = null;
 		this.track = null;
-		const response = await t(
+		const [responseOk, responseErr, response] = await t(
 			fetch(
 				`${store.API_URL}source/track?mbid=${mbid}&sources=${store.sources}`
 			)
 		);
-		if (!response.ok) {
-			this.status = `an error occured: ${response.error}`;
+		if (!responseOk) {
+			this.status = `an error occured: ${responseErr}`;
 			return;
 		}
-		if (!response.value.ok) {
-			const data = await response.value.json();
+		if (!response.ok) {
+			const data = await response.json();
 			this.status = `an error occured: ${data.message}`;
 			return;
 		}
-		const blob = await response.value.blob();
-
+		const blob = await response.blob();
 		const recordingInfo = await window.mb.lookup("recording", mbid, [
 			"artist-credits",
 		]);
@@ -57,18 +56,18 @@ const Player: Component<
 
 	const deleteCached = async (mbid: string) => {
 		this.status = null;
-		const response = await t(
+		const [responseOk, responseErr, response] = await t(
 			fetch(`${store.API_URL}source/track?mbid=${mbid}`, {
 				method: "DELETE",
 			})
 		);
 
-		if (!response.ok) {
-			this.status = `an error occured: ${response.error}`;
+		if (!responseOk) {
+			this.status = `an error occured: ${responseErr}`;
 			return;
 		}
-		if (!response.value.ok) {
-			const data = await response.value.json();
+		if (!response.ok) {
+			const data = await response.json();
 			this.status = `an error occured: ${data.message}`;
 			return;
 		}

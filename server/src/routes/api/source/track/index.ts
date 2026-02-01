@@ -57,8 +57,8 @@ export const GET = createHandler(async (c) => {
 
 	async function SearchAndDownload(source: Source | undefined) {
 		if (!source) return null;
-		const searchResults = await t(source.Search(artist, songTitle, keywords));
-		if (!searchResults.ok) {
+		const [searchResultsOk, _, searchResults] = await t(source.Search(artist, songTitle, keywords));
+		if (!searchResultsOk) {
 			return null;
 		}
 
@@ -66,13 +66,13 @@ export const GET = createHandler(async (c) => {
 		if (searchResults.length < tries) tries = searchResults.length;
 
 		for (let i = 0; i < tries; i++) {
-			const filePath = await t(source.Download(searchResults[i]));
-			if (!filePath.ok) continue;
+			const [filePathOk, _, filePath] = await t(source.Download(searchResults[i]));
+			if (!filePathOk) continue;
 			console.log(
 				`${source.Name}: File ${artist} - ${songTitle} successfully downloaded!`
 			);
 
-			return filePath.value;
+			return filePath;
 		}
 
 		return null;

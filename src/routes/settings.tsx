@@ -40,16 +40,16 @@ const ServerSettings: Component<
 		fetchNewSources(store.API_URL);
 	};
 	const fetchNewSources = async (url: string) => {
-		const response = await t(fetch(`${url}source/list`));
+		const [responseOk, _, response] = await t(fetch(`${url}source/list`));
+		if (!responseOk) {
+			this.sources = [];
+			return;
+		}
 		if (!response.ok) {
 			this.sources = [];
 			return;
 		}
-		if (!response.value.ok) {
-			this.sources = [];
-			return;
-		}
-		const data = await response.value.json();
+		const data = await response.json();
 		if (store.sources && store.sources.length > 0) {
 			const sourceMap = new Map(
 				data.map((source: any) => [source.Name, source])
