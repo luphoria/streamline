@@ -1,8 +1,9 @@
+packages:
+  - packages/frontend
+  - packages/backend
+
 onlyBuiltDependencies:
+  - "@biomejs/biome"
   - better-sqlite3
   - core-js
   - esbuild
-
-packages:
-  - "packages/frontend"
-  - "packages/backend"
