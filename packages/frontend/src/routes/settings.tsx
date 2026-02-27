@@ -2,31 +2,6 @@ import { css, type Component } from "dreamland/core";
 import store from "../store";
 import { t } from "try";
 
-const settingsCss = css`
-	:scope {
-		width: 100%;
-	}
-
-	.settings-row {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 1rem;
-	}
-
-	input[type="text"] {
-		min-width: 15em;
-	}
-
-	.h-group {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		gap: 0.5rem;
-	}
-`;
-
 const ServerSettings: Component<
 	{},
 	{},
@@ -124,8 +99,7 @@ const ServerSettings: Component<
 	);
 };
 
-ServerSettings.style = settingsCss;
-export const Settings: Component<{}, {}, {}> = function (cx) {
+const Settings: Component<{}, {}, {}> = function (cx) {
 	const setMBURL = (url: string) => {
 		window.mb.config.baseUrl = url;
 		//@ts-expect-error calling something internally to take over
@@ -151,6 +125,31 @@ export const Settings: Component<{}, {}, {}> = function (cx) {
 		</div>
 	);
 };
+const settingsCss = css`
+	:scope {
+		width: 100%;
+	}
+
+	.settings-row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 1rem;
+	}
+
+	input[type="text"] {
+		min-width: 15em;
+	}
+
+	.h-group {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.5rem;
+	}
+`;
+ServerSettings.style = settingsCss;
 Settings.style = settingsCss;
 
 export default Settings;

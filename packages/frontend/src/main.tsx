@@ -10,6 +10,7 @@ import ReleaseView from "./routes/release";
 import Search from "./routes/search";
 import Settings from "./routes/settings";
 import Player from "./routes/player";
+import NotFound from "./routes/not-found";
 
 window.mb = new MusicBrainzApi({
 	appName: "streamline (https://github.com/luphoria/streamline)",
@@ -32,6 +33,7 @@ const App: Component = function (cx) {
 					<Route path="artist/:mbid" show={<ArtistView />} />
 					<Route path="release/:mbid" show={<ReleaseView />} />
 					<Route path="settings" show={<Settings />} />
+					<Route path="*" show={<NotFound />} />
 				</Route>
 			</Router>
 		</div>
