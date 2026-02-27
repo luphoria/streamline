@@ -4,5 +4,5 @@ onlyBuiltDependencies:
   - esbuild
 
 packages:
-  - "./"
-  - "server"
+  - "packages/frontend"
+  - "packages/backend"
