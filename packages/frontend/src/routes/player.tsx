@@ -98,15 +98,15 @@ const Player: Component<
 				<button on:click={() => deleteCached(this.mbid)}>
 					delete from cache
 				</button>
-				{use(this.track).andThen(
-					(track) => <button on:click={() => downloadSong(track)}>
-						download song
-					</button>
-				)}
+				{use(this.track).andThen((track) => (
+					<button on:click={() => downloadSong(track)}>download song</button>
+				))}
 			</div>
 			<div class="player">
 				{use(this.status).andThen(
-					(status) => <div>{status}</div>,
+					(status) => (
+						<div>{status}</div>
+					),
 					<div class="loader">
 						<Icon name="search_doc" />
 					</div>

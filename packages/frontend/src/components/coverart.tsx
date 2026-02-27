@@ -12,7 +12,7 @@ const CoverArt: Component<{
 			width={use(this.size)}
 			src={use(this.src)}
 			on:error={(e: any) => {
-				let el = e.target as HTMLImageElement;
+				const el = e.target as HTMLImageElement;
 				el.src = "/shell32/cd_unknown.gif";
 				el.setAttribute("style", "scale: 0.6;");
 			}}

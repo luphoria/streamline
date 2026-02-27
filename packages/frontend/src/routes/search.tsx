@@ -9,7 +9,7 @@ import Icon from "../components/icon";
 import CoverArt from "../components/coverart";
 import { Link } from "dreamland/router";
 
-export const Recording: Component<
+const Recording: Component<
 	{
 		recording: IRecording;
 	},

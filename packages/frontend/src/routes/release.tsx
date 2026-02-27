@@ -4,13 +4,20 @@ import Icon from "../components/icon";
 import CoverArt from "../components/coverart";
 import type { IRelease } from "musicbrainz-api";
 
-const Release: Component<{
-	release: IRelease;
-}, {}, {}> = function () {
+const Release: Component<
+	{
+		release: IRelease;
+	},
+	{},
+	{}
+> = function () {
 	return (
 		<div>
 			<div class="release-header">
-				<CoverArt src={`https://coverartarchive.org/release/${this.release.id}/front`} size={250} />
+				<CoverArt
+					src={`https://coverartarchive.org/release/${this.release.id}/front`}
+					size={250}
+				/>
 				<h3 id="release-title">{this.release.title}</h3>
 				<h4 id="release-artist">
 					{use(this.release["artist-credit"]).mapEach((artist) => {
@@ -81,7 +88,7 @@ const ReleaseView: Component<
 	{},
 	{
 		mbid: string;
-	}, 
+	},
 	{
 		release: IRelease | null;
 	}
@@ -91,7 +98,7 @@ const ReleaseView: Component<
 		const release = await window.mb.lookup("release", mbid, [
 			"recordings",
 			"release-groups",
-			"artists"
+			"artists",
 		]);
 		this.release = release;
 	};

@@ -12,7 +12,7 @@
 		"hono": "^4.11.3",
 		"hono-file-router": "github:Percslol/hono-file-router",
 		"mime": "^4.1.0",
-		"musicbrainz-api": "^0.27.1",
+		"musicbrainz-api": "^1.1.0",
 		"prompt-sync": "^4.2.0",
 		"shell-quote": "^1.8.3",
 		"try": "1.0.3"
