@@ -11,6 +11,7 @@ import Search from "./routes/search";
 import Settings from "./routes/settings";
 import Player from "./routes/player";
 import NotFound from "./routes/not-found";
+import "xp.css/dist/XP.css";
 
 window.mb = new MusicBrainzApi({
 	appName: "streamline (https://github.com/luphoria/streamline)",
